@@ -1,5 +1,4 @@
 import {StyleSheet, View, Text, Button, Pressable} from 'react-native';
-import StyledButton from "../component/StyledButton";
 import StyledButton1 from "../component/StyledButton1";
 
 export function Home({ navigation }) {
