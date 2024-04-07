@@ -8,9 +8,10 @@ export function Login({navigation, route}) {
 
     // Función que se ejecuta cuando se presiona el botón de "Log In"
     //agarra el mail y password y manda un HTTP POST request al backend.
-    const handleLogin = async () => {
+   /*const handleLogin = async () => {
         try {
             // Change the URL to your backend endpoint that handles login
+            //desde este port manda el request al backend.
             let response = await fetch('http://localhost:9001/login', {
                 method: 'POST',
                 headers: {
@@ -24,6 +25,7 @@ export function Login({navigation, route}) {
             });
             let json = await response.json(); //espera la respuesta del backend
             if (response.ok) {
+                console.log("te registraste bien pa")
                 navigation.navigate('UnlockedScreen');
             } else {
                 // si status no aprobado.
@@ -33,7 +35,40 @@ export function Login({navigation, route}) {
             // si falló la conexión con el backend-localhost.
             Alert.alert("Network error", "Unable to connect to the server");
         }
+    };*/
+
+    const handleLogin = () => {
+        console.log("Attempting to login with email:", email);
+
+        const requestBody = {
+            email: email,  // Assuming you're using email and password to log in
+            password: password,
+        };
+
+        fetch('http://localhost:9001/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(requestBody),
+        })
+            .then(response => {
+                console.log(response);
+                if (response.ok) { // Assuming the server sends back a JSON response with a loginSuccess field
+                    console.log('Login successsssssssssssssssssssssssssssssssssssssssssssssssful');
+                    navigation.navigate('Home');
+                } else {
+                    console.log('Login failed');
+                    // Show an error message to the user
+                    alert('Login failed. Please check your credentials and try again.');
+                }
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                alert('An error occurred during login. Please try again.');
+            });
     };
+
 
     return (
         <View style={styles.container}>
