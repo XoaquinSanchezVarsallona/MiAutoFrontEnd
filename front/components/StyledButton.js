@@ -1,7 +1,7 @@
 import React from 'react';
 import { Image, Pressable, StyleSheet } from 'react-native';
 
-function StyledButton1({ icon, onPress }) {
+function StyledButton({ icon, onPress }) {
     return (
         <Pressable onPress={onPress} style={styles.button}>
             <Image source={icon} style={styles.icon} />
@@ -23,4 +23,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default StyledButton1;
+export default StyledButton;

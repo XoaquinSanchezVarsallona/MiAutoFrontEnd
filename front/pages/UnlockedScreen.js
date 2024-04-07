@@ -1,5 +1,5 @@
 import {StyleSheet, View, Text, Button, Pressable} from 'react-native';
-import StyledButton1 from "../component/StyledButton1";
+import StyledButton from "../components/StyledButton";
 
 export function UnlockedScreen({ navigation }) {
     return (

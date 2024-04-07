@@ -1,17 +1,16 @@
 import {StyleSheet, View, Text, Button, Pressable} from 'react-native';
-import StyledButton1 from "../component/StyledButton1";
+import StyledButton from "../components/StyledButton";
 
 export function Home({ navigation }) {
     return (
         <View style={styles.container}>
             <Text style={styles.title}>Login as</Text>
             <View style={styles.buttonContainer}>
-                <StyledButton1
+                <StyledButton
                     icon={require('../assets/car.png')} // Make sure the icon path is correct
                     onPress={() => navigation.navigate('Login', { userType: 'driver' })}
                 />
-                <StyledButton1
-
+                <StyledButton
                     icon={require('../assets/hammer.png')} // Make sure the icon path is correct
                     onPress={() => navigation.navigate('Login', { userType: 'service' })}
                 />

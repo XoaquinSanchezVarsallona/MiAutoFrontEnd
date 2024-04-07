@@ -19,7 +19,8 @@
     "react-native-web": "~0.19.6"
   },
   "devDependencies": {
-    "@babel/core": "^7.20.0"
+    "@babel/core": "^7.20.0",
+    "@react-navigation/native-stack": "^6.9.26"
   },
   "private": true
 }
