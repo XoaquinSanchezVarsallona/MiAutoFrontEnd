@@ -12,6 +12,7 @@ export function Home({ navigation }) {
                     onPress={() => navigation.navigate('Login', { userType: 'driver' })}
                 />
                 <StyledButton1
+
                     icon={require('../assets/hammer.png')} // Make sure the icon path is correct
                     onPress={() => navigation.navigate('Login', { userType: 'service' })}
                 />

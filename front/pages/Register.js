@@ -28,7 +28,7 @@ export function Register( {navigation, route}) {
             password: password,
         };
 
-        fetch('http://localhost:8080/register', {
+        fetch('http://localhost:9001/register', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

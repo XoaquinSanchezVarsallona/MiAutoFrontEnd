@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, TextInput, Text, StyleSheet, Pressable } from 'react-native';
+import { View, TextInput, Text, StyleSheet, Pressable, Alert } from 'react-native';
 
 export function Login({navigation, route}) {
     const {userType} = route.params;
@@ -7,11 +7,34 @@ export function Login({navigation, route}) {
     const [password, setPassword] = useState('');
 
     // Función que se ejecuta cuando se presiona el botón de "Log In"
-    const handleLogin = () => {
-        console.log("Intento de inicio de sesión con:", email, password);
-        // Llamo a la función que verifica el inicio de sesión
-        // passwordValidation(email, password);
+    //agarra el mail y password y manda un HTTP POST request al backend.
+    const handleLogin = async () => {
+        try {
+            // Change the URL to your backend endpoint that handles login
+            let response = await fetch('http://localhost:9001/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    email: email,
+                    password: password,
+                    userType: userType,
+                }),
+            });
+            let json = await response.json(); //espera la respuesta del backend
+            if (response.ok) {
+                navigation.navigate('UnlockedScreen');
+            } else {
+                // si status no aprobado.
+                Alert.alert("Login Failed", json.message || "User not found");
+            }
+        } catch (error) {
+            // si falló la conexión con el backend-localhost.
+            Alert.alert("Network error", "Unable to connect to the server");
+        }
     };
+
     return (
         <View style={styles.container}>
             <Text style={styles.title}>Login</Text>
@@ -29,7 +52,7 @@ export function Login({navigation, route}) {
                 onChangeText={setPassword}
             />
             {/*ACA IRIA FUNCIÓN QUE LOGINEE AL USUARIO EN LA BDD HSQLDB*/}
-            <Pressable style={styles.button} onPress={() => navigation.navigate('Login', { userType })}>
+            <Pressable style={styles.button} onPress={handleLogin}>
                 <Text style={styles.buttonText}>Log In</Text>
             </Pressable>
             <Pressable style={styles.button} onPress={() => navigation.navigate('Register', { userType })}>
@@ -70,3 +93,79 @@ const styles = StyleSheet.create({
         color: 'white',
     },
 });
+
+
+
+
+
+
+/*import {Pressable, Text, TextInput, View} from "react-native";
+import {StyleSheet} from "react-native";
+import touchableOpacity from "react-native-web/src/exports/TouchableOpacity";
+export function Login({navigation}) {
+    return (
+        <View style={styles.container}>
+            <Text style={styles.title}>Log in</Text>
+            <TextInput
+                style={styles.textInput}
+                placeholderTextColor={'#fff'}
+                placeholder={'Enter your email'}
+            />
+            <TextInput
+                style={styles.textInput}
+                placeholder={'Enter your password'}
+                placeholderTextColor={'#fff'}
+                secureTextEntry={true}
+            />
+            {/* Esto se tiene que cambiar despues para que se consiga mandar un mail, etc}
+            <Text >Forgot your password?</Text>
+            <Pressable
+                title={"Submit"}
+                style={styles.button}
+                onPress={ () => {/*Se tiene que hacer la conexion a base para validar ese mail con esa contraseña}}
+            >
+                <Text style={styles.buttonText}>Submit</Text>
+            </Pressable>
+
+        </View>
+    );
+}
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        alignContent: "center",
+        alignItems: "center"
+    },
+    textInput: {
+        borderRadius: 20,
+        borderBottomWidth: 2,
+        width: "80%",
+
+        borderColor: 'grey' ,
+        backgroundColor: "#722471",
+
+        padding: 10,
+        marginTop: 15,
+
+    },
+    title:{
+        fontSize: 30,
+        fontWeight: "bold"
+    },
+    button: {
+        alignItems: "center",
+        justifyContent: "center",
+
+        padding: 10,
+        marginTop: 7 ,
+
+        borderRadius: 20,
+        backgroundColor: "#722471",
+        width: "10%"
+    },
+    buttonText: {
+        fontSize: 15,
+        color: "#fff"
+    }
+
+})*/
