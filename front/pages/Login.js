@@ -45,7 +45,7 @@ export function Login({navigation, route}) {
             password: password,
         };
 
-        fetch('http://localhost:9001/login', {
+        fetch('http://localhost:9002/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -54,9 +54,9 @@ export function Login({navigation, route}) {
         })
             .then(response => {
                 console.log(response);
-                if (response.ok) { // Assuming the server sends back a JSON response with a loginSuccess field
+                if (response.ok) {
                     console.log('Login successsssssssssssssssssssssssssssssssssssssssssssssssful');
-                    navigation.navigate('Home');
+                    navigation.navigate('UnlockedScreen');
                 } else {
                     console.log('Login failed');
                     // Show an error message to the user
