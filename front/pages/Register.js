@@ -9,26 +9,26 @@ export function Register( {navigation, route}) {
     const [surname, setSurname] = useState('');
     const [serviceName, setServiceName] = useState('');
     const [password, setPassword] = useState('');
-    const [Username, setUsername] = useState('');
-    const [Address, setAddress] = useState('');
+    const [username, setUsername] = useState('');
+    const [domicilio, setDomicilio] = useState('');
     const handleRegister = () => {
         console.log("Attempting to register:", email, password);
 
         // Dependiendo del userType, se guarda info distinta
         const requestBody = userType === 'driver' ? {
+            username: username,
             email: email,
-            username: Username,
-            password: password,
             name: name,
             surname: surname,
-            address: Address,
+            password: password,
+            domicilio: domicilio,
         } : {
-            email: email,
             username: serviceName,
+            email: email,
             password: password,
         };
 
-        fetch('http://localhost:9001/register', {
+        fetch('http://localhost:8082/register', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -61,7 +61,7 @@ export function Register( {navigation, route}) {
                     <TextInput
                         style={styles.input}
                         placeholder="userName"
-                        value={Username}
+                        value={username}
                         onChangeText={setUsername}
                     />
                     <TextInput
@@ -79,8 +79,8 @@ export function Register( {navigation, route}) {
                     <TextInput
                         style={styles.input}
                         placeholder="address"
-                        value={Address}
-                        onChangeText={setAddress}
+                        value={domicilio}
+                        onChangeText={setDomicilio}
                     />
                 </>
             )}
