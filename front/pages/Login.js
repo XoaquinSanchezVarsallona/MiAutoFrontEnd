@@ -7,36 +7,7 @@ export function Login({navigation, route}) {
     const [password, setPassword] = useState('');
 
     // Función que se ejecuta cuando se presiona el botón de "Log In"
-    //agarra el mail y password y manda un HTTP POST request al backend.
-   /*const handleLogin = async () => {
-        try {
-            // Change the URL to your backend endpoint that handles login
-            //desde este port manda el request al backend.
-            let response = await fetch('http://localhost:9001/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    email: email,
-                    password: password,
-                    userType: userType,
-                }),
-            });
-            let json = await response.json(); //espera la respuesta del backend
-            if (response.ok) {
-                console.log("te registraste bien pa")
-                navigation.navigate('UnlockedScreen');
-            } else {
-                // si status no aprobado.
-                Alert.alert("Login Failed", json.message || "User not found");
-            }
-        } catch (error) {
-            // si falló la conexión con el backend-localhost.
-            Alert.alert("Network error", "Unable to connect to the server");
-        }
-    };*/
-
+    // Agarra el mail y password y manda un HTTP POST request al backend.
     const handleLogin = () => {
         console.log("Attempting to login with email:", email);
 
@@ -55,7 +26,7 @@ export function Login({navigation, route}) {
             .then(response => {
                 console.log(response);
                 if (response.ok) {
-                    console.log('Login successsssssssssssssssssssssssssssssssssssssssssssssssful');
+                    console.log('Login successful');
                     navigation.navigate('UnlockedScreen');
                 } else {
                     console.log('Login failed');
