@@ -1,4 +1,4 @@
-import {Pressable, StyleSheet, Text, TextInput, View} from "react-native";
+import {ImageBackground, Pressable, StyleSheet, Text, TextInput, View} from "react-native";
 import {useState} from "react";
 
 export function Register( {navigation, route}) {
@@ -54,7 +54,7 @@ export function Register( {navigation, route}) {
 
     // Dependiendo si es driver o service, solicito información distinta.
     return (
-        <View style={styles.container}>
+        <ImageBackground source={require('../assets/BackgroundLocked.jpg')} style={styles.container}>
             <Text style={styles.title}>Register as {userType}</Text>
             {userType === 'driver' && (
                 <>
@@ -109,7 +109,7 @@ export function Register( {navigation, route}) {
             <Pressable style={styles.button} onPress={handleRegister}>
                 <Text style={styles.buttonText}>Register</Text>
             </Pressable>
-        </View>
+        </ImageBackground>
     );
 }
 
@@ -123,17 +123,19 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 24,
         marginBottom: 20,
-    },
-    input: {
-        width: '100%',
+        color: 'white',
+    },input: {
+        width: '25%',
         borderWidth: 1,
         borderColor: 'gray',
         padding: 10,
         marginBottom: 10,
+        color: 'white',
     },
     button: {
-        width: '100%',
-        backgroundColor: '#507cca',
+        width: '10%',
+        borderColor: 'gray',
+        borderWidth: 3,
         padding: 10,
         alignItems: 'center',
         justifyContent: 'center',

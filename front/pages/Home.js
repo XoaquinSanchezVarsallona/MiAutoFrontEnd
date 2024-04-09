@@ -1,9 +1,9 @@
-import {StyleSheet, View, Text, Button, Pressable} from 'react-native';
+import {StyleSheet, View, Text, Button, Pressable, ImageBackground} from 'react-native';
 import StyledButton from "../components/StyledButton";
 
 export function Home({ navigation }) {
     return (
-        <View style={styles.container}>
+        <ImageBackground source={require('../assets/BackgroundLocked.jpg')} style={styles.container}>
             <Text style={styles.title}>Login as</Text>
             <View style={styles.buttonContainer}>
                 <StyledButton
@@ -15,7 +15,7 @@ export function Home({ navigation }) {
                     onPress={() => navigation.navigate('Login', { userType: 'service' })}
                 />
             </View>
-        </View>
+        </ImageBackground>
     );
 }
 
@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
     },
     title: {
         fontSize: 24,
-        color: 'black',
+        color: 'white',
         marginBottom: 30,
     },
     button: {
