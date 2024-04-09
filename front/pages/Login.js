@@ -14,6 +14,7 @@ export function Login({navigation, route}) {
         const requestBody = {
             email: email,  // Assuming you're using email and password to log in
             password: password,
+            userType: userType,
         };
 
         fetch('http://localhost:9002/login', {
@@ -36,7 +37,7 @@ export function Login({navigation, route}) {
             })
             .catch((error) => {
                 console.error('Error:', error);
-                alert('An error occurred during login. Please try again.');
+                alert(error.message);
             });
     };
 

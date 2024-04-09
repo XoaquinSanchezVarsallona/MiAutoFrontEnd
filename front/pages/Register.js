@@ -22,10 +22,15 @@ export function Register( {navigation, route}) {
             surname: surname,
             password: password,
             domicilio: domicilio,
+            usertype: userType,
         } : {
             username: serviceName,
             email: email,
+            name: "",
+            surname: "",
             password: password,
+            domicilio: "",
+            usertype: userType,
         };
 
         fetch('http://localhost:9002/register', {
@@ -38,7 +43,13 @@ export function Register( {navigation, route}) {
             .then(response => {
                 if (response.ok) { // Si se guarda bien en la base de datos, se desbloquea la pantalla
                     console.log('Registration successful');
-                    navigation.navigate('UnlockedScreen', { userType });
+
+                    if (userType === 'driver') {
+                        navigation.navigate('UnlockedScreen', { userType });
+                    } else if (userType === 'service') {
+                        navigation.navigate('UnlockedScreen', { userType });
+                    }
+
                 } else { // Si no se guarda bien, no se desbloquea la pantalla y se muestra un mensaje de error
                     console.log('Registration failed');
                     // Show an error message to the user
@@ -47,7 +58,7 @@ export function Register( {navigation, route}) {
             })
             .catch((error) => {
                 console.error('Error:', error);
-                alert('An error occurred. Please try again.');
+                alert(error.message);
             });
     };
 
