@@ -30,9 +30,10 @@ export function Login({navigation, route}) {
                     console.log('Login successful');
                     navigation.navigate('UnlockedScreen');
                 } else {
-                    console.log('Login failed');
+                    //console.log('Login failed');
                     // Show an error message to the user
-                    alert('Login failed. Please check your credentials and try again.');
+                    //alert('Login failed. Please check your credentials and try again.');
+                    return response.text().then(text => { throw new Error(text); });
                 }
             })
             .catch((error) => {

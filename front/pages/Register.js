@@ -51,9 +51,10 @@ export function Register( {navigation, route}) {
                     }
 
                 } else { // Si no se guarda bien, no se desbloquea la pantalla y se muestra un mensaje de error
-                    console.log('Registration failed');
+                    //console.log('Registration failed');
                     // Show an error message to the user
-                    alert('Registration failed. Please try again.');
+                    //alert('Registration failed. Please try again.');
+                    return response.text().then(text => { throw new Error(text); });
                 }
             })
             .catch((error) => {
