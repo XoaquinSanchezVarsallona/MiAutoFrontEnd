@@ -1,12 +1,23 @@
 import React from 'react';
-import { StyleSheet, View, Text, Button } from 'react-native';
+import {StyleSheet, View, Text, ImageBackground} from 'react-native';
+import StyledButton from "../../components/StyledButton";
 
 export function VehiclesScreen({ navigation }) {
     return (
-        <View style={styles.container}>
-            <Text style={styles.title}>MIAUTO</Text>
-            <Text style={styles.title}>WELCOME TO VEHICLES</Text>
-        </View>
+        <ImageBackground source={require('../../assets/BackgroundUnlocked.jpg')} style={styles.container}>
+            <View style={styles.headerContainer}>
+                <Text style={styles.title}>MIAUTO</Text>
+                <Text style={styles.title}>WELCOME TO ALERTS</Text>
+                <Text style={styles.headerTitle}>ACA TENDRÍAN QUE APARECER TODOS LOS AUTOS DEL SERVICE</Text>
+                <View style={styles.buttonRow}>
+                    <StyledButton
+                        icon={require('../../assets/add.png')}
+                        onPress={() => navigation.navigate('AddNewVehicle' )}
+                        />
+                    <Text style={styles.title}>Agregar un nuevo vehículo</Text>
+                    </View>
+            </View>
+        </ImageBackground>
     );
 }
 
@@ -20,5 +31,10 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 24,
         marginBottom: 30,
+    },
+    buttonRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        width: '100%',
     },
 });

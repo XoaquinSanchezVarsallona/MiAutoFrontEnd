@@ -12,7 +12,7 @@ export function Login({navigation, route}) {
         console.log("Attempting to login with email:", email);
 
         const requestBody = {
-            email: email,  // Assuming you're using email and password to log in
+            email: email,
             password: password,
             userType: userType,
         };

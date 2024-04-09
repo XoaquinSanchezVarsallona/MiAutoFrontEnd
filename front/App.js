@@ -7,8 +7,9 @@ import {Home} from "./pages/Home";
 import {UnlockedScreenDriver} from "./pages/driverScreens/UnlockedScreenDriver";
 import {AlertsScreen} from "./pages/driverScreens/AlertsScreen";
 import {ConfigurationScreen} from "./pages/driverScreens/ConfigurationScreen";
-import {ProfileScreen} from "./pages/driverScreens/ProfileScreen";
+import {FamilyProfile} from "./pages/driverScreens/FamilyProfile";
 import {VehiclesScreen} from "./pages/driverScreens/VehiclesScreen";
+import {AddNewVehicle} from "./pages/driverScreens/AddNewVehicle";
 export default function App() {
     const Stack = createNativeStackNavigator(); //used to configure the screens
 
@@ -21,8 +22,9 @@ export default function App() {
                 <Stack.Screen name="UnlockedScreen" component={UnlockedScreenDriver}/>
                 <Stack.Screen name="AlertsScreen" component={AlertsScreen}/>
                 <Stack.Screen name="ConfigurationScreen" component={ConfigurationScreen}/>
-                <Stack.Screen name="ProfileScreen" component={ProfileScreen}/>
+                <Stack.Screen name="FamilyProfile" component={FamilyProfile}/>
                 <Stack.Screen name="VehiclesScreen" component={VehiclesScreen}/>
+                <Stack.Screen name="AddNewVehicle" component={AddNewVehicle}/>
 
             </Stack.Navigator>
         </NavigationContainer>
