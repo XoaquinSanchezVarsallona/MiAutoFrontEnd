@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, TextInput, Text, StyleSheet, Pressable, Alert } from 'react-native';
+import {TextInput, Text, StyleSheet, Pressable, ImageBackground, View} from 'react-native';
 
 export function Login({navigation, route}) {
     const {userType} = route.params;
@@ -44,7 +44,7 @@ export function Login({navigation, route}) {
 
 
     return (
-        <View style={styles.container}>
+        <ImageBackground source={require('../assets/BackgroundLocked.jpg')} style={styles.container}>
             <Text style={styles.title}>Login</Text>
             <TextInput
                 style={styles.input}
@@ -59,14 +59,17 @@ export function Login({navigation, route}) {
                 value={password}
                 onChangeText={setPassword}
             />
-            {/*ACA IRIA FUNCIÓN QUE LOGINEE AL USUARIO EN LA BDD HSQLDB*/}
+            {/*Función que hace login del usuario en la bd*/}
             <Pressable style={styles.button} onPress={handleLogin}>
                 <Text style={styles.buttonText}>Log In</Text>
             </Pressable>
-            <Pressable style={styles.button} onPress={() => navigation.navigate('Register', { userType })}>
-                <Text style={styles.buttonText}>Register</Text>
-            </Pressable>
-        </View>
+            <View style={{ flexDirection: 'row' }}>
+                <Text style={styles.littletext}>Don't have an account? </Text>
+                <Pressable onPress={() => navigation.navigate('Register', { userType })}>
+                    <Text style={styles.linkText}>Register here</Text>
+                </Pressable>
+            </View>
+        </ImageBackground>
     );
 
 }
@@ -80,17 +83,25 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 24,
         marginBottom: 20,
+        color: 'white',
+    },
+    littletext: {
+        fontSize: 20,
+        margin: 20,
+        color: 'white',
     },
     input: {
-        width: '100%',
+        width: '25%',
         borderWidth: 1,
         borderColor: 'gray',
         padding: 10,
         marginBottom: 10,
+        color: 'white',
     },
     button: {
-        width: '100%',
-        backgroundColor: '#507cca',
+        width: '10%',
+        borderColor: 'gray',
+        borderWidth: 3,
         padding: 10,
         alignItems: 'center',
         justifyContent: 'center',
@@ -100,80 +111,9 @@ const styles = StyleSheet.create({
     buttonText: {
         color: 'white',
     },
+    linkText: {
+        fontSize: 20,
+        margin: 20,
+        color: 'blue',
+    },
 });
-
-
-
-
-
-
-/*import {Pressable, Text, TextInput, View} from "react-native";
-import {StyleSheet} from "react-native";
-import touchableOpacity from "react-native-web/src/exports/TouchableOpacity";
-export function Login({navigation}) {
-    return (
-        <View style={styles.container}>
-            <Text style={styles.title}>Log in</Text>
-            <TextInput
-                style={styles.textInput}
-                placeholderTextColor={'#fff'}
-                placeholder={'Enter your email'}
-            />
-            <TextInput
-                style={styles.textInput}
-                placeholder={'Enter your password'}
-                placeholderTextColor={'#fff'}
-                secureTextEntry={true}
-            />
-            {/* Esto se tiene que cambiar despues para que se consiga mandar un mail, etc}
-            <Text >Forgot your password?</Text>
-            <Pressable
-                title={"Submit"}
-                style={styles.button}
-                onPress={ () => {/*Se tiene que hacer la conexion a base para validar ese mail con esa contraseña}}
-            >
-                <Text style={styles.buttonText}>Submit</Text>
-            </Pressable>
-
-        </View>
-    );
-}
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        alignContent: "center",
-        alignItems: "center"
-    },
-    textInput: {
-        borderRadius: 20,
-        borderBottomWidth: 2,
-        width: "80%",
-
-        borderColor: 'grey' ,
-        backgroundColor: "#722471",
-
-        padding: 10,
-        marginTop: 15,
-
-    },
-    title:{
-        fontSize: 30,
-        fontWeight: "bold"
-    },
-    button: {
-        alignItems: "center",
-        justifyContent: "center",
-
-        padding: 10,
-        marginTop: 7 ,
-
-        borderRadius: 20,
-        backgroundColor: "#722471",
-        width: "10%"
-    },
-    buttonText: {
-        fontSize: 15,
-        color: "#fff"
-    }
-
-})*/
