@@ -16,10 +16,9 @@ export function UnlockedScreenDriver({ navigation, route }) {
         })
             .then(response => response.json())
             .then(data => setUsername(data.username))
-            .catch(error => console.error('Error:', error));
+            .catch(error => console.error('Error al obtener username:', error));
     }, [email]);  // useEffect will re-run when email changes
 
-    console.log("Username: " + username)
     // FetchFamilias busca en base a un username todas sus familias
     const fetchFamilias = async (username) => {
         try {
@@ -33,11 +32,13 @@ export function UnlockedScreenDriver({ navigation, route }) {
             console.error('Error:', error);
         }
     };
+    console.log(fetchFamilias(username));
 
     return (
         <ImageBackground source={require('../../assets/BackgroundUnlocked.jpg')} style={styles.container}>
             <View style={styles.headerContainer}>
                 <Text style={styles.headerTitle}>MIAUTO</Text>
+                <Text style={styles.subTitle}>Welcome { username } </Text>
             </View>
 
             <StyledButton
@@ -76,6 +77,11 @@ const styles = StyleSheet.create({
     headerTitle: {
         fontSize: 100, // Adjust the font size to match your design
         color: '#FFFFFF', // Adjust the color to fit your theme
+        fontWeight: 'bold',
+    },
+    subTitle: {
+        fontSize: 25,
+        color: '#FFFFFF',
         fontWeight: 'bold',
     },
     icon: {
