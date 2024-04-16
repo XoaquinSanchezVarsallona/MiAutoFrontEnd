@@ -6,7 +6,7 @@ export function AddNewVehicle({ navigation }) {
         <ImageBackground source={require('../../assets/BackgroundUnlocked.jpg')} style={styles.container}>
             <View style={styles.headerContainer}>
                 <Text style={styles.title}>MIAUTO</Text>
-                <Text style={styles.title}>WELCOME TO ALERTS</Text>
+                <Text style={styles.title}>WELCOME TO ADD NEW VEHICLE</Text>
                 </View>
         </ImageBackground>
 );

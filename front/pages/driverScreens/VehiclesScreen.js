@@ -15,7 +15,7 @@ export function VehiclesScreen({ navigation }) {
                         onPress={() => navigation.navigate('AddNewVehicle' )}
                         />
                     <Text style={styles.title}>Agregar un nuevo vehículo</Text>
-                    </View>
+                </View>
             </View>
         </ImageBackground>
     );

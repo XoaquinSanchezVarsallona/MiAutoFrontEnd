@@ -28,11 +28,8 @@ export function Login({navigation, route}) {
                 console.log(response);
                 if (response.ok) {
                     console.log('Login successful');
-                    navigation.navigate('UnlockedScreen');
-                } else {
-                    //console.log('Login failed');
-                    // Show an error message to the user
-                    //alert('Login failed. Please check your credentials and try again.');
+                    navigation.navigate('UnlockedScreen', { email: requestBody.email });
+                } else { // Login failed
                     return response.text().then(text => { throw new Error(text); });
                 }
             })

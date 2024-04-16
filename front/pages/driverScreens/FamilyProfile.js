@@ -1,12 +1,18 @@
 import React from 'react';
-import {StyleSheet, View, Text, Button, ImageBackground} from 'react-native';
+import {StyleSheet, View, Text, ImageBackground} from 'react-native';
+import StyledButton from "../../components/StyledButton";
 
 export function FamilyProfile({ navigation }) {
+
     return (
         <ImageBackground source={require('../../assets/BackgroundUnlocked.jpg')} style={styles.container}>
             <View style={styles.headerContainer}>
                 <Text style={styles.title}>MIAUTO</Text>
-                <Text style={styles.title}>WELCOME TO ALERTS</Text>
+                <Text style={styles.title}>WELCOME TO FAMILIES</Text>
+                <StyledButton
+                    icon={require('../../assets/add.png')}
+                    onPress={() => navigation.navigate('AddNewFamily' )}
+                />
             </View>
         </ImageBackground>
     );
