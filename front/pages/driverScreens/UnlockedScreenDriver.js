@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import { StyleSheet, View, Text, ImageBackground } from 'react-native';
 import StyledButton from "../../components/StyledButton";
 
-export function UnlockedScreenDriver({ navigation, route }) {
+export function UnlockedScreenDriver({ navigation, route, children }) {
     const { email } = route.params;
     const [username, setUsername] = useState('');
 
@@ -40,6 +40,8 @@ export function UnlockedScreenDriver({ navigation, route }) {
                 <Text style={styles.headerTitle}>MIAUTO</Text>
                 <Text style={styles.subTitle}>Welcome { username } </Text>
             </View>
+
+            {children}
 
             <StyledButton
                 icon={require('../../assets/configuration.png')}
