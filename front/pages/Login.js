@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, {useContext, useState, useEffect } from 'react';
 import {TextInput, Text, StyleSheet, Pressable, ImageBackground, View} from 'react-native';
+import {AuthContext} from "./AuthContext";
 
 export function Login({navigation, route}) {
     const {userType} = route.params;
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const { signIn, userToken } = useContext(AuthContext);
 
     // Función que se ejecuta cuando se presiona el botón de "Log In"
     // Agarra el mail y password y manda un HTTP POST request al backend.
@@ -25,19 +27,37 @@ export function Login({navigation, route}) {
             body: JSON.stringify(requestBody),
         })
             .then(response => {
-                console.log(response);
-                if (response.ok) {
-                    console.log('Login successful');
-                    navigation.navigate('UnlockedScreen', { email: requestBody.email });
-                } else { // Login failed
+                if (!response.ok) {
                     return response.text().then(text => { throw new Error(text); });
                 }
+                return response.json();
             })
-            .catch((error) => {
-                console.error('Error:', error);
-                alert(error.message);
+            .then(data => {
+                if (data.token) {
+                    console.log('Login successful with token:', data.token);
+                    return signIn(data.token); // signIn now returns a promise
+                } else {
+                    throw new Error('Token not found in response');
+                }
+            })
+            .then(() => {
+                // Only navigate after signIn has completed
+                // The useEffect hook will handle the navigation now
+            })
+            .catch(error => {
+                console.error('Error during login:', error);
+                alert('Login error: ' + error.message);
             });
     };
+
+// useEffect to navigate after signIn
+    useEffect(() => {
+        if (userToken) {
+            console.log('userToken has changed:', userToken);
+            navigation.navigate('UnlockedScreenDriver');
+        }
+    }, [userToken, navigation]);
+
 
 
     return (

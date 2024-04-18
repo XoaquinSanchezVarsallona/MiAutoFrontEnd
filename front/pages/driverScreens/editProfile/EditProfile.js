@@ -1,31 +1,42 @@
-import React, { useState } from 'react';
+import React, {useContext, useState} from 'react';
 import { StyleSheet, View, Text, ImageBackground, ScrollView, TextInput } from 'react-native';
 import StyledButton from "../../../components/StyledButton";
+import jwtDecode from 'jwt-decode'; //importo decoder de token
+import { AuthContext } from "../../AuthContext"; //importo authContext
+
+
+
 
 const icons = {
-    'Edit Profile': require('../../../assets/pencil.png'),
-    'Edit Domicilio': require('../../../assets/pencil.png'),
-    'Edit Name': require('../../../assets/pencil.png'),
-    'Edit Password': require('../../../assets/pencil.png'),
-    'Edit Email': require('../../../assets/pencil.png'),
-    'Edit Surname': require('../../../assets/pencil.png'),
-    'Edit Username': require('../../../assets/pencil.png')
+    'Edit profile': require('../../../assets/pencil.png'),
+    'Edit domicilio': require('../../../assets/pencil.png'),
+    'Edit name': require('../../../assets/pencil.png'),
+    'Edit password': require('../../../assets/pencil.png'),
+    'Edit email': require('../../../assets/pencil.png'),
+    'Edit surname': require('../../../assets/pencil.png'),
+    'Edit username': require('../../../assets/pencil.png')
 };
 
 const fields = [
-    'Profile', 'Domicilio', 'Name', 'Password', 'Email', 'Surname', 'Username'
+    'profile', 'domicilio', 'name', 'password', 'email', 'surname', 'username'
 ];
 
 export function EditProfile({ navigation }) {
+    const { userToken } = useContext(AuthContext); // agarro el token del authContext (si esta loggineado, lo va a tener)
+    const decodedToken = jwtDecode(userToken); //lo decodeo ya que está tokenizado
+    console.log(decodedToken);
+    const userID = decodedToken.id; //agarro el id del token
+
     //esto tendrá los valores de los inputs
     const [inputs, setInputs] = useState({
-        Profile: '',
-        Domicilio: '',
-        Name: '',
-        Password: '',
-        Email: '',
-        Surname: '',
-        Username: '',
+        userID: userID,
+        profile: '',
+        domicilio: '',
+        name: '',
+        password: '',
+        email: '',
+        surname: '',
+        username: '',
     });
 
     //función que se encarga de cambiar el valor de los inputs en tiempo real
@@ -39,6 +50,7 @@ export function EditProfile({ navigation }) {
     //función que se encarga de enviar los datos al backend, y muestra un mensaje de éxito o error
     const handleSave = async (field) => {
         const newValue = inputs[field];
+        const userID = inputs.userID;
         console.log(`Attempting to save ${field} with value: ${newValue}`);
 
 
@@ -51,6 +63,7 @@ export function EditProfile({ navigation }) {
                     //'Authorization': 'Bearer yourToken', // Add your auth token or other authentication method
                 },
                 body: JSON.stringify({
+                    userID: userID,
                     field: field,
                     value: newValue,
                 }),
