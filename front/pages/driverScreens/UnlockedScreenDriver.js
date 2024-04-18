@@ -5,34 +5,24 @@ import StyledButton from "../../components/StyledButton";
 export function UnlockedScreenDriver({ navigation, route }) {
     const { email } = route.params;
     const [username, setUsername] = useState('');
+    const [familias, setFamilies] = useState([]);
 
     // UseEffect tiene el objetivo de obtener el username en base al email
     useEffect(() => {
-        fetch(`http://localhost:9002/username/${email}`, {
+        // Fetch the username based on the email
+        fetch(`http://localhost:9002/user/${email}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
             },
         })
             .then(response => response.json())
-            .then(data => setUsername(data.username))
-            .catch(error => console.error('Error al obtener username:', error));
+            .then(data => {
+                setUsername(data.username);
+                setFamilies(data.familias)
+            })
+            .catch(error => console.error('Error:', error));
     }, [email]);  // useEffect will re-run when email changes
-
-    // FetchFamilias busca en base a un username todas sus familias
-    const fetchFamilias = async (username) => {
-        try {
-            const response = await fetch(`http://localhost:9002/username/${username}`);
-            if (response.ok) {
-                return await response.json(); // Returns the list of families
-            } else {
-                console.log('Failed to fetch families')
-            }
-        } catch (error) {
-            console.error('Error:', error);
-        }
-    };
-    console.log(fetchFamilias(username));
 
     return (
         <ImageBackground source={require('../../assets/BackgroundUnlocked.jpg')} style={styles.container}>
@@ -59,7 +49,13 @@ export function UnlockedScreenDriver({ navigation, route }) {
 
                 <StyledButton
                     icon={require('../../assets/car.png')}
-                    onPress={() => navigation.navigate('VehiclesScreen' )}
+                    onPress={() => {
+                        if (familias.length === 0) {
+                            navigation.navigate('VehiclesScreen', { username: username });
+                        } else {
+                            navigation.navigate('FamilyVehiclesScreen', { families: familias });
+                        }
+                    }}
                 />
             </View>
         </ImageBackground>

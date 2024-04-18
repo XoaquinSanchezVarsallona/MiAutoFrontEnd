@@ -2,13 +2,15 @@ import React from 'react';
 import {StyleSheet, View, Text, ImageBackground} from 'react-native';
 import StyledButton from "../../components/StyledButton";
 
-export function VehiclesScreen({ navigation }) {
+export function VehiclesScreen({ navigation, route }) {
+    const { username } = route.params;
+
     return (
         <ImageBackground source={require('../../assets/BackgroundUnlocked.jpg')} style={styles.container}>
             <View style={styles.headerContainer}>
                 <Text style={styles.title}>MIAUTO</Text>
                 <Text style={styles.title}>WELCOME TO ALERTS</Text>
-                <Text style={styles.headerTitle}>ACA TENDRÍAN QUE APARECER TODOS LOS AUTOS DEL SERVICE</Text>
+                <Text style={styles.headerTitle}>ACA TENDRÍAN QUE APARECER TODOS LOS AUTOS DE LA FAMILIA</Text>
                 <View style={styles.buttonRow}>
                     <StyledButton
                         icon={require('../../assets/add.png')}

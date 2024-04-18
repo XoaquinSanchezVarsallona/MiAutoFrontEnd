@@ -50,15 +50,12 @@ export function Register( {navigation, route}) {
                         navigation.navigate('UnlockedScreen', { userType });
                     }
 
-                } else { // Si no se guarda bien, no se desbloquea la pantalla y se muestra un mensaje de error
-                    //console.log('Registration failed');
-                    // Show an error message to the user
-                    //alert('Registration failed. Please try again.');
+                } else { // Si falla, se muestra un mensaje de error
                     return response.text().then(text => { throw new Error(text); });
                 }
             })
             .catch((error) => {
-                console.error('Error:', error);
+                console.error('Caught error:', error);
                 alert(error.message);
             });
     };
