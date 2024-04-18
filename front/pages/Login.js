@@ -23,6 +23,7 @@ export function Login({navigation, route}) {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                //'token': localStorage.getItem('userToken'),
             },
             body: JSON.stringify(requestBody),
         })
@@ -34,15 +35,15 @@ export function Login({navigation, route}) {
             })
             .then(data => {
                 if (data.token) {
+
                     console.log('Login successful with token:', data.token);
-                    return signIn(data.token); // signIn now returns a promise
+                    signIn(data.token);
+                    console.log('Sign in complete, waiting for userToken update');
+                    navigation.navigate('UnlockedScreenDriver', { email });
+
                 } else {
                     throw new Error('Token not found in response');
                 }
-            })
-            .then(() => {
-                // Only navigate after signIn has completed
-                // The useEffect hook will handle the navigation now
             })
             .catch(error => {
                 console.error('Error during login:', error);
@@ -52,11 +53,17 @@ export function Login({navigation, route}) {
 
 // useEffect to navigate after signIn
     useEffect(() => {
+        console.log('Effect userToken:', userToken);
         if (userToken) {
             console.log('userToken has changed:', userToken);
             navigation.navigate('UnlockedScreenDriver');
         }
     }, [userToken, navigation]);
+
+    // New useEffect added to log the current userToken state
+    useEffect(() => {
+        console.log('Current userToken state:', userToken);
+    }, [userToken]);
 
 
 

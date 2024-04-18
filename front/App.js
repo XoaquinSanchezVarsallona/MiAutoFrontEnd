@@ -17,19 +17,14 @@ import {AuthContext, AuthProvider} from "./pages/AuthContext";
 const Stack = createNativeStackNavigator(); //used to configure the screens
 
 function AppNavigation() {
-    const { userToken } = useContext(AuthContext);
+    //const { userToken } = useContext(AuthContext);
 
     return (
         <NavigationContainer>
             <Stack.Navigator initialRouteName="Home">
-                {userToken == null ? (
-                    <>
                         <Stack.Screen name="Home" component={Home}/>
                         <Stack.Screen name="Login" component={Login}/>
                         <Stack.Screen name="Register" component={Register}/>
-                    </>
-                ) : (
-                    <>
                         <Stack.Screen name="UnlockedScreenDriver" component={UnlockedScreenDriver}/>
                         <Stack.Screen name="AlertsScreen" component={AlertsScreen}/>
                         <Stack.Screen name="ConfigurationScreen" component={ConfigurationScreen}/>
@@ -38,8 +33,6 @@ function AppNavigation() {
                         <Stack.Screen name="AddNewVehicle" component={AddNewVehicle}/>
                         <Stack.Screen name="AddNewFamily" component={AddNewFamily}/>
                         <Stack.Screen name="EditProfile" component={EditProfile}/>
-                    </>
-                )}
             </Stack.Navigator>
         </NavigationContainer>
     );

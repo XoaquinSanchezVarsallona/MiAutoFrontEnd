@@ -6,40 +6,36 @@ export const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
     const [userToken, setUserToken] = useState(null);
 
+
     useEffect(() => {
-        // Check the token on app start and set it if one exists
         const bootstrapAsync = async () => {
-            let token;
             try {
-                //si todavia no pasaron las dos horas, lo va a encontrar y el usuario no tendrá q loggearse de nuevo
-                token = await AsyncStorage.getItem('userToken');
+                const token = await AsyncStorage.getItem('userToken');
+                if (token) {
+                    setUserToken(token);
+                    console.log('Token loaded from AsyncStorage:', token);
+                }
             } catch (e) {
-                console.error('Failed to load token', e);
-            }
-            if (token) {
-                setUserToken(token);
+                console.error('Failed to load token:', e);
             }
         };
 
-        bootstrapAsync().then(r => console.log('Token loaded:', r));
-    }, []);
+        bootstrapAsync();
+    }, [userToken]);
 
     const authContext = {
-        signIn: (token) => {
-            return new Promise((resolve) => {
-                setUserToken(token); // This will asynchronously update the userToken
-                AsyncStorage.setItem('userToken', token).then(() => {
-                    console.log('Token stored in AsyncStorage:', token);
-                    // Setup timeout to clean up the token later
-                    setTimeout(async () => {
-                        console.log('Token expired, user signed out.');
-                        setUserToken(null);
-                        await AsyncStorage.removeItem('userToken');
-                    }, 1000 * 60 * 60 * 2); // 2 hours
-                    resolve(); // Resolve the promise after setting the token
-                });
-            });
-        },
+        signIn: async (token) => {
+            await AsyncStorage.setItem('userToken', token); // Use await to ensure this completes.
+            setUserToken(token); // This updates the state asynchronously.
+            console.log('Token stored in AsyncStorage:', token);
+
+            // Set a timer for automatic sign-out (Consider moving this to a more centralized location)
+            setTimeout(async () => {
+                console.log('Token expired, user signed out.');
+                setUserToken(null);
+                await AsyncStorage.removeItem('userToken');
+            }, 1000 * 60 * 60 * 2); // 2 hours
+        }
         // ... other context methods
     };
 

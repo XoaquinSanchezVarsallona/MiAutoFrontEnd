@@ -2,35 +2,43 @@ import React, {useContext, useState} from 'react';
 import { StyleSheet, View, Text, ImageBackground, ScrollView, TextInput } from 'react-native';
 import StyledButton from "../../../components/StyledButton";
 import jwtDecode from 'jwt-decode'; //importo decoder de token
-import { AuthContext } from "../../AuthContext"; //importo authContext
+import { AuthContext } from "../../AuthContext";
+import asyncStorage from "@react-native-async-storage/async-storage/src/AsyncStorage"; //importo authContext
 
 
 
 
 const icons = {
-    'Edit profile': require('../../../assets/pencil.png'),
-    'Edit domicilio': require('../../../assets/pencil.png'),
+    'Edit username': require('../../../assets/pencil.png'),
     'Edit name': require('../../../assets/pencil.png'),
     'Edit password': require('../../../assets/pencil.png'),
     'Edit email': require('../../../assets/pencil.png'),
     'Edit surname': require('../../../assets/pencil.png'),
-    'Edit username': require('../../../assets/pencil.png')
+    'Edit domicilio': require('../../../assets/pencil.png'),
+
 };
 
 const fields = [
-    'profile', 'domicilio', 'name', 'password', 'email', 'surname', 'username'
+    'username', 'domicilio', 'name', 'password', 'email', 'surname'
 ];
 
 export function EditProfile({ navigation }) {
-    const { userToken } = useContext(AuthContext); // agarro el token del authContext (si esta loggineado, lo va a tener)
-    const decodedToken = jwtDecode(userToken); //lo decodeo ya que está tokenizado
-    console.log(decodedToken);
-    const userID = decodedToken.id; //agarro el id del token
+    const userToken  = asyncStorage.getItem("userToken"); // agarro el token del authContext (si esta loggineado, lo va a tener)
+
+    //no es seguro -> hacer en backend
+    let decodedToken;
+    let userID;
+
+    try {
+        decodedToken = jwtDecode(userToken); // decode the token
+        userID = decodedToken.id; // get the id from the token
+    } catch (error) {
+        console.error('Error decoding token:', error);
+    }
 
     //esto tendrá los valores de los inputs
     const [inputs, setInputs] = useState({
         userID: userID,
-        profile: '',
         domicilio: '',
         name: '',
         password: '',
