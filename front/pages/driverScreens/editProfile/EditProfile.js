@@ -1,9 +1,9 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import { StyleSheet, View, Text, ImageBackground, ScrollView, TextInput } from 'react-native';
 import StyledButton from "../../../components/StyledButton";
 import jwtDecode from 'jwt-decode'; //importo decoder de token
 import { AuthContext } from "../../AuthContext";
-import asyncStorage from "@react-native-async-storage/async-storage/src/AsyncStorage"; //importo authContext
+import AsyncStorage from "@react-native-async-storage/async-storage"; //importo authContext
 
 
 
@@ -23,22 +23,12 @@ const fields = [
 ];
 
 export function EditProfile({ navigation }) {
-    const userToken  = asyncStorage.getItem("userToken"); // agarro el token del authContext (si esta loggineado, lo va a tener)
+    //const userToken  = AsyncStorage.getItem("userToken"); // agarro el token del authContext (si esta loggineado, lo va a tener)
 
-    //no es seguro -> hacer en backend
-    let decodedToken;
-    let userID;
-
-    try {
-        decodedToken = jwtDecode(userToken); // decode the token
-        userID = decodedToken.id; // get the id from the token
-    } catch (error) {
-        console.error('Error decoding token:', error);
-    }
 
     //esto tendrá los valores de los inputs
     const [inputs, setInputs] = useState({
-        userID: userID,
+        userID: '',
         domicilio: '',
         name: '',
         password: '',
@@ -46,6 +36,35 @@ export function EditProfile({ navigation }) {
         surname: '',
         username: '',
     });
+
+    useEffect(() => {
+        const loadUserProfile = async () => {
+            const token = await AsyncStorage.getItem('userToken');
+            if (token) {
+                // Send token to your backend to validate and get user details
+                const response = await fetch('http://localhost:9002//validateToken', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json',
+                    },
+                });
+                const data = await response.json();
+                if (response.ok) {
+                    setInputs({
+                        ...inputs,
+                        userID: data.userId,  // Assume your backend sends back the userId
+                        username: data.username, // And any other fields needed
+                    });
+                } else {
+                    console.error('Token validation failed:', data.message);
+                }
+            }
+        };
+
+        loadUserProfile();
+    }, []);
+
 
     //función que se encarga de cambiar el valor de los inputs en tiempo real
     const handleInputChange = (field, value) => {
@@ -58,24 +77,27 @@ export function EditProfile({ navigation }) {
     //función que se encarga de enviar los datos al backend, y muestra un mensaje de éxito o error
     const handleSave = async (field) => {
         const newValue = inputs[field];
-        const userID = inputs.userID;
+        const {userID} = inputs;
         console.log(`Attempting to save ${field} with value: ${newValue}`);
 
 
         try {
-            // Performing a POST request to the API endpoint
+            const token = await AsyncStorage.getItem('userToken');
             const response = await fetch('http://localhost:9002/editProfile', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    //'Authorization': 'Bearer yourToken', // Add your auth token or other authentication method
+                    'Authorization': `Bearer ${token}`,  // Include the JWT
                 },
                 body: JSON.stringify({
-                    userID: userID,
+                    userId: userID,
                     field: field,
                     value: newValue,
                 }),
             });
+
+            console.log('Server response:', response);
+            console.log('token:' + token);
 
             if (!response.ok) {
                 throw new Error('Network response was not ok');
