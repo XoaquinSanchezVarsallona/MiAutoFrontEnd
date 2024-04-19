@@ -39,7 +39,12 @@ export function Login({navigation, route}) {
                     console.log('Login successful with token:', data.token);
                     signIn(data.token);
                     console.log('Sign in complete, waiting for userToken update');
-                    navigation.navigate('UnlockedScreenDriver', { email });
+
+                    //crea una nueva ruta que comienza en la página unlockedScreen, para que no pueda volver al login.
+                    navigation.reset({
+                        index: 0,
+                        routes: [{ name: 'UnlockedScreenDriver', params: { email: email }}],
+                    });
 
                 } else {
                     throw new Error('Token not found in response');
