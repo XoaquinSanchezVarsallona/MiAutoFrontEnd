@@ -45,9 +45,9 @@ export function Register( {navigation, route}) {
                     console.log('Registration successful');
 
                     if (userType === 'driver') {
-                        navigation.navigate('UnlockedScreen', { userType });
+                        navigation.navigate('Login', { userType });
                     } else if (userType === 'service') {
-                        navigation.navigate('UnlockedScreen', { userType });
+                        navigation.navigate('Login', { userType });
                     }
 
                 } else { // Si falla, se muestra un mensaje de error

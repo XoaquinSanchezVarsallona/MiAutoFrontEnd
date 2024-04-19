@@ -11,9 +11,14 @@ import {FamilyProfile} from "./pages/driverScreens/FamilyProfile";
 import {VehiclesScreen} from "./pages/driverScreens/VehiclesScreen";
 import {AddNewVehicle} from "./pages/driverScreens/AddNewVehicle";
 import {AddNewFamily} from "./pages/driverScreens/AddNewFamily";
+import {EditProfile} from "./pages/driverScreens/editProfile/EditProfile";
+import {AuthContext, AuthProvider} from "./pages/AuthContext";
 import {FamilyVehiclesScreen} from "./pages/driverScreens/FamilyVehiclesScreen";
-export default function App() {
-    const Stack = createNativeStackNavigator(); //used to configure the screens
+
+const Stack = createNativeStackNavigator(); //used to configure the screens
+
+function AppNavigation() {
+    //const { userToken } = useContext(AuthContext);
 
     return (
         <NavigationContainer>
@@ -21,7 +26,7 @@ export default function App() {
                 <Stack.Screen name="Home" component={Home}/>
                 <Stack.Screen name="Login" component={Login}/>
                 <Stack.Screen name="Register" component={Register}/>
-                <Stack.Screen name="UnlockedScreen" component={UnlockedScreenDriver}/>
+                <Stack.Screen name="UnlockedScreenDriver" component={UnlockedScreenDriver}/>
                 <Stack.Screen name="AlertsScreen" component={AlertsScreen}/>
                 <Stack.Screen name="ConfigurationScreen" component={ConfigurationScreen}/>
                 <Stack.Screen name="FamilyProfile" component={FamilyProfile}/>
@@ -29,7 +34,16 @@ export default function App() {
                 <Stack.Screen name="AddNewVehicle" component={AddNewVehicle}/>
                 <Stack.Screen name="AddNewFamily" component={AddNewFamily}/>
                 <Stack.Screen name="FamilyVehiclesScreen" component={FamilyVehiclesScreen}/>
+                <Stack.Screen name="EditProfile" component={EditProfile}/>
             </Stack.Navigator>
         </NavigationContainer>
+    );
+}
+
+export default function App() {
+    return (
+        <AuthProvider>
+            <AppNavigation />
+        </AuthProvider>
     );
 }

@@ -1,8 +1,9 @@
 import React, {useEffect, useState} from 'react';
-import { StyleSheet, View, Text, ImageBackground } from 'react-native';
+import {StyleSheet, View, Text, ImageBackground, Button} from 'react-native';
 import StyledButton from "../../components/StyledButton";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export function UnlockedScreenDriver({ navigation, route }) {
+export function UnlockedScreenDriver({ navigation, route, children }) {
     const { email } = route.params;
     const [username, setUsername] = useState('');
     const [familias, setFamilies] = useState([]);
@@ -24,12 +25,30 @@ export function UnlockedScreenDriver({ navigation, route }) {
             .catch(error => console.error('Error:', error));
     }, [email]);  // useEffect will re-run when email changes
 
+    const logout = async () => {
+        try {
+            //elimino el token del storage local
+            await AsyncStorage.removeItem('userToken');
+
+            //chequeo
+            console.log('Token eliminado', AsyncStorage.getItem('userToken'));
+
+            // This resets the stack navigator to the initial route
+            navigation.reset({index: 0, routes: [{ name: 'Home' }],});
+        } catch (error) {
+            console.error('Logout failed:', error);
+        }
+    };
+
+
     return (
         <ImageBackground source={require('../../assets/BackgroundUnlocked.jpg')} style={styles.container}>
-            <View style={styles.headerContainer}>
+            <View style={styles.header}>
                 <Text style={styles.headerTitle}>MIAUTO</Text>
-                <Text style={styles.subTitle}>Welcome { username } </Text>
+                <Button title="Logout" onPress={logout} color="#fff" />
             </View>
+
+            {children}
 
             <StyledButton
                 icon={require('../../assets/configuration.png')}
@@ -67,18 +86,23 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
     },
-    headerContainer: {
-        marginTop: 60, // Adjust the margin to fit your screen layout
+    header: {
+        flexDirection: 'row', // Align items in a row
+        justifyContent: 'space-between', // Space between the title and button
+        alignItems: 'center', // Center items vertically
+        width: '100%', // Take full width to allow space between elements
+        padding: 20, // Add padding for aesthetics
+        paddingTop: 40, // Add top padding to account for status bar height
     },
     headerTitle: {
-        fontSize: 100, // Adjust the font size to match your design
-        color: '#FFFFFF', // Adjust the color to fit your theme
+        fontSize: 24,
         fontWeight: 'bold',
+        color: '#FFFFFF',
     },
     subTitle: {
-        fontSize: 25,
+        fontSize: 18,
         color: '#FFFFFF',
-        fontWeight: 'bold',
+        marginBottom: 10, // Add some space below the subtitle
     },
     icon: {
         width: 100, // Adjust the size as necessary
