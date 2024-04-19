@@ -9,7 +9,7 @@ export function VehiclesScreen({ navigation, route }) {
         <ImageBackground source={require('../../assets/BackgroundUnlocked.jpg')} style={styles.container}>
             <View style={styles.headerContainer}>
                 <Text style={styles.title}>MIAUTO</Text>
-                <Text style={styles.title}>WELCOME TO ALERTS</Text>
+                <Text style={styles.title}>WELCOME TO VEHICLES SCREEN</Text>
                 <Text style={styles.headerTitle}>ACA TENDRÍAN QUE APARECER TODOS LOS AUTOS DE LA FAMILIA</Text>
                 <View style={styles.buttonRow}>
                     <StyledButton
