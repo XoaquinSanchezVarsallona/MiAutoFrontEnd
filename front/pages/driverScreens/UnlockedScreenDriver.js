@@ -4,7 +4,7 @@ import StyledButton from "../../components/StyledButton";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export function UnlockedScreenDriver({ navigation, route, children }) {
-    const { email } = route.params;
+    const { email } = route.params; //
     const [username, setUsername] = useState('');
     const [familias, setFamilies] = useState([]);
 
