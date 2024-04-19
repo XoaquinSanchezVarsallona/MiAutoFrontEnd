@@ -37,6 +37,7 @@ export function UnlockedScreenDriver({ navigation, route, children }) {
 
     const logout = async () => {
         try {
+            //
             //elimino el token del storage local
             await AsyncStorage.removeItem('userToken');
 
