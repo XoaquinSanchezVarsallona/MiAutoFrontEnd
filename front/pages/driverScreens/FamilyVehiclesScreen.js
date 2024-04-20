@@ -1,9 +1,10 @@
 import React, {useEffect} from 'react';
-import {ImageBackground, Pressable, StyleSheet, Text, View} from 'react-native';
+import {Button, ImageBackground, Pressable, StyleSheet, Text, View} from 'react-native';
 
 export function FamilyVehiclesScreen({ navigation, route }) {
-    const { families } = route.params;
     const [familiesData, setFamilies] = React.useState([]);
+    const { families, email } = route.params;
+
 
     // FetchFamilias busca en base a unos ID una familia
     const fetchFamilias = async (familias) => {
@@ -38,17 +39,26 @@ export function FamilyVehiclesScreen({ navigation, route }) {
         <ImageBackground source={require('../../assets/BackgroundUnlocked.jpg')} style={styles.container}>
             <View style={styles.headerContainer}>
                 <Text style={styles.title}>MIAUTO</Text>
-                <Text style={styles.title}>WELCOME TO FAMILY VEHICLE SCREEN</Text>
-                <Text style={styles.headerTitle}>ACA TENDRÍAN QUE APARECER TODAS LAS FAMILIAS Y LUEGO NAVEGAR A LOS AUTOS</Text>{familiesData.map((family, index) => {
-                return (
-                    <Pressable key={index} style={styles.familyContainer} onPress={() => {
-                        // Handle the press event here
-                        console.log(`Pressed: ${family.surname}`);
-                    }}>
-                        <Text style={styles.familyName}>{family.surname}</Text>
-                    </Pressable>
-                );
-            })}
+                <Text style={styles.title}>WELCOME TO FAMILIES CAR'S SCREEN</Text>
+
+                {familiesData.length > 0 ? (
+                    familiesData.map((family, index) => (
+                        family && ( // Check if family is not null
+                            <Pressable
+                                key={index}
+                                style={styles.familyContainer}
+                                onPress={() => {
+                                    console.log(`Pressed: ${family.surname}`);
+                                    //navigation.navigate('FamilyDetailsScreen', { family: family, email: email  });
+                                }}
+                            >
+                                <Text style={styles.familyName}>{family.surname}</Text>
+                            </Pressable>
+                        )
+                    ))
+                ) : (
+                    <Text style={styles.noFamiliesText}>No families available</Text>
+                )}
             </View>
         </ImageBackground>
     );
@@ -81,4 +91,18 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         width: '100%',
     },
-});
+    addFamilyButton: {
+        padding: 10,
+        margin: 5,
+        borderRadius: 5,
+        borderWidth: 1,
+        borderColor: 'gray',
+    },
+    addFamilyText: {
+        fontSize: 18,
+        color: '#FFFFFF', // White color for the text
+        fontWeight: 'bold', // Bold text to make it stand out
+        textAlign: 'center', // Center the text within the button
+        padding: 10, // Add padding for better touch area and visual spacing
+    },
+})

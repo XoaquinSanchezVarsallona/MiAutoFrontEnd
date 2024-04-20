@@ -14,6 +14,8 @@ import {AddNewFamily} from "./pages/driverScreens/AddNewFamily";
 import {EditProfile} from "./pages/driverScreens/editProfile/EditProfile";
 import {AuthContext, AuthProvider} from "./pages/AuthContext";
 import {FamilyVehiclesScreen} from "./pages/driverScreens/FamilyVehiclesScreen";
+import FamilyDetailsScreen from "./pages/driverScreens/FamilyDetailsScreen";
+import AddFamilyScreen from "./pages/driverScreens/AddFamilyScreen";
 
 const Stack = createNativeStackNavigator(); //used to configure the screens
 
@@ -35,6 +37,9 @@ function AppNavigation() {
                 <Stack.Screen name="AddNewFamily" component={AddNewFamily}/>
                 <Stack.Screen name="FamilyVehiclesScreen" component={FamilyVehiclesScreen}/>
                 <Stack.Screen name="EditProfile" component={EditProfile}/>
+                <Stack.Screen name="FamilyDetailsScreen" component={FamilyDetailsScreen}/>
+                <Stack.Screen name="AddFamilyScreen" component={AddFamilyScreen}/>
+
             </Stack.Navigator>
         </NavigationContainer>
     );
