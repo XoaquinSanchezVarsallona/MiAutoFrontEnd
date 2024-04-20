@@ -38,12 +38,7 @@ export function FamilyProfile({ navigation, route }) {
     return (
         <ImageBackground source={require('../../assets/BackgroundUnlocked.jpg')} style={styles.container}>
             <View style={styles.headerContainer}>
-                <Text style={styles.title}>MIAUTO</Text>
-                <Text style={styles.title}>WELCOME TO FAMILIES SCREEN</Text>
-
-                <Pressable style={styles.addFamilyButton} onPress={() => navigation.navigate('AddFamilyScreen', { username })}>
-                    <Text style={styles.addFamilyText}>Add a new family</Text>
-                </Pressable>
+                <Text style={styles.title}>Mis Familias</Text>
 
                 {familiesData.length > 0 ? (
                     familiesData.map((family, index) => (
@@ -64,6 +59,9 @@ export function FamilyProfile({ navigation, route }) {
                     <Text style={styles.noFamiliesText}>No families available</Text>
                 )}
             </View>
+            <Pressable style={styles.addFamilyButton} onPress={() => navigation.navigate('AddFamilyScreen', { username })}>
+                <Text style={styles.addFamilyText}>Add a new family</Text>
+            </Pressable>
         </ImageBackground>
     );
 }
@@ -76,19 +74,23 @@ const styles = StyleSheet.create({
         padding: 16,
     },
     familyContainer: {
-        padding: 10,
-        margin: 5,
-        borderRadius: 5,
-        borderWidth: 1,
-        borderColor: 'gray',
-    },
-    familyName: {
-        fontSize: 20,
-        color: 'black',
+        padding: 15,
+        marginVertical: 8,
+        marginHorizontal: 12,
+        backgroundColor: '#1e90ff', // A nice blue color
+        borderRadius: 10,
+        elevation: 3, // Adds a subtle shadow effect on Android
+        shadowColor: '#000', // Shadow for iOS
+        shadowOffset: { width: 0, height: 2 }, // Shadow for iOS
+        shadowOpacity: 0.25, // Shadow for iOS
+        shadowRadius: 3.84, // Shadow for iOS
+        alignItems: 'center', // Centers the text inside the button
     },
     title: {
-        fontSize: 24,
-        marginBottom: 30,
+        fontSize: 60,
+        color: 'white',
+        fontWeight: 'bold',
+        marginBottom: 10,
     },
     buttonRow: {
         flexDirection: 'row',
@@ -96,17 +98,28 @@ const styles = StyleSheet.create({
         width: '100%',
     },
     addFamilyButton: {
-        padding: 10,
-        margin: 5,
-        borderRadius: 5,
-        borderWidth: 1,
-        borderColor: 'gray',
+        width: '40%',
+        paddingVertical: 12, // Increase padding for a larger touch area
+        paddingHorizontal: 20,
+        marginVertical: 8,
+        backgroundColor: '#32cd32', // A vibrant green color
+        borderRadius: 20,
+        elevation: 4, // Adds a subtle shadow effect on Android
+        shadowColor: '#000', // Shadow for iOS
+        shadowOffset: { width: 0, height: 2 }, // Shadow for iOS
+        shadowOpacity: 0.25, // Shadow for iOS
+        shadowRadius: 3.84, // Shadow for iOS
+    },
+    familyName: {
+        fontSize: 18,
+        color: 'white',
+        fontWeight: '500',
     },
     addFamilyText: {
         fontSize: 18,
-        color: '#FFFFFF', // White color for the text
-        fontWeight: 'bold', // Bold text to make it stand out
-        textAlign: 'center', // Center the text within the button
-        padding: 10, // Add padding for better touch area and visual spacing
+        color: 'white',
+        fontWeight: '500',
+        textAlign: 'center',
     },
+
 })

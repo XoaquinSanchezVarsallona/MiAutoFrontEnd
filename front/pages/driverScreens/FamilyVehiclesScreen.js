@@ -37,8 +37,7 @@ export function FamilyVehiclesScreen({ navigation, route }) {
 
     return (
         <ImageBackground source={require('../../assets/BackgroundUnlocked.jpg')} style={styles.container}>
-            <View style={styles.headerContainer}>
-                <Text style={styles.title}>MIAUTO</Text>
+            <View style={styles.container}>
                 <Text style={styles.title}>WELCOME TO FAMILIES CAR'S SCREEN</Text>
 
                 {familiesData.length > 0 ? (
@@ -46,7 +45,7 @@ export function FamilyVehiclesScreen({ navigation, route }) {
                         family && ( // Check if family is not null
                             <Pressable
                                 key={index}
-                                style={styles.familyContainer}
+                                style={styles.addFamilyButton}
                                 onPress={() => {
                                     console.log(`Pressed: ${family.surname}`);
                                     //navigation.navigate('FamilyDetailsScreen', { family: family, email: email  });
@@ -71,20 +70,15 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         padding: 16,
     },
-    familyContainer: {
-        padding: 10,
-        margin: 5,
-        borderRadius: 5,
-        borderWidth: 1,
-        borderColor: 'gray',
-    },
     familyName: {
         fontSize: 20,
         color: 'black',
     },
     title: {
-        fontSize: 24,
-        marginBottom: 30,
+        fontSize: 60,
+        color: 'white',
+        fontWeight: 'bold',
+        marginBottom: 10,
     },
     buttonRow: {
         flexDirection: 'row',
@@ -92,11 +86,18 @@ const styles = StyleSheet.create({
         width: '100%',
     },
     addFamilyButton: {
-        padding: 10,
-        margin: 5,
-        borderRadius: 5,
-        borderWidth: 1,
-        borderColor: 'gray',
+        width: '30%',
+        padding: 15,
+        marginVertical: 8,
+        marginHorizontal: 12,
+        backgroundColor: '#1e90ff',
+        borderRadius: 10,
+        elevation: 3,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        alignItems: 'center',
     },
     addFamilyText: {
         fontSize: 18,
