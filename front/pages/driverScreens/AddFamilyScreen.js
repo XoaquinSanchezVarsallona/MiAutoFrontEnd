@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
 
-function AddFamilyScreen({ navigation }) {
+function AddFamilyScreen({ navigation, route }) {
     const [surname, setSurname] = useState('');
+    const username = route.params.username;
 
     const addFamily = async () => {
         try {
-            const response = await fetch('http://localhost:9002/addFamily', {
+            const response = await fetch(`http://localhost:9002/user/${username}/addFamily`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -15,7 +16,10 @@ function AddFamilyScreen({ navigation }) {
             });
             if (response.ok) {
                 alert('Family added successfully');
-                navigation.goBack();
+                navigation.navigate('FamilyProfile');
+            } else if (response.status === 400) {
+                const errorMessage = await response.text();
+                alert(errorMessage);
             } else {
                 console.error('Failed to add family');
             }

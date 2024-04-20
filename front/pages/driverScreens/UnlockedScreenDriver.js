@@ -64,7 +64,7 @@ export function UnlockedScreenDriver({ navigation, route, children }) {
 
                 <StyledButton
                     icon={require('../../assets/family.png')}
-                    onPress={() => navigation.navigate('FamilyProfile', { families: familias, email: email } )}
+                    onPress={() => navigation.navigate('FamilyProfile', { families: familias, email: email, username: username } )}
                 />
 
                 <StyledButton

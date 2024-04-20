@@ -10,7 +10,6 @@ import {ConfigurationScreen} from "./pages/driverScreens/ConfigurationScreen";
 import {FamilyProfile} from "./pages/driverScreens/FamilyProfile";
 import {VehiclesScreen} from "./pages/driverScreens/VehiclesScreen";
 import {AddNewVehicle} from "./pages/driverScreens/AddNewVehicle";
-import {AddNewFamily} from "./pages/driverScreens/AddNewFamily";
 import {EditProfile} from "./pages/driverScreens/editProfile/EditProfile";
 import {AuthContext, AuthProvider} from "./pages/AuthContext";
 import {FamilyVehiclesScreen} from "./pages/driverScreens/FamilyVehiclesScreen";
@@ -34,7 +33,6 @@ function AppNavigation() {
                 <Stack.Screen name="FamilyProfile" component={FamilyProfile}/>
                 <Stack.Screen name="VehiclesScreen" component={VehiclesScreen}/>
                 <Stack.Screen name="AddNewVehicle" component={AddNewVehicle}/>
-                <Stack.Screen name="AddNewFamily" component={AddNewFamily}/>
                 <Stack.Screen name="FamilyVehiclesScreen" component={FamilyVehiclesScreen}/>
                 <Stack.Screen name="EditProfile" component={EditProfile}/>
                 <Stack.Screen name="FamilyDetailsScreen" component={FamilyDetailsScreen}/>

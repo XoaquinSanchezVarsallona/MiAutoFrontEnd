@@ -1,9 +1,9 @@
 import React, {useEffect} from 'react';
-import {Button, ImageBackground, Pressable, StyleSheet, Text, View} from 'react-native';
+import {ImageBackground, Pressable, StyleSheet, Text, View} from 'react-native';
 
 export function FamilyProfile({ navigation, route }) {
     const [familiesData, setFamilies] = React.useState([]);
-    const { families, email } = route.params;
+    const { families, email, username } = route.params;
 
 
     // FetchFamilias busca en base a unos ID una familia
@@ -41,7 +41,7 @@ export function FamilyProfile({ navigation, route }) {
                 <Text style={styles.title}>MIAUTO</Text>
                 <Text style={styles.title}>WELCOME TO FAMILIES SCREEN</Text>
 
-                <Pressable style={styles.addFamilyButton} onPress={() => navigation.navigate('AddFamilyScreen')}>
+                <Pressable style={styles.addFamilyButton} onPress={() => navigation.navigate('AddFamilyScreen', { username })}>
                     <Text style={styles.addFamilyText}>Add a new family</Text>
                 </Pressable>
 
