@@ -48,7 +48,7 @@ export function FamilyVehiclesScreen({ navigation, route }) {
                                 style={styles.addFamilyButton}
                                 onPress={() => {
                                     console.log(`Pressed: ${family.surname}`);
-                                    //navigation.navigate('FamilyDetailsScreen', { family: family, email: email  });
+                                    navigation.navigate('VehiclesScreen', { familySurname: family.surname, familyId: families[index]});
                                 }}
                             >
                                 <Text style={styles.familyName}>{family.surname}</Text>
@@ -56,7 +56,7 @@ export function FamilyVehiclesScreen({ navigation, route }) {
                         )
                     ))
                 ) : (
-                    <Text style={styles.noFamiliesText}>No families available</Text>
+                    <Text>No families available</Text>
                 )}
             </View>
         </ImageBackground>
@@ -71,19 +71,15 @@ const styles = StyleSheet.create({
         padding: 16,
     },
     familyName: {
-        fontSize: 20,
-        color: 'black',
+        fontSize: 18,
+        color: 'white',
+        fontWeight: '500',
     },
     title: {
         fontSize: 60,
         color: 'white',
         fontWeight: 'bold',
         marginBottom: 10,
-    },
-    buttonRow: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        width: '100%',
     },
     addFamilyButton: {
         width: '30%',
@@ -98,12 +94,5 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
         alignItems: 'center',
-    },
-    addFamilyText: {
-        fontSize: 18,
-        color: '#FFFFFF', // White color for the text
-        fontWeight: 'bold', // Bold text to make it stand out
-        textAlign: 'center', // Center the text within the button
-        padding: 10, // Add padding for better touch area and visual spacing
     },
 })
