@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet,  } from 'react-native';
 
 function AddFamilyScreen({ navigation, route }) {
     const [surname, setSurname] = useState('');
@@ -15,12 +15,11 @@ function AddFamilyScreen({ navigation, route }) {
                 body: JSON.stringify({ surname }),
             });
             if (response.ok) {
+                const familias = await response.json(); // Parse the JSON response from the server
+
                 alert('Family added successfully');
 
-                navigation.reset({
-                    index: 0,
-                    routes: [{ name: 'UnlockedScreenDriver', params: { email: email }}],
-                });
+                navigation.navigate('FamilyProfile', { email: email, families: familias, username: username });
             } else if (response.status === 400) {
                 alert("Family already exists");
             } else {

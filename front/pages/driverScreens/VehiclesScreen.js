@@ -8,12 +8,12 @@ export function VehiclesScreen({ navigation, route }) {
 
     const fetchPatentes = async (familySurname) => {
         try {
-            const response = await fetch(`http://localhost:9002/vehicles/family/${familyId}`);
+            const response = await fetch(`http://localhost:9002/vehicle/family/${familyId}`);
             if (response.ok) {
                 return await response.json();
             } else {
                 console.log(`Failed to fetch cars for family: ${familySurname}`);
-                return null;
+                return [];
             }
         } catch (error) {
             console.error('Error:', error);
@@ -62,7 +62,7 @@ export function VehiclesScreen({ navigation, route }) {
                 <Text style={styles.title}>Autos de la familia {familySurname}</Text>
             </View>
             <ScrollView style={styles.vehiclesList}>
-                {vehiclesData.length > 0 ? (
+                {vehiclesData != null && vehiclesData.length > 0 ? (
                     vehiclesData.map((vehicle, index) => (
                         vehicle && ( // Check if family is not null
                             <Pressable
