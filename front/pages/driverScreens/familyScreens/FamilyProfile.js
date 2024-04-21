@@ -35,7 +35,7 @@ export function FamilyProfile({ navigation, route }) {
     useEffect(() => { }, [familiesData]);
 
     return (
-        <ImageBackground source={require('../../assets/BackgroundUnlocked.jpg')} style={styles.container}>
+        <ImageBackground source={require('../../../assets/BackgroundUnlocked.jpg')} style={styles.container}>
             <View style={styles.headerContainer}>
                 <Text style={styles.title}>Mis Familias</Text>
             </View>

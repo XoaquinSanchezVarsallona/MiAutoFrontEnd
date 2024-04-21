@@ -57,7 +57,7 @@ export function VehiclesScreen({ navigation, route }) {
     }, [patentesData]);
 
     return (
-        <ImageBackground source={require('../../assets/BackgroundUnlocked.jpg')} style={styles.container}>
+        <ImageBackground source={require('../../../assets/BackgroundUnlocked.jpg')} style={styles.container}>
             <View style={styles.headerContainer}>
                 <Text style={styles.title}>Autos de la familia {familySurname}</Text>
             </View>

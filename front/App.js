@@ -6,19 +6,19 @@ import {Register} from "./pages/Register"
 import {Home} from "./pages/Home";
 import {UnlockedScreenDriver} from "./pages/driverScreens/UnlockedScreenDriver";
 import {ConfigurationScreen} from "./pages/driverScreens/ConfigurationScreen";
-import {FamilyProfile} from "./pages/driverScreens/FamilyProfile";
-import {VehiclesScreen} from "./pages/driverScreens/VehiclesScreen";
-import {AddNewVehicle} from "./pages/driverScreens/AddNewVehicle";
+import {FamilyProfile} from "./pages/driverScreens/familyScreens/FamilyProfile";
+import {VehiclesScreen} from "./pages/driverScreens/vehicleScreens/VehiclesScreen";
+import {AddNewVehicle} from "./pages/driverScreens/addEntityScreens/AddNewVehicle";
 import {EditProfile} from "./pages/driverScreens/editProfile/EditProfile";
 import {AuthProvider} from "./pages/AuthContext";
-import {FamilyVehiclesScreen} from "./pages/driverScreens/FamilyVehiclesScreen";
-import FamilyDetailsScreen from "./pages/driverScreens/FamilyDetailsScreen";
-import AddFamilyScreen from "./pages/driverScreens/AddFamilyScreen";
-import JoinFamilyScreen from "./pages/driverScreens/JoinFamilyScreen";
+import {FamilyVehiclesScreen} from "./pages/driverScreens/familyScreens/FamilyVehiclesScreen";
+import FamilyDetailsScreen from "./pages/driverScreens/familyScreens/FamilyDetailsScreen";
+import AddFamilyScreen from "./pages/driverScreens/addEntityScreens/AddFamilyScreen";
+import JoinFamilyScreen from "./pages/driverScreens/familyScreens/JoinFamilyScreen";
 import {AlertScreen} from "./pages/alerts/AlertsScreen";
 import {AddAlertScreen} from "./pages/alerts/AddAlertScreen";
 import {AlertsFromFamilyScreen} from "./pages/alerts/AlertsFromFamilyScreen";
-import VehicleProfile from "./pages/driverScreens/VehicleProfile";
+import VehicleProfile from "./pages/driverScreens/vehicleScreens/VehicleProfile";
 
 const Stack = createNativeStackNavigator(); //used to configure the screens
 

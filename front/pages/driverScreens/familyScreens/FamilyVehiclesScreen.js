@@ -36,7 +36,7 @@ export function FamilyVehiclesScreen({ navigation, route }) {
     useEffect(() => { }, [familiesData]);
 
     return (
-        <ImageBackground source={require('../../assets/BackgroundUnlocked.jpg')} style={styles.container}>
+        <ImageBackground source={require('../../../assets/BackgroundUnlocked.jpg')} style={styles.container}>
             <View style={styles.headerContainer}>
                 <Text style={styles.title}>WELCOME TO FAMILIES CAR'S SCREEN</Text>
             </View>

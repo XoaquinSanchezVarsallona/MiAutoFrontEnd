@@ -21,7 +21,7 @@ export function VehicleProfile({ navigation, route }) {
     };
 
     return (
-        <ImageBackground source={require('../../assets/BackgroundUnlocked.jpg')} style={styles.container}>
+        <ImageBackground source={require('../../../assets/BackgroundUnlocked.jpg')} style={styles.container}>
             <View style={styles.content}>
                 <Text style={styles.title}>{vehicle.marca} {vehicle.modelo} de los {familySurname}</Text>
                 <Text style={styles.detail}>Model: {vehicle.modelo}</Text>

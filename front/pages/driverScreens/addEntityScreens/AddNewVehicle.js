@@ -35,7 +35,7 @@ export function AddNewVehicle({ navigation, route }) {
     };
 
     return (
-        <ImageBackground source={require('../../assets/BackgroundUnlocked.jpg')} style={styles.container}>
+        <ImageBackground source={require('../../../assets/BackgroundUnlocked.jpg')} style={styles.container}>
             <View style={styles.headerContainer}>
                 <Text style={styles.title}>Agregue un nuevo Vehiculo a la familia {familySurname}</Text>
                 </View>
