@@ -1,6 +1,5 @@
-import React, {useCallback, useEffect} from 'react';
-import {ImageBackground, Pressable, StyleSheet, Text, View} from 'react-native';
-import {useFocusEffect} from "@react-navigation/native";
+import React, {useEffect} from 'react';
+import {ImageBackground, Pressable, ScrollView, StyleSheet, Text, View} from 'react-native';
 
 export function FamilyProfile({ navigation, route }) {
     const [familiesData, setFamilies] = React.useState([]);
@@ -40,7 +39,9 @@ export function FamilyProfile({ navigation, route }) {
         <ImageBackground source={require('../../assets/BackgroundUnlocked.jpg')} style={styles.container}>
             <View style={styles.headerContainer}>
                 <Text style={styles.title}>Mis Familias</Text>
+            </View>
 
+            <ScrollView style={styles.familiesScrollView} contentContainerStyle={styles.familiesContentContainer}>
                 {familiesData.length > 0 ? (
                     familiesData.map((family, index) => (
                         family && ( // Check if family is not null
@@ -49,7 +50,7 @@ export function FamilyProfile({ navigation, route }) {
                                 style={styles.familyContainer}
                                 onPress={() => {
                                     console.log(`Pressed: ${family.surname}`);
-                                    navigation.navigate('FamilyDetailsScreen', { family: family, email: email  });
+                                    navigation.navigate('FamilyDetailsScreen', { family: family, email: email });
                                 }}
                             >
                                 <Text style={styles.familyName}>{family.surname}</Text>
@@ -59,25 +60,42 @@ export function FamilyProfile({ navigation, route }) {
                 ) : (
                     <Text style={styles.noFamiliesText}>No families available</Text>
                 )}
+            </ScrollView>
+
+            <View style={styles.buttonsContainer}>
+                <Pressable style={styles.addFamilyButton} onPress={() => navigation.navigate('AddFamilyScreen', { username, email })}>
+                    <Text style={styles.addFamilyText}>Add a new family</Text>
+                </Pressable>
+                <Pressable style={styles.addFamilyButton} onPress={() => navigation.navigate('JoinFamilyScreen', { username, email })}>
+                    <Text style={styles.addFamilyText}>Join a family</Text>
+                </Pressable>
             </View>
-            <Pressable style={styles.addFamilyButton} onPress={() => navigation.navigate('AddFamilyScreen', { username, email })}>
-                <Text style={styles.addFamilyText}>Add a new family</Text>
-            </Pressable>
-            <Pressable style={styles.addFamilyButton} onPress={() => navigation.navigate('JoinFamilyScreen', { username, email })}>
-                <Text style={styles.addFamilyText}>Join a family</Text>
-            </Pressable>
         </ImageBackground>
     );
+
 }
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'center',
+        justifyContent: 'space-between', // Distribute space between elements
         alignItems: 'center',
         padding: 16,
     },
+    headerContainer: {
+        width: '100%',
+        alignItems: 'center',
+        marginBottom: 20,
+    },
+    familiesScrollView: {
+        width: '50%',
+        flex: 1,
+    },
+    familiesContentContainer: {
+        alignItems: 'center',
+    },
     familyContainer: {
+        width: '80%',
         padding: 15,
         marginVertical: 8,
         marginHorizontal: 12,
@@ -101,6 +119,12 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         width: '100%',
     },
+    buttonsContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        width: '100%',
+        padding: 10,
+    },
     addFamilyButton: {
         width: '40%',
         paddingVertical: 12, // Increase padding for a larger touch area
@@ -108,7 +132,7 @@ const styles = StyleSheet.create({
         marginVertical: 8,
         backgroundColor: '#32cd32', // A vibrant green color
         borderRadius: 20,
-        elevation: 4, // Adds a subtle shadow effect on Android
+        elevation: 4,
         shadowColor: '#000', // Shadow for iOS
         shadowOffset: { width: 0, height: 2 }, // Shadow for iOS
         shadowOpacity: 0.25, // Shadow for iOS
@@ -125,5 +149,4 @@ const styles = StyleSheet.create({
         fontWeight: '500',
         textAlign: 'center',
     },
-
 })

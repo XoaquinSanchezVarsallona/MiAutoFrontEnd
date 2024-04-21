@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {StyleSheet, View, Text, ImageBackground, Pressable} from 'react-native';
+import {StyleSheet, View, Text, ImageBackground, Pressable, ScrollView} from 'react-native';
 
 export function VehiclesScreen({ navigation, route }) {
     const { familySurname, familyId } = route.params;
@@ -59,7 +59,9 @@ export function VehiclesScreen({ navigation, route }) {
     return (
         <ImageBackground source={require('../../assets/BackgroundUnlocked.jpg')} style={styles.container}>
             <View style={styles.headerContainer}>
-                <Text style={styles.title}>Autos de la familia { familySurname }</Text>
+                <Text style={styles.title}>Autos de la familia {familySurname}</Text>
+            </View>
+            <ScrollView style={styles.vehiclesList}>
                 {vehiclesData.length > 0 ? (
                     vehiclesData.map((vehicle, index) => (
                         vehicle && ( // Check if family is not null
@@ -81,10 +83,10 @@ export function VehiclesScreen({ navigation, route }) {
                         )
                     ))
                 ) : (
-                    <Text>No vehicles available</Text>
+                    <Text style={styles.noVehiclesText}>No vehicles available</Text>
                 )}
-            </View>
-            <Pressable style={styles.addVehicleButton} onPress={() => navigation.navigate('AddNewVehicle', { familySurname: familySurname, familyId: familyId })}>
+            </ScrollView>
+            <Pressable style={styles.addVehicleButton} onPress={() => navigation.navigate('AddNewVehicle', { familySurname, familyId })}>
                 <Text style={styles.addVehicleText}>Add a new vehicle</Text>
             </Pressable>
         </ImageBackground>
@@ -96,13 +98,25 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
+    },
+    headerContainer: {
+        justifyContent: 'center',
+        alignItems: 'center',
         padding: 16,
+        paddingTop: 40,
+        width: '100%',
+    },
+    vehiclesList: {
+        flex: 1,
+        width: '50%',
+        marginTop: 10,
+        marginBottom: 80,
     },
     title: {
         fontSize: 60,
         color: 'white',
         fontWeight: 'bold',
-        marginBottom: 10,
+        alignSelf: 'center',
     },
     buttonRow: {
         flexDirection: 'row',
@@ -111,16 +125,14 @@ const styles = StyleSheet.create({
     },
     addVehicleButton: {
         width: '40%',
-        paddingVertical: 12, // Increase padding for a larger touch area
+        paddingVertical: 12,
         paddingHorizontal: 20,
-        marginVertical: 8,
-        backgroundColor: '#32cd32', // A vibrant green color
+        marginVertical: 10,
+        backgroundColor: '#32cd32',
         borderRadius: 20,
-        elevation: 4, // Adds a subtle shadow effect on Android
-        shadowColor: '#000', // Shadow for iOS
-        shadowOffset: { width: 0, height: 2 }, // Shadow for iOS
-        shadowOpacity: 0.25, // Shadow for iOS
-        shadowRadius: 3.84, // Shadow for iOS
+        position: 'absolute',
+        bottom: 10,
+        alignSelf: 'center',
     },
     addVehicleText: {
         fontSize: 18,
@@ -134,16 +146,16 @@ const styles = StyleSheet.create({
         marginHorizontal: 12,
         backgroundColor: '#1e90ff',
         borderRadius: 10,
-        elevation: 3,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.25,
-        shadowRadius: 3.84,
-        alignItems: 'center',
     },
     vehicleText: {
         fontSize: 14,
         color: 'white',
         fontWeight: '500',
+    },
+    noVehiclesText: {
+        fontSize: 18,
+        color: 'white',
+        textAlign: 'center',
+        marginTop: 20, // Add some space at the top of the message
     },
 });

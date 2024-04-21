@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {Button, ImageBackground, Pressable, StyleSheet, Text, View} from 'react-native';
+import {ImageBackground, Pressable, StyleSheet, Text, View, ScrollView} from 'react-native';
 
 export function FamilyVehiclesScreen({ navigation, route }) {
     const [familiesData, setFamilies] = React.useState([]);
@@ -37,18 +37,20 @@ export function FamilyVehiclesScreen({ navigation, route }) {
 
     return (
         <ImageBackground source={require('../../assets/BackgroundUnlocked.jpg')} style={styles.container}>
-            <View style={styles.container}>
+            <View style={styles.headerContainer}>
                 <Text style={styles.title}>WELCOME TO FAMILIES CAR'S SCREEN</Text>
+            </View>
 
+            <ScrollView style={styles.familiesList} contentContainerStyle={styles.contentContainerStyle}>
                 {familiesData.length > 0 ? (
                     familiesData.map((family, index) => (
-                        family && ( // Check if family is not null
+                        family && (
                             <Pressable
                                 key={index}
-                                style={styles.addFamilyButton}
+                                style={styles.familyButton}
                                 onPress={() => {
                                     console.log(`Pressed: ${family.surname}`);
-                                    navigation.navigate('VehiclesScreen', { familySurname: family.surname, familyId: families[index]});
+                                    navigation.navigate('VehiclesScreen', { familySurname: family.surname, familyId: families[index] });
                                 }}
                             >
                                 <Text style={styles.familyName}>{family.surname}</Text>
@@ -56,9 +58,9 @@ export function FamilyVehiclesScreen({ navigation, route }) {
                         )
                     ))
                 ) : (
-                    <Text>No families available</Text>
+                    <Text style={styles.noFamiliesText}>No families available</Text>
                 )}
-            </View>
+            </ScrollView>
         </ImageBackground>
     );
 }
@@ -68,31 +70,47 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
+    },
+    contentContainerStyle: {
+        alignItems: 'center',
+    },
+    headerContainer: {
+        justifyContent: 'center',
+        alignItems: 'center',
         padding: 16,
+        paddingTop: 40,
+        width: '100%',
+    },
+    title: {
+        fontSize: 60,
+        color: 'white',
+        fontWeight: 'bold',
+        textAlign: 'center',
+    },
+    familiesList: {
+        flex: 1,
+        width: '100%',
+        marginBottom: 20,
+    },
+    familyButton: {
+        padding: 15,
+        marginVertical: 8,
+        // Removed marginHorizontal
+        backgroundColor: '#1e90ff',
+        borderRadius: 10,
+        alignItems: 'center',
+        width: '50%', // This sets the button width to half of its container width
+        alignSelf: 'center', // This will center each button within the ScrollView
     },
     familyName: {
         fontSize: 18,
         color: 'white',
         fontWeight: '500',
     },
-    title: {
-        fontSize: 60,
+    noFamiliesText: {
+        fontSize: 18,
         color: 'white',
-        fontWeight: 'bold',
-        marginBottom: 10,
-    },
-    addFamilyButton: {
-        width: '30%',
-        padding: 15,
-        marginVertical: 8,
-        marginHorizontal: 12,
-        backgroundColor: '#1e90ff',
-        borderRadius: 10,
-        elevation: 3,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.25,
-        shadowRadius: 3.84,
-        alignItems: 'center',
+        textAlign: 'center',
+        marginTop: 20,
     },
 })
