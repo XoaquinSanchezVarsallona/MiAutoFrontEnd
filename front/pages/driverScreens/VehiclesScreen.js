@@ -69,7 +69,7 @@ export function VehiclesScreen({ navigation, route }) {
                                 key={index}
                                 style={styles.vehicleButton}
                                 onPress={() => {
-                                    console.log(`Pressed: ${vehicle.patente}`);
+                                    navigation.navigate('VehicleProfile', { vehicle: vehicle, familySurname: familySurname });
                                 }}
                             >
                                 <Text style={styles.vehicleText}>Year: {vehicle.ano}</Text>

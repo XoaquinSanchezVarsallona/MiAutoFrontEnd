@@ -65,7 +65,7 @@ export function FamilyProfile({ navigation, route }) {
                 <Pressable style={styles.addFamilyButton} onPress={() => navigation.navigate('AddFamilyScreen', { username, email, familiesData })}>
                     <Text style={styles.addFamilyText}>Add a new family</Text>
                 </Pressable>
-                <Pressable style={styles.addFamilyButton} onPress={() => navigation.navigate('JoinFamilyScreen', { username, email, familiesData })}>
+                <Pressable style={styles.addFamilyButton} onPress={() => navigation.navigate('JoinFamilyScreen', { username, email })}>
                     <Text style={styles.addFamilyText}>Join a family</Text>
                 </Pressable>
             </View>

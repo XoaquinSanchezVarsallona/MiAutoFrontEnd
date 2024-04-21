@@ -11,16 +11,16 @@ import {FamilyProfile} from "./pages/driverScreens/FamilyProfile";
 import {VehiclesScreen} from "./pages/driverScreens/VehiclesScreen";
 import {AddNewVehicle} from "./pages/driverScreens/AddNewVehicle";
 import {EditProfile} from "./pages/driverScreens/editProfile/EditProfile";
-import {AuthContext, AuthProvider} from "./pages/AuthContext";
+import {AuthProvider} from "./pages/AuthContext";
 import {FamilyVehiclesScreen} from "./pages/driverScreens/FamilyVehiclesScreen";
 import FamilyDetailsScreen from "./pages/driverScreens/FamilyDetailsScreen";
 import AddFamilyScreen from "./pages/driverScreens/AddFamilyScreen";
 import JoinFamilyScreen from "./pages/driverScreens/JoinFamilyScreen";
+import VehicleProfile from "./pages/driverScreens/VehicleProfile";
 
 const Stack = createNativeStackNavigator(); //used to configure the screens
 
 function AppNavigation() {
-    //const { userToken } = useContext(AuthContext);
 
     return (
         <NavigationContainer>
@@ -39,6 +39,7 @@ function AppNavigation() {
                 <Stack.Screen name="FamilyDetailsScreen" component={FamilyDetailsScreen}/>
                 <Stack.Screen name="AddFamilyScreen" component={AddFamilyScreen}/>
                 <Stack.Screen name="JoinFamilyScreen" component={JoinFamilyScreen}/>
+                <Stack.Screen name="VehicleProfile" component={VehicleProfile}/>
 
             </Stack.Navigator>
         </NavigationContainer>
