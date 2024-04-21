@@ -1,42 +1,66 @@
-import React from 'react';
-import { StyleSheet, View, Text, ImageBackground, ScrollView } from 'react-native';
-import StyledButton from "../../components/StyledButton";
+import React, {useEffect} from 'react';
+import {ImageBackground, Pressable, StyleSheet, Text, View} from 'react-native';
 
-const icons = {
-    'Edit Profile': require('../../assets/pencil.png'),
-    'Edit Domicilio': require('../../assets/pencil.png'),
-    'Edit Name': require('../../assets/pencil.png'),
-    'Edit Password': require('../../assets/pencil.png'),
-    'Edit Email': require('../../assets/pencil.png'),
-    'Edit Surname': require('../../assets/pencil.png'),
-    'Edit Username': require('../../assets/pencil.png')
-};
+export function AlertScreen({ navigation, route }) {
+    const [familiesData, setFamilies] = React.useState([]);
+    const { families, email, username } = route.params;
 
-const buttons = [
-    { label: 'Edit Profile', navigateTo: 'editProfile' },
-    { label: 'Edit Domicilio', navigateTo: 'editDomicilio' },
-    { label: 'Edit Name', navigateTo: 'editName' },
-    { label: 'Edit Password', navigateTo: 'editPassword' },
-    { label: 'Edit Email', navigateTo: 'editEmail' },
-    { label: 'Edit Surname', navigateTo: 'editSurname' },
-    { label: 'Edit Username', navigateTo: 'editUsername' }
-];
+    // FetchFamilias busca en base a unos ID una familia
+    const fetchFamilias = async (familias) => {
+        try {
+            // Filter out any null values in case some fetches failed
+            return await Promise.all(familias.map(async (familyId) => {
+                const response = await fetch(`http://localhost:9002/family/${familyId}`);
+                if (response.ok) {
+                    return await response.json();
+                } else {
+                    console.log(`Failed to fetch family with ID: ${familyId}`);
+                    return null;
+                }
+            }))
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    };
 
-export function AlertsScreen({ navigation }) {
+    useEffect(() => {
+        fetchFamilias(families)
+            .then(fetchedFamilies => {
+                console.log('Fetched families:', fetchedFamilies);
+                setFamilies(fetchedFamilies);
+            })
+            .catch(error => console.error('Error:', error));
+    }, [families]);
+
+    useEffect(() => { }, [familiesData]);
+
     return (
         <ImageBackground source={require('../../assets/BackgroundUnlocked.jpg')} style={styles.container}>
-            <ScrollView contentContainerStyle={styles.scrollContainer}>
-                <Text style={styles.title}>Alertas</Text>
-                {buttons.map((button, index) => (
-                    <View key={index} style={styles.buttonContainer}>
-                        <StyledButton
-                            icon={icons[button.label]}
-                            onPress={() => navigation.navigate(button.navigateTo)}
-                        />
-                        <Text style={styles.buttonText}>{button.label}</Text>
-                    </View>
-                ))}
-            </ScrollView>
+            <View style={styles.headerContainer}>
+                <Text style={styles.title}>My Alerts</Text>
+
+                {familiesData.length > 0 ? (
+                    familiesData.map((family, index) => (
+                        family && ( // Check if family is not null
+                            <Pressable
+                                key={index}
+                                style={styles.familyContainer}
+                                onPress={() => {
+                                    console.log(`Pressed: ${family.surname}`);
+                                    navigation.navigate('AlertsFromFamilyScreen', { family: family, email: email  });
+                                }}
+                            >
+                                <Text style={styles.familyName}>{family.surname}</Text>
+                            </Pressable>
+                        )
+                    ))
+                ) : (
+                    <Text style={styles.noFamiliesText}>No families available</Text>
+                )}
+            </View>
+            <Pressable style={styles.addAlertButton} onPress={() => navigation.navigate('AddAlertScreen', { username, email })}>
+                <Text style={styles.addAlertText}>Add a new alert</Text>
+            </Pressable>
         </ImageBackground>
     );
 }
@@ -44,28 +68,57 @@ export function AlertsScreen({ navigation }) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
         padding: 16,
     },
-    scrollContainer: {
-        alignItems: 'center',
-        paddingTop: 20,
-    },
-    headerContainer: {
-        width: '100%',
-        marginBottom: 20,
-    },
-    buttonContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginBottom: 10,
+    familyContainer: {
+        padding: 15,
+        marginVertical: 8,
+        marginHorizontal: 12,
+        backgroundColor: '#1e90ff', // A nice blue color
+        borderRadius: 10,
+        elevation: 3, // Adds a subtle shadow effect on Android
+        shadowColor: '#000', // Shadow for iOS
+        shadowOffset: { width: 0, height: 2 }, // Shadow for iOS
+        shadowOpacity: 0.25, // Shadow for iOS
+        shadowRadius: 3.84, // Shadow for iOS
+        alignItems: 'center', // Centers the text inside the button
     },
     title: {
-        fontSize: 24,
-        marginBottom: 20,
+        fontSize: 60,
+        color: 'white',
+        fontWeight: 'bold',
+        marginBottom: 10,
     },
-    buttonText: {
-        fontSize: 16,
-        marginLeft: 10,
+    addAlertButton: {
+        width: '40%',
+        paddingVertical: 12, // Increase padding for a larger touch area
+        paddingHorizontal: 20,
+        marginVertical: 8,
+        backgroundColor: '#32cd32', // A vibrant green color
+        borderRadius: 20,
+        elevation: 4, // Adds a subtle shadow effect on Android
+        shadowColor: '#000', // Shadow for iOS
+        shadowOffset: { width: 0, height: 2 }, // Shadow for iOS
+        shadowOpacity: 0.25, // Shadow for iOS
+        shadowRadius: 3.84, // Shadow for iOS
     },
-});
-
+    alertMessage: {
+        fontSize: 18,
+        color: 'white',
+        fontWeight: '500',
+    },
+    addAlertText: {
+        fontSize: 18,
+        color: 'white',
+        fontWeight: '500',
+        textAlign: 'center',
+    },
+    noAlertsText: {
+        fontSize: 18,
+        color: 'white',
+        fontWeight: '500',
+        textAlign: 'center',
+    },
+})
