@@ -39,7 +39,7 @@ export function UnlockedScreenDriver({ navigation, route, children }) {
             <View style={styles.buttonRow}>
                 <StyledButton
                     icon={require('../../assets/alert.png')}
-                    onPress={() => navigation.navigate('AlertsScreen' )}
+                    onPress={() => navigation.navigate('AlertsScreen', { families: familias, email: email, username: username } )}
                 />
 
                 <StyledButton
