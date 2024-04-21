@@ -5,7 +5,6 @@ import {Login} from "./pages/Login"
 import {Register} from "./pages/Register"
 import {Home} from "./pages/Home";
 import {UnlockedScreenDriver} from "./pages/driverScreens/UnlockedScreenDriver";
-import {AlertsScreen} from "./pages/alerts/AlertsScreen";
 import {ConfigurationScreen} from "./pages/driverScreens/ConfigurationScreen";
 import {FamilyProfile} from "./pages/driverScreens/FamilyProfile";
 import {VehiclesScreen} from "./pages/driverScreens/VehiclesScreen";
@@ -16,6 +15,9 @@ import {FamilyVehiclesScreen} from "./pages/driverScreens/FamilyVehiclesScreen";
 import FamilyDetailsScreen from "./pages/driverScreens/FamilyDetailsScreen";
 import AddFamilyScreen from "./pages/driverScreens/AddFamilyScreen";
 import JoinFamilyScreen from "./pages/driverScreens/JoinFamilyScreen";
+import {AlertScreen} from "./pages/alerts/AlertsScreen";
+import {AddAlertScreen} from "./pages/alerts/AddAlertScreen";
+import {AlertsFromFamilyScreen} from "./pages/alerts/AlertsFromFamilyScreen";
 
 const Stack = createNativeStackNavigator(); //used to configure the screens
 
@@ -29,7 +31,7 @@ function AppNavigation() {
                 <Stack.Screen name="Login" component={Login}/>
                 <Stack.Screen name="Register" component={Register}/>
                 <Stack.Screen name="UnlockedScreenDriver" component={UnlockedScreenDriver}/>
-                <Stack.Screen name="AlertsScreen" component={AlertsScreen}/>
+                <Stack.Screen name="AlertsScreen" component={AlertScreen}/>
                 <Stack.Screen name="ConfigurationScreen" component={ConfigurationScreen}/>
                 <Stack.Screen name="FamilyProfile" component={FamilyProfile}/>
                 <Stack.Screen name="VehiclesScreen" component={VehiclesScreen}/>
@@ -39,6 +41,10 @@ function AppNavigation() {
                 <Stack.Screen name="FamilyDetailsScreen" component={FamilyDetailsScreen}/>
                 <Stack.Screen name="AddFamilyScreen" component={AddFamilyScreen}/>
                 <Stack.Screen name="JoinFamilyScreen" component={JoinFamilyScreen}/>
+                <Stack.Screen name="AddAlertScreen" component={AddAlertScreen}/>
+                <Stack.Screen name="AlertsFromFamilyScreen" component={AlertsFromFamilyScreen}/>
+
+
 
             </Stack.Navigator>
         </NavigationContainer>
