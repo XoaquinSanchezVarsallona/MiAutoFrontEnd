@@ -1,5 +1,6 @@
-import React, {useEffect} from 'react';
+import React, {useCallback, useEffect} from 'react';
 import {ImageBackground, Pressable, StyleSheet, Text, View} from 'react-native';
+import {useFocusEffect} from "@react-navigation/native";
 
 export function FamilyProfile({ navigation, route }) {
     const [familiesData, setFamilies] = React.useState([]);
@@ -59,8 +60,11 @@ export function FamilyProfile({ navigation, route }) {
                     <Text style={styles.noFamiliesText}>No families available</Text>
                 )}
             </View>
-            <Pressable style={styles.addFamilyButton} onPress={() => navigation.navigate('AddFamilyScreen', { username })}>
+            <Pressable style={styles.addFamilyButton} onPress={() => navigation.navigate('AddFamilyScreen', { username, email })}>
                 <Text style={styles.addFamilyText}>Add a new family</Text>
+            </Pressable>
+            <Pressable style={styles.addFamilyButton} onPress={() => navigation.navigate('JoinFamilyScreen', { username, email })}>
+                <Text style={styles.addFamilyText}>Join a family</Text>
             </Pressable>
         </ImageBackground>
     );

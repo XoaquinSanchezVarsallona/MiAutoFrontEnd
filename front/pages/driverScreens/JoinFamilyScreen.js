@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
 
-function AddFamilyScreen({ navigation, route }) {
+function JoinFamilyScreen({ navigation, route }) {
     const [surname, setSurname] = useState('');
     const { username, email } = route.params;
 
-    const addFamily = async () => {
+    const joinToFamily = async () => {
         try {
-            const response = await fetch(`http://localhost:9002/user/${username}/addFamily`, {
+            const response = await fetch(`http://localhost:9002/user/${username}/joinToFamily`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -15,16 +15,17 @@ function AddFamilyScreen({ navigation, route }) {
                 body: JSON.stringify({ surname }),
             });
             if (response.ok) {
-                alert('Family added successfully');
-
+                alert('Join to family successfully');
                 navigation.reset({
                     index: 0,
                     routes: [{ name: 'UnlockedScreenDriver', params: { email: email }}],
                 });
+            } else if (response.status === 404) {
+                alert("Family doesn't exist");
             } else if (response.status === 400) {
-                alert("Family already exists");
+                alert("You are already in that family");
             } else {
-                console.error('Failed to add family');
+                alert('Failed to join to family. Please try again.');
             }
         } catch (error) {
             console.error('Error:', error);
@@ -33,14 +34,14 @@ function AddFamilyScreen({ navigation, route }) {
 
     return (
         <View style={styles.container}>
-            <Text>Add New Family</Text>
+            <Text>Join to Family</Text>
             <TextInput
                 style={styles.input}
                 value={surname}
                 onChangeText={setSurname}
                 placeholder="Surname"
             />
-            <Button title="Add Family" onPress={addFamily} />
+            <Button title="Join to Family" onPress={joinToFamily} />
         </View>
     );
 }
@@ -60,4 +61,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default AddFamilyScreen;
+export default JoinFamilyScreen;
