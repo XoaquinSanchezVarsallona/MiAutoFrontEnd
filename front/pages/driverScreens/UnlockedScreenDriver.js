@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {StyleSheet, View, Text, ImageBackground} from 'react-native';
 import StyledButton from "../../components/StyledButton";
 import { useFocusEffect } from '@react-navigation/native';
@@ -26,9 +26,8 @@ export function UnlockedScreenDriver({ navigation, route, children }) {
                     console.error('Error:', error);
                 }
             };
-
             fetchAndSetUser().then(r => console.log(r));
-        }, [email, navigation])
+        }, [email])
     );
     return (
         <ImageBackground source={require('../../assets/BackgroundUnlocked.jpg')} style={styles.container}>
