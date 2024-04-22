@@ -54,14 +54,24 @@ export function AddNewVehicle({ navigation, route }) {
             <TextInput
                 style={styles.input}
                 value={fechaVencimientoSeguro}
-                onChangeText={setFechaVencimientoSeguro}
-                placeholder="Insurance Expiry"
+                keyboardType="numbers-and-punctuation"
+                onChangeText={(text) => {
+                    if (/^(\d{0,2})(\/(\d{0,2})?)?(\/(\d{0,4})?)?$/.test(text) || text === '') {
+                        setFechaVencimientoSeguro(text);
+                    }
+                }}
+                placeholder="Insurance Expiry (DD/MM/YYYY)"
             />
             <TextInput
                 style={styles.input}
                 value={fechaVencimientoVTV}
-                onChangeText={setFechaVencimientoVTV}
-                placeholder="VTV Expiry"
+                keyboardType="numbers-and-punctuation"
+                onChangeText={(text) => {
+                    if (/^(\d{0,2})(\/(\d{0,2})?)?(\/(\d{0,4})?)?$/.test(text) || text === '') {
+                        setFechaVencimientoVTV(text);
+                    }
+                }}
+                placeholder="VTV Expiry (DD/MM/YYYY)"
             />
             <TextInput
                 style={styles.input}

@@ -25,7 +25,10 @@ export function FamilyVehiclesScreen({ navigation, route }) {
     };
 
     useEffect(() => {
-        fetchFamilias(families)
+        // Create a new array with duplicate family IDs removed
+        const uniqueFamilies = [...new Set(families)];
+
+        fetchFamilias(uniqueFamilies)
             .then(fetchedFamilies => {
                 console.log('Fetched families:', fetchedFamilies);
                 setFamilies(fetchedFamilies);
