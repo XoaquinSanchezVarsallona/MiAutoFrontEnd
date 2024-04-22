@@ -44,23 +44,25 @@ function JoinFamilyScreen({ navigation, route }) {
     };
 
     return (
-        <View style={styles.container}>
-            <Text>Join to Family</Text>
-            <TextInput
-                style={styles.input}
-                value={surname}
-                onChangeText={setSurname}
-                placeholder="Surname"
-            />
-            <TextInput // Add this block
-                style={styles.input}
-                value={password}
-                onChangeText={setPassword}
-                placeholder="Password"
-                //secureTextEntry
-            />
-            <Button title="Join to Family" onPress={joinToFamily} />
-        </View>
+        <ImageBackground source={require('../../../assets/BackgroundUnlocked.jpg')} style={styles.container}>
+            <View style={styles.container}>
+                <Text>Join to Family</Text>
+                <TextInput
+                    style={styles.input}
+                    value={surname}
+                    onChangeText={setSurname}
+                    placeholder="Surname"
+                />
+                <TextInput // Add this block
+                    style={styles.input}
+                    value={password}
+                    onChangeText={setPassword}
+                    placeholder="Password"
+                    //secureTextEntry
+                />
+                <Button title="Join to Family" onPress={joinToFamily} />
+            </View>
+        </ImageBackground>
     );
 }
 

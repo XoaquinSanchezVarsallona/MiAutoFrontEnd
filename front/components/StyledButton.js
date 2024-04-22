@@ -1,26 +1,27 @@
 import React from 'react';
-import { Image, Pressable, StyleSheet } from 'react-native';
+import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 
-function StyledButton({ icon, onPress }) {
+function StyledButton({ icon, text, onPress }) {
     return (
-        <Pressable onPress={onPress} style={styles.button}>
-            <Image source={icon} style={styles.icon} />
-        </Pressable>
+        <TouchableOpacity onPress={onPress} style={{ alignItems: 'center' }}>
+            <Image source={icon} />
+            <Text style={styles.textLabel}>{text}</Text>
+        </TouchableOpacity>
     );
 }
 
 const styles = StyleSheet.create({
-    button: {
-        //padding: 10, // Padding inside the button
-        //margin: 5, // Margin around the button
-        flex: 1,
-        alignItems: 'center', // Center the icon inside the button
-    },
     icon: {
         width: 100,
         height: 100,
         resizeMode: 'contain' // Keep the icon's aspect ratio
     },
+    textLabel: {
+        color: 'white',
+        fontSize: 20,
+        fontWeight: 'bold',
+    }
+
 });
 
 export default StyledButton;
