@@ -3,6 +3,7 @@ import { View, Text, TextInput, Button, StyleSheet,  } from 'react-native';
 
 function AddFamilyScreen({ navigation, route }) {
     const [surname, setSurname] = useState('');
+    const [password, setPassword] = useState(''); // Add this line
     const { username, email } = route.params;
 
     const addFamily = async () => {
@@ -12,7 +13,7 @@ function AddFamilyScreen({ navigation, route }) {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ surname }),
+                body: JSON.stringify({ surname, password }),
             });
             if (response.ok) {
                 const familias = await response.json(); // Parse the JSON response from the server
@@ -38,6 +39,13 @@ function AddFamilyScreen({ navigation, route }) {
                 value={surname}
                 onChangeText={setSurname}
                 placeholder="Surname"
+            />
+            <TextInput // Add this block
+                style={styles.input}
+                value={password}
+                onChangeText={setPassword}
+                placeholder="Password"
+                //secureTextEntry
             />
             <Button title="Add Family" onPress={addFamily} />
         </View>

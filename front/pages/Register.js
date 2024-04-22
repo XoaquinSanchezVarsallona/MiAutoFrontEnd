@@ -12,6 +12,23 @@ export function Register( {navigation, route}) {
     const [username, setUsername] = useState('');
     const [domicilio, setDomicilio] = useState('');
     const handleRegister = () => {
+        if (!email.includes('@')) {
+            alert('Please enter a valid email address.');
+            return;
+        }
+        if (password.length < 8) {
+            alert('Password must be at least 8 characters.');
+            return;
+        }
+        if (userType === 'driver' && (username === '' || name === '' || surname === '' || domicilio === '')) {
+            alert('Please fill in all fields.');
+            return;
+        }
+        if (userType === 'service' && serviceName === '') {
+            alert('Please fill in all fields.');
+            return;
+        }
+
         console.log("Attempting to register:", email, password);
 
         // Dependiendo del userType, se guarda info distinta
@@ -43,6 +60,7 @@ export function Register( {navigation, route}) {
             .then(response => {
                 if (response.ok) { // Si se guarda bien en la base de datos, se desbloquea la pantalla
                     console.log('Registration successful');
+                    alert('Registration succesful');
 
                     if (userType === 'driver') {
                         navigation.navigate('Login', { userType });
