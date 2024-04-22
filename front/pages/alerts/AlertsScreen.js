@@ -50,7 +50,7 @@ export function AlertScreen({ navigation, route }) {
                                     navigation.navigate('AlertsFromFamilyScreen', { family: family, email: email  });
                                 }}
                             >
-                                <Text style={styles.familyName}>{family.surname}</Text>
+                                <Text style={styles.addFamilyText}>{family.surname}</Text>
                             </Pressable>
                         )
                     ))
@@ -118,6 +118,12 @@ const styles = StyleSheet.create({
     noAlertsText: {
         fontSize: 18,
         color: 'white',
+        fontWeight: '500',
+        textAlign: 'center',
+    },
+    noFamiliesText: {
+        fontSize: 18,
+        color: 'white', // This will make the text color white
         fontWeight: '500',
         textAlign: 'center',
     },
