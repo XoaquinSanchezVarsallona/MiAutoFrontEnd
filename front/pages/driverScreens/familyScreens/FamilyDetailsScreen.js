@@ -65,7 +65,7 @@ function FamilyDetailsScreen({ route, navigation }) {
     };
 
     return (
-        <ImageBackground source={require('../../assets/BackgroundUnlocked.jpg')} style={styles.container}>
+        <ImageBackground source={require('../../../assets/BackgroundUnlocked.jpg')} style={styles.container}>
             <View style={styles.headerContainer}>
                 <Text style={styles.title}>Edit Family: {family.surname}</Text>
             </View>

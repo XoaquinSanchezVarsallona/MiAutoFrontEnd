@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, View, Text, ImageBackground} from 'react-native';
+import {StyleSheet, View, Text, ImageBackground, Button} from 'react-native';
 import StyledButton from "../../components/StyledButton";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export function UnlockedScreenDriver({ navigation, route, children }) {
     const { email } = route.params; //
@@ -24,17 +25,36 @@ export function UnlockedScreenDriver({ navigation, route, children }) {
             .catch(error => console.error('Error:', error));
     }, [email]);  // useEffect will re-run when email changes
 
+    const logout = async () => {
+        try {
+            //
+            //elimino el token del storage local
+            await AsyncStorage.removeItem('userToken');
+
+            //chequeo
+            console.log('Token eliminado', AsyncStorage.getItem('userToken'));
+
+            // This resets the stack navigator to the initial route
+            navigation.reset({index: 0, routes: [{ name: 'Home' }],});
+        } catch (error) {
+            console.error('Logout failed:', error);
+        }
+    };
+
+
     return (
         <ImageBackground source={require('../../assets/BackgroundUnlocked.jpg')} style={styles.container}>
             <View style={styles.header}>
                 <Text style={styles.headerTitle}>MIAUTO</Text>
-                <StyledButton style={styles.configurationButton}
-                    icon={require('../../assets/configuration.png')}
-                    onPress={() => navigation.navigate('ConfigurationScreen' )}
-                />
+                <Button title="Logout" onPress={logout} color="#fff" />
             </View>
 
             {children}
+
+            <StyledButton
+                icon={require('../../assets/configuration.png')}
+                onPress={() => navigation.navigate('ConfigurationScreen' )}
+            />
 
             <View style={styles.buttonRow}>
                 <StyledButton
@@ -44,7 +64,7 @@ export function UnlockedScreenDriver({ navigation, route, children }) {
 
                 <StyledButton
                     icon={require('../../assets/family.png')}
-                    onPress={() => navigation.navigate('FamilyProfile', { families: familias, email: email, username: username } )}
+                    onPress={() => navigation.navigate('FamilyProfile' )}
                 />
 
                 <StyledButton
@@ -65,22 +85,20 @@ export function UnlockedScreenDriver({ navigation, route, children }) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        alignItems: 'center',
     },
     header: {
-        flexDirection: 'row',
-        paddingLeft: 425,
-        padding: 20,
-        paddingTop: 40,
+        flexDirection: 'row', // Align items in a row
+        justifyContent: 'space-between', // Space between the title and button
+        alignItems: 'center', // Center items vertically
+        width: '100%', // Take full width to allow space between elements
+        padding: 20, // Add padding for aesthetics
+        paddingTop: 40, // Add top padding to account for status bar height
     },
     headerTitle: {
-        fontSize: 125,
+        fontSize: 24,
         fontWeight: 'bold',
         color: '#FFFFFF',
-    },
-    configurationButton: {
-        position: 'absolute', // Position absolutely within the header
-        paddingLeft: 260, // Adjust the value as needed for your layout
-        top: 40, // Adjust according to the padding of the header
     },
     subTitle: {
         fontSize: 18,
