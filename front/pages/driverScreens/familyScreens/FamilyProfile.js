@@ -24,15 +24,20 @@ export function FamilyProfile({ navigation, route }) {
     };
 
     useEffect(() => {
-        fetchFamilias(families)
+        // Create a new array with duplicate family IDs removed
+        const uniqueFamilies = [...new Set(families)];
+
+        fetchFamilias(uniqueFamilies)
             .then(fetchedFamilies => {
                 console.log('Fetched families:', fetchedFamilies);
                 setFamilies(fetchedFamilies);
             })
             .catch(error => console.error('Error:', error));
-    }, [families, navigation]);
+    }, [families]);
 
-    useEffect(() => { }, [familiesData, navigation]);
+    useEffect(() => {
+        console.log('Families:', familiesData);
+    }, [familiesData]);
 
     return (
         <ImageBackground source={require('../../../assets/BackgroundUnlocked.jpg')} style={styles.container}>

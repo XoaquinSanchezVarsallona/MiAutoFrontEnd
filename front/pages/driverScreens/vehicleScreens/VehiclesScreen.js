@@ -9,7 +9,7 @@ export function VehiclesScreen({ navigation, route }) {
 
     const fetchPatentes = async (familySurname) => {
         try {
-            const response = await fetch(`http://localhost:9002/vehicle/family/${familyId}`);
+            const response = await fetch(`http://localhost:9002/vehicles/family/${familyId}`);
             if (response.ok) {
                 return await response.json();
             } else {
