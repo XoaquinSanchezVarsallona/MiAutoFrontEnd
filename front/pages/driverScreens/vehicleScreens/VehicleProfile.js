@@ -31,7 +31,7 @@ export function VehicleProfile({ navigation, route }) {
                     <TouchableOpacity style={styles.deleteButton} onPress={deleteVehicle}>
                         <Text style={styles.buttonText}>Delete Vehicle</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.modifyButton} onPress={() => {/* Función de modificación */}}>
+                    <TouchableOpacity style={styles.modifyButton} onPress={() => { navigation.navigate("EditCarProfile", {patente : vehicle.patente} ) }}>
                         <Text style={styles.buttonText}>Modify Vehicle Details</Text>
                     </TouchableOpacity>
                 </View>

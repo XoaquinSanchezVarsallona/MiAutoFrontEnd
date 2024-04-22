@@ -19,6 +19,7 @@ import {AlertScreen} from "./pages/alerts/AlertsScreen";
 import {AddAlertScreen} from "./pages/alerts/AddAlertScreen";
 import {AlertsFromFamilyScreen} from "./pages/alerts/AlertsFromFamilyScreen";
 import VehicleProfile from "./pages/driverScreens/vehicleScreens/VehicleProfile";
+import {EditCarProfile} from "./pages/driverScreens/editProfile/EditCarProfile";
 
 const Stack = createNativeStackNavigator(); //used to configure the screens
 
@@ -45,7 +46,7 @@ function AppNavigation() {
                 <Stack.Screen name="AddAlertScreen" component={AddAlertScreen}/>
                 <Stack.Screen name="AlertsFromFamilyScreen" component={AlertsFromFamilyScreen}/>
                 <Stack.Screen name="VehicleProfile" component={VehicleProfile}/>
-
+                <Stack.Screen name="EditCarProfile" component={EditCarProfile}/>
             </Stack.Navigator>
         </NavigationContainer>
     );

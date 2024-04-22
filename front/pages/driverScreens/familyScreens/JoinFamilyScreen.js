@@ -15,11 +15,19 @@ function JoinFamilyScreen({ navigation, route }) {
                 body: JSON.stringify({ surname }),
             });
             if (response.ok) {
-                alert('Join to family successfully');
+                /*alert('Join to family successfully');
                 navigation.reset({
                     index: 0,
                     routes: [{ name: 'UnlockedScreenDriver', params: { email: email }}],
-                });
+                });*/
+
+                const familias = await response.json(); // Parse the JSON response from the server
+
+                alert('Joined to added successfully');
+
+                navigation.navigate('FamilyProfile', { email: email, families: familias, username: username });
+
+
             } else if (response.status === 404) {
                 alert("Family doesn't exist");
             } else if (response.status === 400) {
