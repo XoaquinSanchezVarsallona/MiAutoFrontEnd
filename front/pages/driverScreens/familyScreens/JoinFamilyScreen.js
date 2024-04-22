@@ -3,6 +3,7 @@ import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
 
 function JoinFamilyScreen({ navigation, route }) {
     const [surname, setSurname] = useState('');
+    const [password, setPassword] = useState('');
     const { username, email } = route.params;
 
     const joinToFamily = async () => {
@@ -12,7 +13,7 @@ function JoinFamilyScreen({ navigation, route }) {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ surname }),
+                body: JSON.stringify({ surname, password }),
             });
             if (response.ok) {
                 /*alert('Join to family successfully');
@@ -32,6 +33,8 @@ function JoinFamilyScreen({ navigation, route }) {
                 alert("Family doesn't exist");
             } else if (response.status === 400) {
                 alert("You are already in that family");
+            } else if (response.status === 401) {
+                alert("Incorrect password");
             } else {
                 alert('Failed to join to family. Please try again.');
             }
@@ -48,6 +51,13 @@ function JoinFamilyScreen({ navigation, route }) {
                 value={surname}
                 onChangeText={setSurname}
                 placeholder="Surname"
+            />
+            <TextInput // Add this block
+                style={styles.input}
+                value={password}
+                onChangeText={setPassword}
+                placeholder="Password"
+                //secureTextEntry
             />
             <Button title="Join to Family" onPress={joinToFamily} />
         </View>
