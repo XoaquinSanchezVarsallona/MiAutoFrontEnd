@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, View, Text, ImageBackground} from 'react-native';
 import StyledButton from "../../components/StyledButton";
+import { useFocusEffect } from '@react-navigation/native';
 
 export function UnlockedScreenDriver({ navigation, route, children }) {
     const { email } = route.params; //
@@ -8,22 +9,27 @@ export function UnlockedScreenDriver({ navigation, route, children }) {
     const [familias, setFamilies] = useState([]);
 
     // UseEffect tiene el objetivo de obtener el username en base al email
-    useEffect(() => {
-        // Fetch the username based on the email
-        fetch(`http://localhost:9002/user/${email}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        })
-            .then(response => response.json())
-            .then(data => {
-                setUsername(data.username);
-                setFamilies(data.familias)
-            })
-            .catch(error => console.error('Error:', error));
-    }, [email]);  // useEffect will re-run when email changes
+    useFocusEffect(
+        React.useCallback(() => {
+            const fetchAndSetUser = async () => {
+                try {
+                    const response = await fetch(`http://localhost:9002/user/${email}`, {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                    });
+                    const data = await response.json();
+                    setUsername(data.username);
+                    setFamilies(data.familias);
+                } catch (error) {
+                    console.error('Error:', error);
+                }
+            };
 
+            fetchAndSetUser().then(r => console.log(r));
+        }, [email, navigation])
+    );
     return (
         <ImageBackground source={require('../../assets/BackgroundUnlocked.jpg')} style={styles.container}>
             <View style={styles.header}>

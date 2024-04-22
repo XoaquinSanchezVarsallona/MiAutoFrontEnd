@@ -1,5 +1,6 @@
-import React, {useEffect} from 'react';
+import React, {} from 'react';
 import {StyleSheet, View, Text, ImageBackground, Pressable, ScrollView} from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 
 export function VehiclesScreen({ navigation, route }) {
     const { familySurname, familyId } = route.params;
@@ -36,26 +37,27 @@ export function VehiclesScreen({ navigation, route }) {
         }
     };
 
-    // Primero busco las patentes de la familia
-    useEffect(() => {
-        fetchPatentes(familySurname)
-            .then(fetchedPatentes => {
-                console.log('Fetched patentes:', fetchedPatentes);
+    useFocusEffect(
+        React.useCallback(() => {
+            const fetchAndSetPatentes = async () => {
+                const fetchedPatentes = await fetchPatentes(familySurname);
                 setPatentes(fetchedPatentes);
-            })
-            .catch(error => console.error('Error:', error));
-    }, [familySurname]);
+            };
 
-    // Luego busco los autos en base a las patentes
-    useEffect(() => {
-        fetchVehicles(patentesData)
-            .then(fetchedVehicles => {
-                console.log('Fetched vehicles:', fetchedVehicles);
+            fetchAndSetPatentes().then(r => console.log(r));
+        }, [familySurname])
+    );
+
+    useFocusEffect(
+        React.useCallback(() => {
+            const fetchAndSetVehicles = async () => {
+                const fetchedVehicles = await fetchVehicles(patentesData);
                 setVehicles(fetchedVehicles);
-            })
-            .catch(error => console.error('Error:', error));
-    }, [patentesData]);
+            };
 
+            fetchAndSetVehicles().then(r => console.log(r));
+        }, [patentesData])
+    );
     return (
         <ImageBackground source={require('../../../assets/BackgroundUnlocked.jpg')} style={styles.container}>
             <View style={styles.headerContainer}>

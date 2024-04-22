@@ -1,5 +1,5 @@
 import {StyleSheet, View, Text, ImageBackground, TextInput, Button} from 'react-native';
-import {useEffect, useState} from "react";
+import {useState} from "react";
 
 export function AddNewVehicle({ navigation, route }) {
     const { familySurname, familyId } = route.params;

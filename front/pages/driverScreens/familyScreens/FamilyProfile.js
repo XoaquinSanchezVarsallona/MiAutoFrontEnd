@@ -30,9 +30,9 @@ export function FamilyProfile({ navigation, route }) {
                 setFamilies(fetchedFamilies);
             })
             .catch(error => console.error('Error:', error));
-    }, [families]);
+    }, [families, navigation]);
 
-    useEffect(() => { }, [familiesData]);
+    useEffect(() => { }, [familiesData, navigation]);
 
     return (
         <ImageBackground source={require('../../../assets/BackgroundUnlocked.jpg')} style={styles.container}>

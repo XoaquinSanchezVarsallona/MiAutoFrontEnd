@@ -33,7 +33,7 @@ export function FamilyVehiclesScreen({ navigation, route }) {
             .catch(error => console.error('Error:', error));
     }, [families]);
 
-    useEffect(() => { }, [familiesData]);
+    useEffect(() => { }, [familiesData, families]);
 
     return (
         <ImageBackground source={require('../../../assets/BackgroundUnlocked.jpg')} style={styles.container}>
