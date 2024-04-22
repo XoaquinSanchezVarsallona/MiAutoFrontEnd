@@ -2,6 +2,7 @@ import React from 'react';
 import {StyleSheet, View, Text, ImageBackground, TouchableOpacity} from 'react-native';
 import StyledButton from "../../components/StyledButton";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import StyledButton2 from "../../components/StyledButton2";
 
 export function ConfigurationScreen({ navigation }) {
     const logout = async () => {
@@ -25,13 +26,15 @@ export function ConfigurationScreen({ navigation }) {
             <View style={styles.headerContainer}>
                 <Text style={styles.title}>Configuration</Text>
                 <TouchableOpacity style={styles.buttonContainer} onPress={logout}>
-                    <StyledButton
+                    <StyledButton2
+                        onPress={logout}
                         icon={require('../../assets/logout.png')}
                     />
                     <Text style={styles.subtitle}>Logout</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.buttonContainer} onPress={() => navigation.navigate('EditProfile')}>
-                    <StyledButton
+                    <StyledButton2
+                        onPress={logout}
                         icon={require('../../assets/pencil.png')}
                     />
                     <Text style={styles.subtitle}>Edit Profile</Text>
@@ -65,6 +68,7 @@ const styles = StyleSheet.create({
         marginBottom: 10, // Space below the title
     },
     buttonContainer: {
+        height: 100,
         width: '25%',
         flexDirection: 'row',
         padding: 10,

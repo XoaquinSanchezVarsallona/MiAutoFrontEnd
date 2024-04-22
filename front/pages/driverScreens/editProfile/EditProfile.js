@@ -3,7 +3,8 @@ import { StyleSheet, View, Text, ImageBackground, ScrollView, TextInput } from '
 import StyledButton from "../../../components/StyledButton";
 import jwtDecode from 'jwt-decode'; //importo decoder de token
 import { AuthContext } from "../../AuthContext";
-import AsyncStorage from "@react-native-async-storage/async-storage"; //importo authContext
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import StyledButton2 from "../../../components/StyledButton2"; //importo authContext
 
 
 
@@ -126,7 +127,7 @@ export function EditProfile({ navigation }) {
                             value={inputs[field]}
                             placeholder={`New ${field}`}
                         />
-                        <StyledButton
+                        <StyledButton2
                             icon={icons[`Edit ${field}`]}
                             onPress={() => handleSave(field)}
                         />
