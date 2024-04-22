@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
+import {View, Text, TextInput, Button, StyleSheet, ImageBackground} from 'react-native';
 
 function JoinFamilyScreen({ navigation, route }) {
     const [surname, setSurname] = useState('');
@@ -41,16 +41,18 @@ function JoinFamilyScreen({ navigation, route }) {
     };
 
     return (
-        <View style={styles.container}>
-            <Text>Join to Family</Text>
-            <TextInput
-                style={styles.input}
-                value={surname}
-                onChangeText={setSurname}
-                placeholder="Surname"
-            />
-            <Button title="Join to Family" onPress={joinToFamily} />
-        </View>
+        <ImageBackground source={require('../../../assets/BackgroundUnlocked.jpg')} style={styles.container}>
+            <View style={styles.container}>
+                <Text>Join to Family</Text>
+                <TextInput
+                    style={styles.input}
+                    value={surname}
+                    onChangeText={setSurname}
+                    placeholder="Surname"
+                />
+                <Button title="Join to Family" onPress={joinToFamily} />
+            </View>
+        </ImageBackground>
     );
 }
 

@@ -7,11 +7,13 @@ export function Home({ navigation }) {
             <Text style={styles.title}>Login as</Text>
             <View style={styles.buttonContainer}>
                 <StyledButton
-                    icon={require('../assets/car.png')} // Make sure the icon path is correct
+                    icon={require('../assets/car.png')}
+                    text="Driver"
                     onPress={() => navigation.navigate('Login', { userType: 'driver' })}
                 />
                 <StyledButton
-                    icon={require('../assets/hammer.png')} // Make sure the icon path is correct
+                    icon={require('../assets/hammer.png')}
+                    text="Service"
                     onPress={() => navigation.navigate('Login', { userType: 'service' })}
                 />
             </View>
@@ -35,9 +37,9 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
     title: {
-        fontSize: 24,
+        fontSize: 70,
         color: 'white',
-        marginBottom: 30,
+        marginBottom: 60,
     },
     button: {
         marginVertical: 10, //espacio entre botones

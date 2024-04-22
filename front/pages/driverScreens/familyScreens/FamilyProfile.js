@@ -1,5 +1,6 @@
 import React, {useEffect} from 'react';
 import {ImageBackground, Pressable, ScrollView, StyleSheet, Text, View} from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 
 export function FamilyProfile({ navigation, route }) {
     const [familiesData, setFamilies] = React.useState([]);
@@ -23,17 +24,19 @@ export function FamilyProfile({ navigation, route }) {
         }
     };
 
-    useEffect(() => {
-        // Create a new array with duplicate family IDs removed
-        const uniqueFamilies = [...new Set(families)];
+    useFocusEffect(
+        React.useCallback(() => {
+            // Create a new array with duplicate family IDs removed
+            const uniqueFamilies = [...new Set(families)];
 
-        fetchFamilias(uniqueFamilies)
-            .then(fetchedFamilies => {
-                console.log('Fetched families:', fetchedFamilies);
-                setFamilies(fetchedFamilies);
-            })
-            .catch(error => console.error('Error:', error));
-    }, [families]);
+            fetchFamilias(uniqueFamilies)
+                .then(fetchedFamilies => {
+                    console.log('Fetched families:', fetchedFamilies);
+                    setFamilies(fetchedFamilies);
+                })
+                .catch(error => console.error('Error:', error));
+        }, [families])
+    );
 
     useEffect(() => {
         console.log('Families:', familiesData);
