@@ -36,7 +36,7 @@ export function UnlockedScreenDriver({ navigation, route, children }) {
                 <Text style={styles.headerTitle}>MIAUTO</Text>
                 <StyledButton style={styles.configurationButton}
                     icon={require('../../assets/configuration.png')}
-                    onPress={() => navigation.navigate('ConfigurationScreen' )}
+                    onPress={() => navigation.navigate('ConfigurationScreen')}
                 />
             </View>
 

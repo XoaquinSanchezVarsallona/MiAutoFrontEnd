@@ -7,7 +7,7 @@ export function AlertsFromFamilyScreen({ navigation, route }) {
 
     const fetchAlerts = async () => {
         try {
-            const response = await fetch(`http://localhost:9002/alertas/family/${family.surname}`);
+            const response = await fetch(`http://localhost:9002/alertasss/family/${family.surname}`);
             if (response.ok) {
                 console.log("Fetching alerts for family: ", family.surname);
                 const alerts = await response.json();

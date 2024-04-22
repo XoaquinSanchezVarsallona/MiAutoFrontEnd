@@ -8,7 +8,7 @@ export function AddAlertScreen({ navigation, route }) {
 
     const addAlert = async () => {
         try {
-            const response = await fetch(`http://localhost:9002/alerts/add`, {
+            const response = await fetch(`http://localhost:9002/alertas/add`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

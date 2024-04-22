@@ -77,7 +77,21 @@ export function EditProfile({ navigation }) {
     //función que se encarga de enviar los datos al backend, y muestra un mensaje de éxito o error
     const handleSave = async (field) => {
         const newValue = inputs[field];
-        const {userID} = inputs;
+        const {userID, username, name, surname, domicilio, password, email} = inputs;
+
+        if (field === 'email' && !newValue.includes('@')) {
+            alert('Please enter a valid email address.');
+            return;
+        }
+        if (field === 'password' && newValue.length < 8) {
+            alert('Password must be at least 8 characters.');
+            return;
+        }
+        if (field === 'username' && (username === '' || name === '' || surname === '' || domicilio === '')) {
+            alert('Please fill in all fields.');
+            return;
+        }
+
         console.log(`Attempting to save ${field} with value: ${newValue}`);
 
 
