@@ -41,7 +41,7 @@ export function FamilyVehiclesScreen({ navigation, route }) {
     return (
         <ImageBackground source={require('../../../assets/BackgroundUnlocked.jpg')} style={styles.container}>
             <View style={styles.headerContainer}>
-                <Text style={styles.title}>WELCOME TO FAMILIES CAR'S SCREEN</Text>
+                <Text style={styles.title}>Familias con Autos</Text>
             </View>
 
             <ScrollView style={styles.familiesList} contentContainerStyle={styles.contentContainerStyle}>

@@ -10,6 +10,7 @@ export function UnlockedScreenDriver({ navigation, route, children }) {
     const [username, setUsername] = useState('');
     const [familias, setFamilies] = useState([]);
 
+
     // UseEffect tiene el objetivo de obtener el username en base al email
     useFocusEffect(
         React.useCallback(() => {

@@ -135,7 +135,7 @@ export function EditProfile({ navigation }) {
                             value={inputs[field]}
                             placeholder={`New ${field}`}
                         />
-                        <StyledButton
+                        <StyledButton2
                             icon={icons[`Edit ${field}`]}
                             onPress={() => handleSave(field)}
                         />
@@ -163,14 +163,17 @@ const styles = StyleSheet.create({
     input: {
         flex: 1,
         height: 40,
+        color: 'white',
         borderColor: 'gray',
         borderWidth: 1,
         marginRight: 10,
         paddingHorizontal: 10,
     },
     title: {
-        fontSize: 24,
-        marginBottom: 20,
+        fontSize: 60,
+        color: 'white',
+        fontWeight: 'bold',
+        marginBottom: 10,
     },
     buttonText: {
         fontSize: 16,

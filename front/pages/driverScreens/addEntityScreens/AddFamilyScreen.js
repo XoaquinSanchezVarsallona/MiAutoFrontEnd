@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet,  } from 'react-native';
+import {View, Text, TextInput, Button, StyleSheet, ImageBackground,} from 'react-native';
 
 function AddFamilyScreen({ navigation, route }) {
     const [surname, setSurname] = useState('');
@@ -32,23 +32,25 @@ function AddFamilyScreen({ navigation, route }) {
     };
 
     return (
-        <View style={styles.container}>
-            <Text>Add New Family</Text>
-            <TextInput
-                style={styles.input}
-                value={surname}
-                onChangeText={setSurname}
-                placeholder="Surname"
-            />
-            <TextInput // Add this block
-                style={styles.input}
-                value={password}
-                onChangeText={setPassword}
-                placeholder="Password"
-                //secureTextEntry
-            />
-            <Button title="Add Family" onPress={addFamily} />
-        </View>
+        <ImageBackground source={require('../../../assets/BackgroundUnlocked.jpg')} style={styles.container}>
+            <View style={styles.container}>
+                    <Text style={styles.title}>Add New Family</Text>
+                    <TextInput
+                        style={styles.input}
+                        value={surname}
+                        onChangeText={setSurname}
+                        placeholder="Surname"
+                    />
+                    <TextInput // Add this block
+                        style={styles.input}
+                        value={password}
+                        onChangeText={setPassword}
+                        placeholder="Password"
+                        //secureTextEntry
+                    />
+                    <Button title="Agregar familia nueva" onPress={addFamily} />
+                </View>
+        </ImageBackground>
     );
 }
 
@@ -59,11 +61,19 @@ const styles = StyleSheet.create({
         padding: 20,
     },
     input: {
+        color: 'white',
         height: 40,
         borderColor: 'gray',
         borderWidth: 1,
         marginBottom: 20,
         paddingLeft: 10,
+    },
+    title: {
+        fontSize: 60,
+        color: 'white',
+        fontWeight: 'bold',
+        marginBottom: 10,
+        alignContent: 'center',
     },
 });
 

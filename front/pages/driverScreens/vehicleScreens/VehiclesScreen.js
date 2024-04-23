@@ -7,15 +7,21 @@ export function VehiclesScreen({ navigation, route }) {
     const [patentesData, setPatentes] = React.useState([]);
     const [vehiclesData, setVehicles] = React.useState([]);
 
-    const fetchPatentes = async (familySurname) => {
+    const fetchPatentes = async (familySurname, data) => {
         try {
-            const response = await fetch(`http://localhost:9002/vehicles/family/${familyId}`);
-            if (response.ok) {
-                return await response.json();
-            } else {
-                console.log(`Failed to fetch cars for family: ${familySurname}`);
-                return [];
-            }
+            const response = await fetch(`http://localhost:9002/vehicles/${familyId}`, {
+            method: 'POST',
+                headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        });
+        if (response.ok) {
+            return await response.json();
+        } else {
+            console.log('Failed to fetch cars for family: ${familySurname}');
+            return [];
+        }
         } catch (error) {
             console.error('Error:', error);
         }
