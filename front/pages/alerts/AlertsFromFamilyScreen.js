@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Button, StyleSheet } from 'react-native';
+import {View, Text, Button, StyleSheet, ImageBackground} from 'react-native';
 
 export function AlertsFromFamilyScreen({ navigation, route }) {
     const { family, email } = route.params;
@@ -39,23 +39,25 @@ export function AlertsFromFamilyScreen({ navigation, route }) {
     }, []);
 
     return (
-        <View style={styles.container}>
-            <Text style={styles.title}>Alerts for {family.surname}</Text>
-            {alerts.length > 0 ? (
-                alerts.map((alert, index) => (
-                    <View key={index} style={styles.alertContainer}>
-                        <View style={styles.alertTextContainer}>
-                            <Text>{alert.message}</Text>
+        <ImageBackground source={require('../../assets/BackgroundUnlocked.jpg')} style={styles.container}>
+            <View style={styles.container}>
+                <Text style={styles.title}>Alerts for {family.surname}</Text>
+                {alerts.length > 0 ? (
+                    alerts.map((alert, index) => (
+                        <View key={index} style={styles.alertContainer}>
+                            <View style={styles.alertTextContainer}>
+                                <Text>{alert.message}</Text>
+                            </View>
+                            <View style={styles.alertButtonContainer}>
+                                <Button title="Delete" onPress={() => deleteAlert(alert.idAlert)} />
+                            </View>
                         </View>
-                        <View style={styles.alertButtonContainer}>
-                            <Button title="Delete" onPress={() => deleteAlert(alert.idAlert)} />
-                        </View>
-                    </View>
-                ))
-            ) : (
-                <Text>No alerts available</Text>
-            )}
-        </View>
+                    ))
+                ) : (
+                    <Text>No alerts available</Text>
+                )}
+            </View>
+        </ImageBackground>
     );
 }
 

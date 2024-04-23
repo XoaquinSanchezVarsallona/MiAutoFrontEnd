@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
+import {View, Text, TextInput, Button, StyleSheet, ImageBackground} from 'react-native';
 
 function JoinFamilyScreen({ navigation, route }) {
     const [surname, setSurname] = useState('');

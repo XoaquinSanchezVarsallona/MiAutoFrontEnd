@@ -1,13 +1,8 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import { StyleSheet, View, Text, ImageBackground, ScrollView, TextInput } from 'react-native';
-import StyledButton from "../../../components/StyledButton";
-import jwtDecode from 'jwt-decode'; //importo decoder de token
-import { AuthContext } from "../../AuthContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import StyledButton2 from "../../../components/StyledButton2"; //importo authContext
-
-
-
+import StyledButton2 from "../../../components/StyledButton2";
+import StyledButton from "../../../components/StyledButton";
 
 const icons = {
     'Edit username': require('../../../assets/pencil.png'),
@@ -16,7 +11,6 @@ const icons = {
     'Edit email': require('../../../assets/pencil.png'),
     'Edit surname': require('../../../assets/pencil.png'),
     'Edit domicilio': require('../../../assets/pencil.png'),
-
 };
 
 const fields = [
@@ -141,7 +135,7 @@ export function EditProfile({ navigation }) {
                             value={inputs[field]}
                             placeholder={`New ${field}`}
                         />
-                        <StyledButton2
+                        <StyledButton
                             icon={icons[`Edit ${field}`]}
                             onPress={() => handleSave(field)}
                         />

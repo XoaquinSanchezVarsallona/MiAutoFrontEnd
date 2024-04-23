@@ -1,6 +1,7 @@
 import React, { useState} from 'react';
 import { StyleSheet, View, Text, ImageBackground, ScrollView, TextInput } from 'react-native';
 import StyledButton from "../../../components/StyledButton";
+import StyledButton3 from "../../../components/StyleButton3";
 
 const icons = {
     'Edit username': require('../../../assets/pencil.png'),
@@ -70,7 +71,6 @@ export function EditCarProfile({ navigation , route}) {
 
             // Update UI or notify user based on success
             alert(`Updated ${field} successfully!`);
-            navigation.navigate('FamilyProfile')
         } catch (error) {
             console.error('Error updating profile:', error);
             alert('Failed to update profile. Please try again.');
@@ -89,7 +89,7 @@ export function EditCarProfile({ navigation , route}) {
                             value={inputs[field]}
                             placeholder={`New ${field}`}
                         />
-                        <StyledButton
+                        <StyledButton3
                             icon={icons[`Edit ${field}`]}
                             onPress={() => handleSave(field)}
                         />
