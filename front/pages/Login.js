@@ -7,6 +7,10 @@ export function Login({navigation, route}) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const { signIn, userToken } = useContext(AuthContext);
+    const [errorMessage, setErrorMessage] = useState('');
+    const [isHovered, setIsHovered] = useState(false);
+    const inputStyleEmail = email.length > 0 ? styles.inputNormal : styles.inputItalic;
+    const inputStylePassword = password.length > 0 ? styles.inputNormal : styles.inputItalic;
 
     // Función que se ejecuta cuando se presiona el botón de "Log In"
     // Agarra el mail y password y manda un HTTP POST request al backend.
@@ -53,7 +57,7 @@ export function Login({navigation, route}) {
             })
             .catch(error => {
                 console.error('Error during login:', error);
-                alert('Login error: ' + error.message);
+                setErrorMessage(error.message || 'Login error. Please try again.')
             });
     };
 
@@ -76,24 +80,40 @@ export function Login({navigation, route}) {
     return (
         <ImageBackground source={require('../assets/BackgroundLocked.jpg')} style={styles.container}>
             <Text style={styles.title}>Login</Text>
-            <TextInput
-                style={styles.input}
-                placeholder="Email"
-                value={email}
-                onChangeText={setEmail}
-            />
-            <TextInput
-                style={styles.input}
-                placeholder="Password"
-                secureTextEntry //se ven puntitos
-                value={password}
-                onChangeText={setPassword}
-            />
+            <View style={styles.container}>
+                <Text style={styles.label}>Email</Text>
+                <TextInput
+                    style={inputStyleEmail}
+                    placeholder="Email"
+                    value={email}
+                    onChangeText={setEmail}
+                    placeholderTextColor="#FFFFFF80"
+                />
+                <Text style={styles.label}>Password</Text>
+                <TextInput
+                    style={inputStylePassword}
+                    placeholder="Password"
+                    secureTextEntry={true}
+                    value={password}
+                    onChangeText={setPassword}
+                    placeholderTextColor="#FFFFFF80"
+                />
+            </View>
+            <View style={styles.errorContainer}>
+                {errorMessage ? <Text style={styles.errorText}>{errorMessage}</Text> : <Text style={styles.errorText}></Text>}
+            </View>
             {/*Función que hace login del usuario en la bd*/}
-            <Pressable style={styles.button} onPress={handleLogin}>
-                <Text style={styles.buttonText}>Log In</Text>
-            </Pressable>
-            <View style={{ flexDirection: 'row' }}>
+            <View style={styles.buttonContainer}>
+                <Pressable
+                    style={[styles.button, isHovered ? styles.buttonHover : null]}
+                    onPress={handleLogin}
+                    onMouseEnter={() => setIsHovered(true)}
+                    onMouseLeave={() => setIsHovered(false)}
+                >
+                    <Text style={[styles.buttonText, isHovered ? styles.textHover : null]}>Log In</Text>
+                </Pressable>
+            </View>
+            <View style={{ flexDirection: 'row', paddingBottom: 30 }}>
                 <Text style={styles.littletext}>Don't have an account? </Text>
                 <Pressable onPress={() => navigation.navigate('Register', { userType })}>
                     <Text style={styles.linkText}>Register here</Text>
@@ -110,10 +130,19 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         padding: 20,
     },
+    label: {
+        alignSelf: 'flex-start',
+        color: 'white',
+        fontSize: 16,
+        fontWeight: 'bold',
+        marginBottom: 5,
+        marginLeft: 2,
+        padding: 2,
+    },
     title: {
         fontSize: 70,
-        marginBottom: 20,
         color: 'white',
+        paddingTop: 30,
     },
     littletext: {
         fontSize: 20,
@@ -121,22 +150,21 @@ const styles = StyleSheet.create({
         color: 'white',
     },
     input: {
-        width: '25%',
+        width: 300,
         borderWidth: 1,
         borderColor: 'gray',
         padding: 10,
-        marginBottom: 10,
+        marginBottom: 5,
         color: 'white',
     },
     button: {
-        width: '10%',
+        width: '100%',
         borderColor: 'gray',
         borderWidth: 3,
         padding: 10,
         alignItems: 'center',
         justifyContent: 'center',
         borderRadius: 5,
-        marginTop: 10,
     },
     buttonText: {
         color: 'white',
@@ -146,4 +174,45 @@ const styles = StyleSheet.create({
         margin: 20,
         color: 'blue',
     },
+    errorContainer: {
+        height: 20,
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginBottom: 10,
+    },
+    errorText: {
+        fontSize: 16,
+        color: 'red',
+    },
+    buttonContainer: {
+        marginBottom: 20,
+        width: '8%',
+    },
+    buttonHover: {
+        backgroundColor: 'rgba(128, 128, 128, 0.5)',
+        borderColor: 'lightgray',
+        fontWeight: 'bold',
+    },
+    textHover: {
+        color: 'white',
+        fontWeight: 'bold',
+    },
+    inputNormal: {
+        width: 300,
+        borderWidth: 1,
+        borderColor: 'gray',
+        padding: 10,
+        marginBottom: 5,
+        color: 'white',
+        fontStyle: 'normal',
+    },
+    inputItalic: {
+        width: 300,
+        borderWidth: 1,
+        borderColor: 'gray',
+        padding: 10,
+        marginBottom: 5,
+        color: 'white',
+        fontStyle: 'italic',
+    }
 });
