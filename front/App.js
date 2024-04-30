@@ -1,4 +1,5 @@
 import React from 'react';
+import {useFonts} from 'expo-font';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {Login} from "./pages/Login"
@@ -19,35 +20,42 @@ import {AlertScreen} from "./pages/alerts/AlertsScreen";
 import {AddAlertScreen} from "./pages/alerts/AddAlertScreen";
 import {AlertsFromFamilyScreen} from "./pages/alerts/AlertsFromFamilyScreen";
 import VehicleProfile from "./pages/driverScreens/vehicleScreens/VehicleProfile";
+import {PaperProvider} from "react-native-paper";
 
 const Stack = createNativeStackNavigator(); //used to configure the screens
 
 function AppNavigation() {
     //const { userToken } = useContext(AuthContext);
-
+    let [fontsLoaded] = useFonts({
+        'Vidaloka-Regular': require('./assets/fonts/Vidaloka-Regular.ttf'),
+    });
+    if (!fontsLoaded) {
+        return null; // or a loading screen
+    }
     return (
-        <NavigationContainer>
-            <Stack.Navigator initialRouteName="Home">
-                <Stack.Screen name="Home" component={Home}/>
-                <Stack.Screen name="Login" component={Login}/>
-                <Stack.Screen name="Register" component={Register}/>
-                <Stack.Screen name="UnlockedScreenDriver" component={UnlockedScreenDriver}/>
-                <Stack.Screen name="AlertsScreen" component={AlertScreen}/>
-                <Stack.Screen name="ConfigurationScreen" component={ConfigurationScreen}/>
-                <Stack.Screen name="FamilyProfile" component={FamilyProfile}/>
-                <Stack.Screen name="VehiclesScreen" component={VehiclesScreen}/>
-                <Stack.Screen name="AddNewVehicle" component={AddNewVehicle}/>
-                <Stack.Screen name="FamilyVehiclesScreen" component={FamilyVehiclesScreen}/>
-                <Stack.Screen name="EditProfile" component={EditProfile}/>
-                <Stack.Screen name="FamilyDetailsScreen" component={FamilyDetailsScreen}/>
-                <Stack.Screen name="AddFamilyScreen" component={AddFamilyScreen}/>
-                <Stack.Screen name="JoinFamilyScreen" component={JoinFamilyScreen}/>
-                <Stack.Screen name="AddAlertScreen" component={AddAlertScreen}/>
-                <Stack.Screen name="AlertsFromFamilyScreen" component={AlertsFromFamilyScreen}/>
-                <Stack.Screen name="VehicleProfile" component={VehicleProfile}/>
-
-            </Stack.Navigator>
-        </NavigationContainer>
+        <PaperProvider>
+            <NavigationContainer>
+                <Stack.Navigator initialRouteName="Home">
+                    <Stack.Screen name="Home" component={Home}/>
+                    <Stack.Screen name="Login" component={Login}/>
+                    <Stack.Screen name="Register" component={Register}/>
+                    <Stack.Screen name="UnlockedScreenDriver" component={UnlockedScreenDriver}/>
+                    <Stack.Screen name="AlertsScreen" component={AlertScreen}/>
+                    <Stack.Screen name="ConfigurationScreen" component={ConfigurationScreen}/>
+                    <Stack.Screen name="FamilyProfile" component={FamilyProfile}/>
+                    <Stack.Screen name="VehiclesScreen" component={VehiclesScreen}/>
+                    <Stack.Screen name="AddNewVehicle" component={AddNewVehicle}/>
+                    <Stack.Screen name="FamilyVehiclesScreen" component={FamilyVehiclesScreen}/>
+                    <Stack.Screen name="EditProfile" component={EditProfile}/>
+                    <Stack.Screen name="FamilyDetailsScreen" component={FamilyDetailsScreen}/>
+                    <Stack.Screen name="AddFamilyScreen" component={AddFamilyScreen}/>
+                    <Stack.Screen name="JoinFamilyScreen" component={JoinFamilyScreen}/>
+                    <Stack.Screen name="AddAlertScreen" component={AddAlertScreen}/>
+                    <Stack.Screen name="AlertsFromFamilyScreen" component={AlertsFromFamilyScreen}/>
+                    <Stack.Screen name="VehicleProfile" component={VehicleProfile}/>
+                </Stack.Navigator>
+            </NavigationContainer>
+        </PaperProvider>
     );
 }
 

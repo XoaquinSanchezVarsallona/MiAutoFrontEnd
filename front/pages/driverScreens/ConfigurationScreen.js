@@ -22,8 +22,8 @@ export function ConfigurationScreen({ navigation }) {
 
     return (
         <ImageBackground source={require('../../assets/BackgroundUnlocked.jpg')} style={styles.container}>
+            <Text style={styles.title}>Configuration</Text>
             <View style={styles.headerContainer}>
-                <Text style={styles.title}>Configuration</Text>
                 <TouchableOpacity style={styles.buttonContainer} onPress={logout}>
                     <StyledButton
                         icon={require('../../assets/logout.png')}
@@ -33,6 +33,12 @@ export function ConfigurationScreen({ navigation }) {
                 <TouchableOpacity style={styles.buttonContainer} onPress={() => navigation.navigate('EditProfile')}>
                     <StyledButton
                         icon={require('../../assets/pencil.png')}
+                    />
+                    <Text style={styles.subtitle}>View Profile</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.buttonContainer} onPress={() => navigation.navigate('ViewProfile')}>
+                    <StyledButton
+                        icon={require('../../assets/user.png')}
                     />
                     <Text style={styles.subtitle}>Edit Profile</Text>
                 </TouchableOpacity>
@@ -49,8 +55,10 @@ const styles = StyleSheet.create({
         padding: 16,
     },
     headerContainer: {
-        width: '100%',
+        flexDirection: 'row',
+        justifyContent: 'space-evenly',
         alignItems: 'center',
+        width: '100%',
     },
     title: {
         fontSize: 60,

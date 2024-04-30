@@ -89,9 +89,11 @@ const styles = StyleSheet.create({
         top: 0,
     },
     headerTitle: {
+        fontFamily: 'Vidaloka-Regular',
         fontSize: 125,
         fontWeight: 'bold',
         color: '#FFFFFF',
+        letterSpacing: 10,
     },
     configurationButton: {
         position: 'absolute',

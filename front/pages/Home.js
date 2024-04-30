@@ -1,4 +1,4 @@
-import {StyleSheet, View, Text, Button, Pressable, ImageBackground} from 'react-native';
+import {StyleSheet, View, Text, ImageBackground} from 'react-native';
 import StyledButton from "../components/StyledButton";
 
 export function Home({ navigation }) {
@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
     title: {
-        fontSize: 70,
+        fontSize: 80,
         color: 'white',
         marginBottom: 60,
     },
