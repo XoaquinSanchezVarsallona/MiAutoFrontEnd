@@ -46,10 +46,17 @@ export function Login({navigation, route}) {
                     console.log('Sign in complete, waiting for userToken update');
 
                     //crea una nueva ruta que comienza en la página unlockedScreen, para que no pueda volver al login.
-                    navigation.reset({
-                        index: 0,
-                        routes: [{ name: 'UnlockedScreenDriver', params: { email: email }}],
-                    });
+                    if (userType === 'driver') {
+                        navigation.reset({
+                            index: 0,
+                            routes: [{ name: 'UnlockedScreenDriver', params: { email: email }}],
+                        });
+                    } else if (userType === 'service') {
+                        navigation.reset({
+                            index: 0,
+                            routes: [{ name: 'UnlockedScreenService', params: { email: email }}],
+                        });
+                    }
 
                 } else {
                     throw new Error('Token not found in response');
@@ -66,7 +73,11 @@ export function Login({navigation, route}) {
         console.log('Effect userToken:', userToken);
         if (userToken) {
             console.log('userToken has changed:', userToken);
-            navigation.navigate('UnlockedScreenDriver');
+            if (userType === 'driver') {
+                navigation.navigate('UnlockedScreenDriver');
+            } else if (userType === 'service') {
+                navigation.navigate('UnlockedScreenService');
+            }
         }
     }, [userToken, navigation]);
 

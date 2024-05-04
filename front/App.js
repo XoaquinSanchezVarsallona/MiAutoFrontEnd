@@ -21,6 +21,10 @@ import {AddAlertScreen} from "./pages/alerts/AddAlertScreen";
 import {AlertsFromFamilyScreen} from "./pages/alerts/AlertsFromFamilyScreen";
 import VehicleProfile from "./pages/driverScreens/vehicleScreens/VehicleProfile";
 import {EditCarProfile} from "./pages/driverScreens/editProfile/EditCarProfile";
+import {UnlockedScreenService} from "./pages/serviceScreens/UnlockedScreenService";
+import {AddNewStore} from "./pages/serviceScreens/AddNewStore";
+import StoreProfile from "./pages/serviceScreens/StoreProfile";
+import {EditStoreProfile} from "./pages/serviceScreens/EditStoreProfile";
 import {PaperProvider} from "react-native-paper";
 
 const Stack = createNativeStackNavigator(); //used to configure the screens
@@ -55,6 +59,10 @@ function AppNavigation() {
                     <Stack.Screen name="AlertsFromFamilyScreen" component={AlertsFromFamilyScreen}/>
                     <Stack.Screen name="VehicleProfile" component={VehicleProfile}/>
                     <Stack.Screen name="EditCarProfile" component={EditCarProfile}/>
+                    <Stack.Screen name="UnlockedScreenService" component={UnlockedScreenService}/>
+                    <Stack.Screen name="AddNewStore" component={AddNewStore}/>
+                    <Stack.Screen name="StoreProfile" component={StoreProfile}/>
+                    <Stack.Screen name="EditStoreProfile" component={EditStoreProfile}/>
                 </Stack.Navigator>
             </NavigationContainer>
         </PaperProvider>
