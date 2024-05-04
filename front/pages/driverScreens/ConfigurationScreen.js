@@ -1,6 +1,5 @@
 import React from 'react';
 import {StyleSheet, View, Text, ImageBackground, TouchableOpacity} from 'react-native';
-import StyledButton from "../../components/StyledButton";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import StyledButton2 from "../../components/StyledButton2";
 
@@ -34,16 +33,17 @@ export function ConfigurationScreen({ navigation }) {
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.buttonContainer} onPress={() => navigation.navigate('EditProfile')}>
                     <StyledButton2
-                        onPress={logout}
+                        onPress={() => navigation.navigate('EditProfile')}
                         icon={require('../../assets/pencil.png')}
                     />
-                    <Text style={styles.subtitle}>View Profile</Text>
+                    <Text style={styles.subtitle}>Edit Profile</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.buttonContainer} onPress={() => navigation.navigate('ViewProfile')}>
-                    <StyledButton
+                    <StyledButton2
+                        onPress={() => navigation.navigate('ViewProfile')}
                         icon={require('../../assets/user.png')}
                     />
-                    <Text style={styles.subtitle}>Edit Profile</Text>
+                    <Text style={styles.subtitle}>View Profile</Text>
                 </TouchableOpacity>
             </View>
         </ImageBackground>
@@ -53,7 +53,7 @@ export function ConfigurationScreen({ navigation }) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'center',
+        justifyContent: 'flex-start',
         alignItems: 'center',
         padding: 16,
     },
@@ -64,10 +64,11 @@ const styles = StyleSheet.create({
         width: '100%',
     },
     title: {
+        padding: 20,
+        paddingBottom: 60,
         fontSize: 60,
-        color: 'white',
         fontWeight: 'bold',
-        marginBottom: 10,
+        color: '#FFFFFF',
     },
     subtitle: {
         color: 'white',

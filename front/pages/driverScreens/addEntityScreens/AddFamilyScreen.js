@@ -5,6 +5,7 @@ function AddFamilyScreen({ navigation, route }) {
     const [surname, setSurname] = useState('');
     const [password, setPassword] = useState(''); // Add this line
     const { username, email } = route.params;
+    const [errorMessage, setErrorMessage] = useState('');
 
     const addFamily = async () => {
         try {
@@ -27,6 +28,7 @@ function AddFamilyScreen({ navigation, route }) {
                 console.error('Failed to add family');
             }
         } catch (error) {
+            setErrorMessage(error.message || 'Login error. Please try again.')
             console.error('Error:', error);
         }
     };
@@ -48,7 +50,8 @@ function AddFamilyScreen({ navigation, route }) {
                         placeholder="Password"
                         //secureTextEntry
                     />
-                    <Button title="Agregar familia nueva" onPress={addFamily} />
+                {errorMessage ? <Text style={styles.errorText}>{errorMessage}</Text> : <Text style={styles.errorText}></Text>}
+                <Button title="Agregar familia nueva" onPress={addFamily} />
                 </View>
         </ImageBackground>
     );
@@ -74,6 +77,10 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         marginBottom: 10,
         alignContent: 'center',
+    },
+    errorText: {
+        fontSize: 16,
+        color: 'red',
     },
 });
 

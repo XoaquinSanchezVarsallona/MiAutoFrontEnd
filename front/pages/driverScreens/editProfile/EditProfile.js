@@ -2,7 +2,6 @@ import React, {useEffect, useState} from 'react';
 import { StyleSheet, View, Text, ImageBackground, ScrollView, TextInput } from 'react-native';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import StyledButton2 from "../../../components/StyledButton2";
-import StyledButton from "../../../components/StyledButton";
 
 const icons = {
     'Edit username': require('../../../assets/pencil.png'),
@@ -17,27 +16,25 @@ const fields = [
     'username', 'domicilio', 'name', 'password', 'email', 'surname'
 ];
 
-export function EditProfile({ navigation }) {
+export function EditProfile({  }) {
     //const userToken  = AsyncStorage.getItem("userToken"); // agarro el token del authContext (si esta loggineado, lo va a tener)
 
-
-    //esto tendrá los valores de los inputs
     const [inputs, setInputs] = useState({
         userID: '',
+        username: '',
         domicilio: '',
         name: '',
-        password: '',
-        email: '',
         surname: '',
-        username: '',
+        email: '',
     });
+    const [canFetchProfile, setCanFetchProfile] = useState(false);
 
+    // This effect runs once and fetches the token and user ID
     useEffect(() => {
-        const loadUserProfile = async () => {
+        async function loadUserProfile() {
             const token = await AsyncStorage.getItem('userToken');
             if (token) {
-                // Send token to your backend to validate and get user details
-                const response = await fetch('http://localhost:9002//validateToken', {
+                const response = await fetch('http://localhost:9002/validateToken', {
                     method: 'POST',
                     headers: {
                         'Authorization': `Bearer ${token}`,
@@ -46,19 +43,48 @@ export function EditProfile({ navigation }) {
                 });
                 const data = await response.json();
                 if (response.ok) {
-                    setInputs({
-                        ...inputs,
-                        userID: data.userId,  // Assume your backend sends back the userId
-                        username: data.username, // And any other fields needed
-                    });
+                    setInputs(prevInputs => ({
+                        ...prevInputs,
+                        userID: data.userId,
+                        username: data.username,
+                    }));
+                    setCanFetchProfile(true); // Enable fetching more details
                 } else {
                     console.error('Token validation failed:', data.message);
+                    setCanFetchProfile(false);
                 }
             }
-        };
-
-        loadUserProfile();
+        }
+        loadUserProfile().then(r => console.log(r));
     }, []);
+
+    // This effect runs only when canFetchProfile is set to true
+    useEffect(() => {
+        if (canFetchProfile) {
+            async function fetchAndSetUser() {
+                try {
+                    const response = await fetch(`http://localhost:9002/user/${inputs.userID}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                    });
+                    const data = await response.json();
+                    setInputs(prevInputs => ({
+                        ...prevInputs,
+                        domicilio: data.domicilio,
+                        name: data.name,
+                        surname: data.surname,
+                        email: data.email,
+                    }));
+                } catch (error) {
+                    console.error('Error:', error);
+                }
+            }
+            fetchAndSetUser().then(r => console.log(r));
+        }
+    }, [canFetchProfile, inputs.userID]); // Depend on canFetchProfile
+
 
 
     //función que se encarga de cambiar el valor de los inputs en tiempo real
@@ -127,20 +153,46 @@ export function EditProfile({ navigation }) {
         <ImageBackground source={require('../../../assets/BackgroundUnlocked.jpg')} style={styles.container}>
             <ScrollView contentContainerStyle={styles.scrollContainer}>
                 <Text style={styles.title}>Edit Profile</Text>
-                {fields.map((field, index) => (
-                    <View key={index} style={styles.inputContainer}>
-                        <TextInput
-                            style={styles.input}
-                            onChangeText={(text) => handleInputChange(field, text)}
-                            value={inputs[field]}
-                            placeholder={`New ${field}`}
-                        />
-                        <StyledButton2
-                            icon={icons[`Edit ${field}`]}
-                            onPress={() => handleSave(field)}
-                        />
+                <View style={styles.columnsContainer}>
+                    <View style={styles.column}>
+                        {fields.slice(0, 3).map((field, index) => (
+                            <View key={index} style={styles.inputContainer}>
+                                <Text style={styles.label}>{field.charAt(0).toUpperCase() + field.slice(1)}</Text>
+                                <View style={styles.inputRow}>
+                                    <TextInput
+                                        style={styles.input}
+                                        onChangeText={(text) => handleInputChange(field, text)}
+                                        value={inputs[field]}
+                                        placeholder={inputs[field]}
+                                    />
+                                    <StyledButton2
+                                        icon={icons[`Edit ${field}`]}
+                                        onPress={() => handleSave(field)}
+                                    />
+                                </View>
+                            </View>
+                        ))}
                     </View>
-                ))}
+                    <View style={styles.column}>
+                        {fields.slice(3, 6).map((field, index) => (
+                            <View key={index} style={styles.inputContainer}>
+                                <Text style={styles.label}>{field.charAt(0).toUpperCase() + field.slice(1)}</Text>
+                                <View style={styles.inputRow}>
+                                    <TextInput
+                                        style={styles.input}
+                                        onChangeText={(text) => handleInputChange(field, text)}
+                                        value={inputs[field]}
+                                        placeholder={inputs[field]}
+                                    />
+                                    <StyledButton2
+                                        icon={icons[`Edit ${field}`]}
+                                        onPress={() => handleSave(field)}
+                                    />
+                                </View>
+                            </View>
+                        ))}
+                    </View>
+                </View>
             </ScrollView>
         </ImageBackground>
     );
@@ -150,15 +202,37 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 16,
+        alignItems: 'center',
+    },
+    columnsContainer: {
+        flexDirection: 'row',  // Aligns children in a row
+        justifyContent: 'space-around',  // Distributes space around the columns
+        width: '100%',
+    },
+    column: {
+        flexDirection: 'column',
+        width: '50%',
+        padding: 25,
     },
     scrollContainer: {
         alignItems: 'center',
-        paddingTop: 20,
+    },
+    label: {
+        alignSelf: 'flex-start',
+        color: 'white',
+        fontSize: 16,
+        fontWeight: 'bold',
+        marginLeft: 2,
     },
     inputContainer: {
-        flexDirection: 'row',
+        flexDirection: 'column',
+        width: '25%',
         alignItems: 'center',
-        marginBottom: 10,
+    },
+    inputRow: {
+        flexDirection: 'row',
+        width: '100%',
+        alignItems: 'center',
     },
     input: {
         flex: 1,
@@ -175,8 +249,6 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         marginBottom: 10,
     },
-    buttonText: {
-        fontSize: 16,
-        marginLeft: 10,
-    },
 });
+
+

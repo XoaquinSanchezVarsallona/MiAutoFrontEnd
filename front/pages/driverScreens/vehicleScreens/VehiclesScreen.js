@@ -9,7 +9,7 @@ export function VehiclesScreen({ navigation, route }) {
 
     const fetchPatentes = async (familySurname, data) => {
         try {
-            const response = await fetch(`http://localhost:9002/vehicles/${familyId}`, {
+            const response = await fetch(`http://localhost:9002/vehicles/family/${familyId}`, {
             method: 'POST',
                 headers: {
                 'Content-Type': 'application/json',
@@ -87,6 +87,10 @@ export function VehiclesScreen({ navigation, route }) {
                                 <Text style={styles.vehicleText}>Brand: {vehicle.marca}</Text>
                                 <Text style={styles.vehicleText}>Model: {vehicle.modelo}</Text>
                                 <Text style={styles.vehicleText}>License Plate: {vehicle.patente}</Text>
+                                <View style={styles.stateStyle}>
+                                    <Text style={styles.vehicleText}>State:</Text>
+                                    <View style={[styles.stateIndicator, {backgroundColor: '#32cd32', borderRadius: 4}]}/>
+                                </View>
                             </Pressable>
                         )
                     ))
@@ -165,5 +169,13 @@ const styles = StyleSheet.create({
         color: 'white',
         textAlign: 'center',
         marginTop: 20, // Add some space at the top of the message
+    },
+    stateIndicator: {
+        height: 20,
+        width: 20,
+        marginLeft: 10,
+    },
+    stateStyle: {
+        flexDirection: 'row',
     },
 });

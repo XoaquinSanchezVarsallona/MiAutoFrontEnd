@@ -30,7 +30,7 @@ export function UnlockedScreenDriver({ navigation, route, children }) {
                 }
             };
             fetchAndSetUser().then(r => console.log(r));
-        }, [email])
+        }, [])
     );
 
     return (
