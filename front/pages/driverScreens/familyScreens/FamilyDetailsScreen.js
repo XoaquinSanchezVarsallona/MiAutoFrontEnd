@@ -82,7 +82,7 @@ function FamilyDetailsScreen({ route, navigation }) {
                 <Pressable style={styles.addFamilyButton} onPress={updateSurname}>
                     <Text style={styles.addFamilyText}>Update Surname</Text>
                 </Pressable>
-                <Pressable style={styles.addFamilyButton} onPress={deleteFamily}>
+                <Pressable style={styles.deleteFamilyButton} onPress={deleteFamily}>
                     <Text style={styles.addFamilyText}>Delete Family</Text>
                 </Pressable>
             </View>
@@ -137,6 +137,19 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20,
         marginVertical: 8,
         backgroundColor: '#32cd32', // A vibrant green color
+        borderRadius: 20,
+        elevation: 4,
+        shadowColor: '#000', // Shadow for iOS
+        shadowOffset: { width: 0, height: 2 }, // Shadow for iOS
+        shadowOpacity: 0.25, // Shadow for iOS
+        shadowRadius: 3.84, // Shadow for iOS
+    },
+    deleteFamilyButton: {
+        width: '40%',
+        paddingVertical: 12, // Increase padding for a larger touch area
+        paddingHorizontal: 20,
+        marginVertical: 8,
+        backgroundColor: 'red',
         borderRadius: 20,
         elevation: 4,
         shadowColor: '#000', // Shadow for iOS
