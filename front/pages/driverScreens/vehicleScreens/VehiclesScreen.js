@@ -10,18 +10,18 @@ export function VehiclesScreen({ navigation, route }) {
     const fetchPatentes = async (familySurname, data) => {
         try {
             const response = await fetch(`http://localhost:9002/vehicles/family/${familyId}`, {
-            method: 'POST',
+                method: 'POST',
                 headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data),
-        });
-        if (response.ok) {
-            return await response.json();
-        } else {
-            console.log('Failed to fetch cars for family: ${familySurname}');
-            return [];
-        }
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            });
+            if (response.ok) {
+                return await response.json();
+            } else {
+                console.log('Failed to fetch cars for family: ${familySurname}');
+                return [];
+            }
         } catch (error) {
             console.error('Error:', error);
         }

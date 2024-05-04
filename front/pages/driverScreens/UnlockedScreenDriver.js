@@ -59,6 +59,12 @@ export function UnlockedScreenDriver({ navigation, route, children }) {
                 />
 
                 <StyledButton
+                    icon={require('../../assets/hammer.png')}
+                    onPress={() => navigation.navigate('StoreUnlockedScreen', { } )}
+                    text={'Stores'}
+                />
+
+                <StyledButton
                     icon={require('../../assets/family.png')}
                     onPress={() => navigation.navigate('FamilyProfile', { families: familias, email: email, username: username } )}
                     text={'Families'}
@@ -92,6 +98,7 @@ const styles = StyleSheet.create({
         top: 0,
     },
     headerTitle: {
+        marginLeft: 25,
         fontFamily: 'Vidaloka-Regular',
         fontSize: 125,
         fontWeight: 'bold',
