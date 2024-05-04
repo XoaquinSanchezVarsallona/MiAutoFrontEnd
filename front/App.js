@@ -27,6 +27,7 @@ import StoreProfile from "./pages/serviceScreens/StoreProfile";
 import {EditStoreProfile} from "./pages/serviceScreens/EditStoreProfile";
 import {PaperProvider} from "react-native-paper";
 import {ViewProfile} from "./pages/driverScreens/ViewProfile";
+import {StoreUnlockedScreen} from "./pages/driverScreens/storesScreens/StoreUnlockedScreen";
 
 const Stack = createNativeStackNavigator(); //used to configure the screens
 
@@ -65,6 +66,7 @@ function AppNavigation() {
                     <Stack.Screen name="AddNewStore" component={AddNewStore}/>
                     <Stack.Screen name="StoreProfile" component={StoreProfile}/>
                     <Stack.Screen name="EditStoreProfile" component={EditStoreProfile}/>
+                    <Stack.Screen name="StoreUnlockedScreen" component={StoreUnlockedScreen}/>
                 </Stack.Navigator>
             </NavigationContainer>
         </PaperProvider>
