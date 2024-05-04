@@ -27,6 +27,7 @@ import StoreProfile from "./pages/serviceScreens/StoreProfile";
 import {EditStoreProfile} from "./pages/serviceScreens/EditStoreProfile";
 import {PaperProvider} from "react-native-paper";
 import {ViewProfile} from "./pages/driverScreens/ViewProfile";
+import {VehicleRoutes} from "./pages/driverScreens/vehicleScreens/VehicleRoutes";
 
 const Stack = createNativeStackNavigator(); //used to configure the screens
 
@@ -60,11 +61,12 @@ function AppNavigation() {
                     <Stack.Screen name="AlertsFromFamilyScreen" component={AlertsFromFamilyScreen}/>
                     <Stack.Screen name="VehicleProfile" component={VehicleProfile}/>
                     <Stack.Screen name="EditCarProfile" component={EditCarProfile}/>
-                    <Stack.Screen name={"ViewProfile"} component={ViewProfile}/>
+                    <Stack.Screen name="ViewProfile" component={ViewProfile}/>
                     <Stack.Screen name="UnlockedScreenService" component={UnlockedScreenService}/>
                     <Stack.Screen name="AddNewStore" component={AddNewStore}/>
                     <Stack.Screen name="StoreProfile" component={StoreProfile}/>
                     <Stack.Screen name="EditStoreProfile" component={EditStoreProfile}/>
+                    <Stack.Screen name="VehicleRoutes" component={VehicleRoutes}/>
                 </Stack.Navigator>
             </NavigationContainer>
         </PaperProvider>

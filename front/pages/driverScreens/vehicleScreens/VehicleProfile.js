@@ -3,6 +3,7 @@ import {Image, View, Text, StyleSheet, ImageBackground, TouchableOpacity} from '
 
 export function VehicleProfile({ navigation, route }) {
     const { vehicle, familySurname } = route.params;
+    const carName = vehicle.marca + ' ' + vehicle.modelo;
 
     const deleteVehicle = async () => {
         try {
@@ -33,6 +34,35 @@ export function VehicleProfile({ navigation, route }) {
                     <Image source={require('../../../assets/grayCar.png')} style={styles.icon} />
                 </View>
             </View>
+            <View style={styles.content}>
+                <View>
+                    <Text style={styles.title}>Information in case of accident</Text>
+                    <Text style={styles.detail}>Expiry: {vehicle.fechaVencimientoSeguro}</Text>
+                    <View style={{ flexDirection: 'row' }}>
+                        <TouchableOpacity style={styles.notifyButton} >
+                            <Text style={styles.buttonText}>Notify Accident</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.modifyInfoButton} >
+                            <Text style={styles.buttonText}>Modify Info</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+                <View>
+                    <Image source={require('../../../assets/carcrash.png')} style={styles.crashicon} />
+                </View>
+            </View>
+            <View style={styles.content}>
+                <View>
+                    <Text style={styles.title}>Usage of car</Text>
+                    <Text style={styles.detail}>Add / Modify / Delete / View routes from {carName}</Text>
+                    <TouchableOpacity style={styles.routesButton} onPress={() => navigation.navigate('VehicleRoutes', { vehicle })}>
+                        <Text style={styles.buttonText}>View routes</Text>
+                    </TouchableOpacity>
+                </View>
+                <View>
+                    <Image source={require('../../../assets/statistics.png')} style={styles.statIcon} />
+                </View>
+            </View>
             <View style={styles.buttonContainer}>
                 <TouchableOpacity style={styles.deleteButton} onPress={deleteVehicle}>
                     <Text style={styles.buttonText}>Delete Vehicle</Text>
@@ -47,11 +77,12 @@ export function VehicleProfile({ navigation, route }) {
 
 const styles = StyleSheet.create({
     content: {
-        padding: 20,
-        margin: 10,
+        marginTop: 15,
+        padding: 15,
+        margin: 2,
         backgroundColor: '#f8f8f8',
         borderRadius: 10,
-        width: '80%',
+        width: '60%',
         alignSelf: 'center',
         justifyContent: 'space-between',
         flexDirection: 'row',
@@ -106,6 +137,44 @@ const styles = StyleSheet.create({
     detail: {
         fontSize: 16,
     },
+    notifyButton: {
+        width: '50%',
+        paddingVertical: 6,
+        paddingHorizontal: 10,
+        marginVertical: 5,
+        marginRight: 10,
+        top: 5,
+        backgroundColor: 'red',
+        borderRadius: 10,
+    },
+    modifyInfoButton: {
+        width: '50%',
+        paddingVertical: 6,
+        paddingHorizontal: 10,
+        marginVertical: 5,
+        marginRight: 10,
+        top: 5,
+        backgroundColor: 'orange',
+        borderRadius: 10,
+    },
+    routesButton: {
+        width: '30%',
+        paddingVertical: 6,
+        paddingHorizontal: 10,
+        marginVertical: 5,
+        marginRight: 10,
+        top: 5,
+        backgroundColor: '#1e90ff',
+        borderRadius: 10,
+    },
+    crashicon: {
+        height: 100,
+        width: 400,
+    },
+    statIcon: {
+        height: 100,
+        width: 100,
+    }
 });
 
 export default VehicleProfile;
