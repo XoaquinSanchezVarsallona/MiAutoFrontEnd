@@ -24,7 +24,9 @@ export function UnlockedScreenDriver({ navigation, route, children }) {
                     });
                     const data = await response.json();
                     setUsername(data.username);
+                    console.log('Fetched user:', data.username);
                     setFamilies(data.familias);
+                    console.log('Fetched families:', data.familias);
                 } catch (error) {
                     console.error('Error:', error);
                 }
