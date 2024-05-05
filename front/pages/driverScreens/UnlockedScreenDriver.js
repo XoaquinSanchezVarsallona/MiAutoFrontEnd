@@ -61,7 +61,7 @@ export function UnlockedScreenDriver({ navigation, route, children }) {
 
                 <StyledButton
                     icon={require('../../assets/hammer.png')}
-                    onPress={() => navigation.navigate('StoreUnlockedScreen')}
+                    onPress={() => navigation.navigate('StoreUnlockedScreen', { email: email, username: username } )}
                     text={'Stores'}
                 />
 
