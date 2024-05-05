@@ -45,7 +45,7 @@ export function FamilyProfile({ navigation, route }) {
     return (
         <ImageBackground source={require('../../../assets/BackgroundUnlocked.jpg')} style={styles.container}>
             <View style={styles.headerContainer}>
-                <Text style={styles.title}>Mis Familias</Text>
+                <Text style={styles.title}>My Families</Text>
             </View>
 
             <ScrollView style={styles.familiesScrollView} contentContainerStyle={styles.familiesContentContainer}>

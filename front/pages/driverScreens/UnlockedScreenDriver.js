@@ -3,6 +3,7 @@ import {StyleSheet, View, Text, ImageBackground} from 'react-native';
 import StyledButton from "../../components/StyledButton";
 import { useFocusEffect } from '@react-navigation/native';
 import StyledButton2 from "../../components/StyledButton2";
+import StyledButton4 from "../../components/StyledButton4";
 
 
 export function UnlockedScreenDriver({ navigation, route, children }) {
@@ -60,11 +61,11 @@ export function UnlockedScreenDriver({ navigation, route, children }) {
 
                 <StyledButton
                     icon={require('../../assets/hammer.png')}
-                    onPress={() => navigation.navigate('StoreUnlockedScreen', { } )}
+                    onPress={() => navigation.navigate('StoreUnlockedScreen')}
                     text={'Stores'}
                 />
 
-                <StyledButton
+                <StyledButton4
                     icon={require('../../assets/family.png')}
                     onPress={() => navigation.navigate('FamilyProfile', { families: familias, email: email, username: username } )}
                     text={'Families'}
@@ -112,11 +113,10 @@ const styles = StyleSheet.create({
         padding: 30,
     },
     subTitle: {
-        paddingTop: 115,
+        paddingTop: 120,
         padding: 20,
         fontSize: 30,
         color: '#FFFFFF',
-        marginBottom: 10, // Add some space below the subtitle
     },
     icon: {
         width: 100,
