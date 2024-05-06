@@ -64,11 +64,10 @@ const styles = StyleSheet.create({
         width: '100%',
     },
     title: {
-        padding: 20,
-        paddingBottom: 60,
         fontSize: 60,
+        color: 'white',
         fontWeight: 'bold',
-        color: '#FFFFFF',
+        marginBottom: 10,
     },
     subtitle: {
         color: 'white',

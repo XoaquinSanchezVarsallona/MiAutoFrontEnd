@@ -77,7 +77,7 @@ export function VehiclesScreen({ navigation, route }) {
                                 key={index}
                                 style={styles.vehicleButton}
                                 onPress={() => {
-                                    navigation.navigate('VehicleProfile', { vehicle: vehicle, familySurname: familySurname });
+                                    navigation.navigate('VehicleProfile', { vehicle: vehicle, familySurname: familySurname, familyId: familyId });
                                 }}
                             >
                                 <Text style={styles.vehicleText}>Year: {vehicle.ano}</Text>
@@ -136,7 +136,7 @@ const styles = StyleSheet.create({
         width: '100%',
     },
     addVehicleButton: {
-        width: '40%',
+        width: '20%',
         paddingVertical: 12,
         paddingHorizontal: 20,
         marginVertical: 10,

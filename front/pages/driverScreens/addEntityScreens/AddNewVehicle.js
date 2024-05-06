@@ -1,12 +1,16 @@
-import {StyleSheet, View, Text, ImageBackground, TextInput, Button} from 'react-native';
-import {useState} from "react";
+import {StyleSheet, View, Text, ImageBackground, TextInput, Button, Pressable} from 'react-native';
+import React, {useState} from "react";
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import dayjs from 'dayjs';
 
 export function AddNewVehicle({ navigation, route }) {
     const { familySurname, familyId } = route.params;
     const [patente, setPatente] = useState('');
     const [ano, setAno] = useState('');
-    const [fechaVencimientoSeguro, setFechaVencimientoSeguro] = useState('');
-    const [fechaVencimientoVTV, setFechaVencimientoVTV] = useState('');
+    const [fechaVencimientoSeguro, setFechaVencimientoSeguro] = useState(null);
+    const [fechaVencimientoVTV, setFechaVencimientoVTV] = useState(null);
     const [kilometraje, setKilometraje] = useState('');
     const [marca, setMarca] = useState('');
     const [modelo, setModelo] = useState('');
@@ -37,97 +41,155 @@ export function AddNewVehicle({ navigation, route }) {
     return (
         <ImageBackground source={require('../../../assets/BackgroundUnlocked.jpg')} style={styles.container}>
             <View style={styles.headerContainer}>
-                <Text style={styles.title}>Agregue un nuevo Vehiculo a la familia {familySurname}</Text>
+                <Text style={styles.title}>Add new Vehicle to the {familySurname} family</Text>
                 </View>
-            <TextInput
-                style={styles.input}
-                value={patente}
-                onChangeText={setPatente}
-                placeholder="License Plate"
-            />
-            <TextInput
-                style={styles.input}
-                value={ano}
-                onChangeText={setAno}
-                placeholder="Year"
-            />
-            <TextInput
-                style={styles.input}
-                value={fechaVencimientoSeguro}
-                keyboardType="numbers-and-punctuation"
-                onChangeText={(text) => {
-                    if (/^(\d{0,2})(\/(\d{0,2})?)?(\/(\d{0,4})?)?$/.test(text) || text === '') {
-                        setFechaVencimientoSeguro(text);
-                    }
-                }}
-                placeholder="Insurance Expiry (DD/MM/YYYY)"
-            />
-            <TextInput
-                style={styles.input}
-                value={fechaVencimientoVTV}
-                keyboardType="numbers-and-punctuation"
-                onChangeText={(text) => {
-                    if (/^(\d{0,2})(\/(\d{0,2})?)?(\/(\d{0,4})?)?$/.test(text) || text === '') {
-                        setFechaVencimientoVTV(text);
-                    }
-                }}
-                placeholder="VTV Expiry (DD/MM/YYYY)"
-            />
-            <TextInput
-                style={styles.input}
-                value={kilometraje}
-                onChangeText={setKilometraje}
-                placeholder="Mileage"
-            />
-            <TextInput
-                style={styles.input}
-                value={marca}
-                onChangeText={setMarca}
-                placeholder="Brand"
-            />
-            <TextInput
-                style={styles.input}
-                value={modelo}
-                onChangeText={setModelo}
-                placeholder="Model"
-            />
-            <Button style={styles.addVehicleButton} title="Add Vehicle" onPress={ addVehicle }></Button>
+            <View style={styles.columnsContainer}>
+                <View style={styles.column}>
+                    <View style={styles.inputContainer}>
+                        <Text style={styles.label}>License Plate</Text>
+                        <TextInput
+                            style={styles.input}
+                            value={patente}
+                            onChangeText={setPatente}
+                            placeholder="License Plate"
+                            placeholderTextColor="#FFFFFF80"
+                        />
+                    </View>
+                    <View style={styles.inputContainer}>
+                        <Text style={styles.label}>Year</Text>
+                        <TextInput
+                            style={styles.input}
+                            value={ano}
+                            onChangeText={setAno}
+                            placeholder="Year"
+                            placeholderTextColor="#FFFFFF80"
+                        />
+                    </View>
+                    <View style={styles.inputContainer}>
+                        <Text style={styles.label}>Mileage</Text>
+                        <TextInput
+                            style={styles.input}
+                            value={kilometraje}
+                            onChangeText={setKilometraje}
+                            placeholder="Mileage"
+                            placeholderTextColor="#FFFFFF80"
+                        />
+                    </View>
+                    <View style={styles.inputContainer}>
+                        <Text style={styles.label}>Brand</Text>
+                        <TextInput
+                            style={styles.input}
+                            value={marca}
+                            onChangeText={setMarca}
+                            placeholder="Brand"
+                            placeholderTextColor="#FFFFFF80"
+                        />
+                    </View>
+                    <View style={styles.inputContainer}>
+                        <Text style={styles.label}>Model</Text>
+                        <TextInput
+                            style={styles.input}
+                            value={modelo}
+                            onChangeText={setModelo}
+                            placeholder="Model"
+                            placeholderTextColor="#FFFFFF80"
+                        />
+                    </View>
+                </View>
+                <View style={styles.column}>
+                    <View style={styles.inputContainer}>
+                        <Text style={styles.label}>Insurance Expiry</Text>
+                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                            <DatePicker
+                                value={fechaVencimientoSeguro ? dayjs(fechaVencimientoSeguro) : null}
+                                onChange={(newValue) => {
+                                    setFechaVencimientoSeguro(newValue ? dayjs(newValue).format('YYYY-MM-DD') : '');
+                                }}
+                            />
+                        </LocalizationProvider>
+                    </View>
+                    <View style={styles.inputContainer}>
+                        <Text style={styles.label}>VTV Expiry</Text>
+                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                            <DatePicker
+                                value={fechaVencimientoSeguro ? dayjs(fechaVencimientoVTV) : null}
+                                onChange={(newValue) => {
+                                    setFechaVencimientoVTV(newValue ? dayjs(newValue).format('YYYY-MM-DD') : '');
+                                }}
+                            />
+                        </LocalizationProvider>
+                    </View>
+                </View>
+            </View>
+            <Pressable style={styles.addVehicleButton} onPress={() => { addVehicle().then(navigation.navigate('VehiclesScreen', { familySurname, familyId })) }}>
+                <Text style={styles.addVehicleText}>Add vehicle</Text>
+            </Pressable>
         </ImageBackground>
 );
 }
-
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-            justifyContent: 'center',
-            alignItems: 'center',
-            padding: 16,
+        justifyContent: 'flex-start', // Start content from the top
+        alignItems: 'center', // Center content horizontally
+        padding: 16,
+        paddingTop: 30, // Adjust padding top to give space for the title
+    },
+    headerContainer: {
+        width: '100%',
+        alignItems: 'center',
+        marginBottom: 10, // Space below the header
     },
     title: {
         fontSize: 60,
         color: 'white',
         fontWeight: 'bold',
-        marginBottom: 10,
+    },
+    columnsContainer: {
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'center', // Center the columns within the container
+        alignItems: 'flex-start', // Align items to the start of their container
+        width: '100%',
+    },
+    column: {
+        width: '20%', // Adjust width to bring columns closer
+        padding: 15,
+    },
+    inputContainer: {
+        width: '90%', // Full width to align inputs properly within the columns
+        marginBottom: 10, // Space between each input
     },
     input: {
-        height: 40,
+        width: '100%',
+        color: 'white',
         borderColor: 'gray',
+        padding: 10,
+        borderRadius: 2,
         borderWidth: 1,
-        marginBottom: 20,
-        paddingLeft: 10,
-        borderRadius: 5,
+    },
+    label: {
+        alignSelf: 'flex-start',
+        color: 'white',
+        fontSize: 16,
+        fontWeight: 'bold',
+        marginBottom: 3,
     },
     addVehicleButton: {
-        width: '40%',
-        paddingVertical: 12, // Increase padding for a larger touch area
+        width: '20%',
+        paddingVertical: 12,
         paddingHorizontal: 20,
-        marginVertical: 8,
-        backgroundColor: '#32cd32', // A vibrant green color
+        marginVertical: 10,
+        backgroundColor: '#32cd32',
         borderRadius: 20,
-        elevation: 4, // Adds a subtle shadow effect on Android
-        shadowColor: '#000', // Shadow for iOS
-        shadowOffset: { width: 0, height: 2 }, // Shadow for iOS
-        shadowOpacity: 0.25, // Shadow for iOS
-        shadowRadius: 3.84, // Shadow for iOS
+        position: 'absolute',
+        bottom: 10,
+        alignSelf: 'center',
+    },
+    addVehicleText: {
+        fontSize: 18,
+        color: 'white',
+        fontWeight: '500',
+        textAlign: 'center',
     },
 });

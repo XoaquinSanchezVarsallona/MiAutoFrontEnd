@@ -205,8 +205,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     columnsContainer: {
-        flexDirection: 'row',  // Aligns children in a row
-        justifyContent: 'space-around',  // Distributes space around the columns
+        flexDirection: 'row',
+        justifyContent: 'space-around',
         width: '100%',
     },
     column: {

@@ -29,6 +29,9 @@ import {PaperProvider} from "react-native-paper";
 import {ViewProfile} from "./pages/driverScreens/ViewProfile";
 import {VehicleRoutes} from "./pages/driverScreens/vehicleScreens/VehicleRoutes";
 import {StoreUnlockedScreen} from "./pages/driverScreens/storesScreens/StoreUnlockedScreen";
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
+import AddNewRoute from "./pages/driverScreens/addEntityScreens/AddNewRoute";
 
 const Stack = createNativeStackNavigator(); //used to configure the screens
 
@@ -41,37 +44,40 @@ function AppNavigation() {
         return null; // or a loading screen
     }
     return (
-        <PaperProvider>
-            <NavigationContainer>
-                <Stack.Navigator initialRouteName="Home">
-                    <Stack.Screen name="Home" component={Home}/>
-                    <Stack.Screen name="Login" component={Login}/>
-                    <Stack.Screen name="Register" component={Register}/>
-                    <Stack.Screen name="UnlockedScreenDriver" component={UnlockedScreenDriver}/>
-                    <Stack.Screen name="AlertsScreen" component={AlertScreen}/>
-                    <Stack.Screen name="ConfigurationScreen" component={ConfigurationScreen}/>
-                    <Stack.Screen name="FamilyProfile" component={FamilyProfile}/>
-                    <Stack.Screen name="VehiclesScreen" component={VehiclesScreen}/>
-                    <Stack.Screen name="AddNewVehicle" component={AddNewVehicle}/>
-                    <Stack.Screen name="FamilyVehiclesScreen" component={FamilyVehiclesScreen}/>
-                    <Stack.Screen name="EditProfile" component={EditProfile}/>
-                    <Stack.Screen name="FamilyDetailsScreen" component={FamilyDetailsScreen}/>
-                    <Stack.Screen name="AddFamilyScreen" component={AddFamilyScreen}/>
-                    <Stack.Screen name="JoinFamilyScreen" component={JoinFamilyScreen}/>
-                    <Stack.Screen name="AddAlertScreen" component={AddAlertScreen}/>
-                    <Stack.Screen name="AlertsFromFamilyScreen" component={AlertsFromFamilyScreen}/>
-                    <Stack.Screen name="VehicleProfile" component={VehicleProfile}/>
-                    <Stack.Screen name="EditCarProfile" component={EditCarProfile}/>
-                    <Stack.Screen name="ViewProfile" component={ViewProfile}/>
-                    <Stack.Screen name="UnlockedScreenService" component={UnlockedScreenService}/>
-                    <Stack.Screen name="AddNewStore" component={AddNewStore}/>
-                    <Stack.Screen name="StoreProfile" component={StoreProfile}/>
-                    <Stack.Screen name="EditStoreProfile" component={EditStoreProfile}/>
-                    <Stack.Screen name="StoreUnlockedScreen" component={StoreUnlockedScreen}/>
-                    <Stack.Screen name="VehicleRoutes" component={VehicleRoutes}/>
-                </Stack.Navigator>
-            </NavigationContainer>
-        </PaperProvider>
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <PaperProvider>
+                <NavigationContainer>
+                    <Stack.Navigator initialRouteName="Home">
+                        <Stack.Screen name="Home" component={Home}/>
+                        <Stack.Screen name="Login" component={Login}/>
+                        <Stack.Screen name="Register" component={Register}/>
+                        <Stack.Screen name="UnlockedScreenDriver" component={UnlockedScreenDriver}/>
+                        <Stack.Screen name="AlertsScreen" component={AlertScreen}/>
+                        <Stack.Screen name="ConfigurationScreen" component={ConfigurationScreen}/>
+                        <Stack.Screen name="FamilyProfile" component={FamilyProfile}/>
+                        <Stack.Screen name="VehiclesScreen" component={VehiclesScreen}/>
+                        <Stack.Screen name="AddNewVehicle" component={AddNewVehicle}/>
+                        <Stack.Screen name="FamilyVehiclesScreen" component={FamilyVehiclesScreen}/>
+                        <Stack.Screen name="EditProfile" component={EditProfile}/>
+                        <Stack.Screen name="FamilyDetailsScreen" component={FamilyDetailsScreen}/>
+                        <Stack.Screen name="AddFamilyScreen" component={AddFamilyScreen}/>
+                        <Stack.Screen name="JoinFamilyScreen" component={JoinFamilyScreen}/>
+                        <Stack.Screen name="AddAlertScreen" component={AddAlertScreen}/>
+                        <Stack.Screen name="AlertsFromFamilyScreen" component={AlertsFromFamilyScreen}/>
+                        <Stack.Screen name="VehicleProfile" component={VehicleProfile}/>
+                        <Stack.Screen name="EditCarProfile" component={EditCarProfile}/>
+                        <Stack.Screen name="ViewProfile" component={ViewProfile}/>
+                        <Stack.Screen name="UnlockedScreenService" component={UnlockedScreenService}/>
+                        <Stack.Screen name="AddNewStore" component={AddNewStore}/>
+                        <Stack.Screen name="StoreProfile" component={StoreProfile}/>
+                        <Stack.Screen name="EditStoreProfile" component={EditStoreProfile}/>
+                        <Stack.Screen name="StoreUnlockedScreen" component={StoreUnlockedScreen}/>
+                        <Stack.Screen name="VehicleRoutes" component={VehicleRoutes}/>
+                        <Stack.Screen name="AddNewRoute" component={AddNewRoute}/>
+                    </Stack.Navigator>
+                </NavigationContainer>
+            </PaperProvider>
+        </LocalizationProvider>
     );
 }
 

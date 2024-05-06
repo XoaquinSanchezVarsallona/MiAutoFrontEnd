@@ -2,7 +2,7 @@ import React from 'react';
 import {Image, View, Text, StyleSheet, ImageBackground, TouchableOpacity} from 'react-native';
 
 export function VehicleProfile({ navigation, route }) {
-    const { vehicle, familySurname } = route.params;
+    const { vehicle, familySurname, familyId } = route.params;
     const carName = vehicle.marca + ' ' + vehicle.modelo;
 
     const deleteVehicle = async () => {
@@ -55,7 +55,7 @@ export function VehicleProfile({ navigation, route }) {
                 <View>
                     <Text style={styles.title}>Usage of car</Text>
                     <Text style={styles.detail}>Add / Modify / Delete / View routes from {carName}</Text>
-                    <TouchableOpacity style={styles.routesButton} onPress={() => navigation.navigate('VehicleRoutes', { vehicle })}>
+                    <TouchableOpacity style={styles.routesButton} onPress={() => navigation.navigate('VehicleRoutes', { vehicle, familySurname, familyId })}>
                         <Text style={styles.buttonText}>View routes</Text>
                     </TouchableOpacity>
                 </View>
