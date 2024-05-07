@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {StyleSheet, View, Text, ImageBackground, ScrollView} from 'react-native';
+import {StyleSheet, View, Text, ImageBackground, ScrollView, TouchableOpacity, Linking} from 'react-native';
 
 export function VisualStoreProfile({ route }) {
     const [storeData, setStoreData] = useState({
@@ -39,6 +39,16 @@ export function VisualStoreProfile({ route }) {
         fetchStoreData();
     }, []);
 
+    const handleOpenURL = (url) => {
+        Linking.canOpenURL(url).then(supported => {
+            if (supported) {
+                Linking.openURL(url);
+            } else {
+                console.log("Don't know how to open URI: " + url);
+            }
+        });
+    };
+
     return (
         <ImageBackground source={require('../../../assets/BackgroundUnlocked.jpg')} style={styles.container}>
             <View style={styles.headerContainer}>
@@ -47,9 +57,15 @@ export function VisualStoreProfile({ route }) {
             <ScrollView style={styles.vehiclesList}>
                 <Text style={styles.field}>Description: {storeData.description}</Text>
                 <Text style={styles.field}>Phone Number: {storeData.phoneNumber}</Text>
-                <Text style={styles.field}>Web Page: {storeData.webPageLink}</Text>
-                <Text style={styles.field}>Instagram: {storeData.instagramLink}</Text>
-                <Text style={styles.field}>Google Maps: {storeData.googleMapsLink}</Text>
+                <TouchableOpacity onPress={() => handleOpenURL(storeData.webPageLink)}>
+                    <Text style={styles.field}>Web Page: {storeData.webPageLink}</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => handleOpenURL(storeData.instagramLink)}>
+                    <Text style={styles.field}>Instagram: {storeData.instagramLink}</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => handleOpenURL(storeData.googleMapsLink)}>
+                    <Text style={styles.field}>Google Maps: {storeData.googleMapsLink}</Text>
+                </TouchableOpacity>
             </ScrollView>
         </ImageBackground>
     );
