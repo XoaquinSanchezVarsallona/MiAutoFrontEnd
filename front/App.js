@@ -32,6 +32,8 @@ import {StoreUnlockedScreen} from "./pages/driverScreens/storesScreens/StoreUnlo
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import AddNewRoute from "./pages/driverScreens/addEntityScreens/AddNewRoute";
+import {EditVisualStoreProfile} from "./pages/serviceScreens/EditVisualStoreProfile";
+import {VisualStoreProfile} from "./pages/driverScreens/storesScreens/VisualStoreProfile";
 
 const Stack = createNativeStackNavigator(); //used to configure the screens
 
@@ -71,7 +73,9 @@ function AppNavigation() {
                         <Stack.Screen name="AddNewStore" component={AddNewStore}/>
                         <Stack.Screen name="StoreProfile" component={StoreProfile}/>
                         <Stack.Screen name="EditStoreProfile" component={EditStoreProfile}/>
+                        <Stack.Screen name="EditVisualStoreProfile" component={EditVisualStoreProfile}/>
                         <Stack.Screen name="StoreUnlockedScreen" component={StoreUnlockedScreen}/>
+                        <Stack.Screen name="VisualStoreProfile" component={VisualStoreProfile}/>
                         <Stack.Screen name="VehicleRoutes" component={VehicleRoutes}/>
                         <Stack.Screen name="AddNewRoute" component={AddNewRoute}/>
                     </Stack.Navigator>
