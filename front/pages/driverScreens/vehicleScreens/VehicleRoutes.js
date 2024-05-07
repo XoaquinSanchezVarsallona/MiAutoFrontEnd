@@ -1,5 +1,6 @@
-import {ImageBackground, Pressable, StyleSheet, Text, View} from "react-native";
+import {ImageBackground, Pressable, ScrollView, StyleSheet, Text, View} from "react-native";
 import React, {useEffect, useState} from "react";
+import RouteCard from "../../../components/RouteCard";
 
 export function VehicleRoutes({ navigation, route }) {
     const { vehicle, familyId } = route.params;
@@ -8,10 +9,10 @@ export function VehicleRoutes({ navigation, route }) {
     const [routes, setRoutes] = useState([]);
 
     // Fetch de todas las rutas de un vehículo
-    const fetchRoutes = async () => {
-        for (let user of users) {
+    const fetchRoutes = async (users) => {
+        const routesPromises = users.map(async (user) => {
             try {
-                const response = await fetch(`http://localhost:9002/user/${user.id}/vehicle/${patente}/routes`, {
+                const response = await fetch(`http://localhost:9002/user/${user.userId}/vehicle/${patente}/routes`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -19,19 +20,24 @@ export function VehicleRoutes({ navigation, route }) {
                 });
                 if (response.ok) {
                     const userRoutes = await response.json();
-                    setRoutes(userRoutes);
-                    console.log(`Routes for user ${user.id}:`, userRoutes);
-                } else {
-                    console.error(`Failed to fetch routes for user ${user.id}`);
+                    console.log(`Routes for user ${user.userId}:`, userRoutes);
+                    return userRoutes;
                 }
             } catch (error) {
-                console.error('Error:', error);
+                console.error('Error fetching routes for user:', user.userId, error);
             }
-        }
+        });
+
+        const results = await Promise.all(routesPromises);
+        setRoutes(results.flat()); // Assuming each userRoutes is an array
     }
 
     useEffect(() => {
-        fetchUsers().then(() => fetchRoutes());
+        fetchUsers().then(users => {
+            if (users && users.length) {
+                fetchRoutes(users);
+            }
+        });
     }, [familyId]);
 
     const fetchUsers = async () => {
@@ -46,7 +52,8 @@ export function VehicleRoutes({ navigation, route }) {
             if (response.ok) {
                 const fetchedUsers = await response.json();
                 setUsers(fetchedUsers);
-                console.log('Users fetched successfully');
+                console.log('Users fetched successfully', fetchedUsers);
+                return fetchedUsers;
             } else if (response.status === 400) {
                 const errorMessage = await response.text();
                 alert(errorMessage);
@@ -63,15 +70,15 @@ export function VehicleRoutes({ navigation, route }) {
             <View>
                 <Text style={styles.title}>Routes of {vehicle.marca} {vehicle.modelo}</Text>
             </View>
-
-            {routes.length === 0 ? (
-                <Text style={styles.noRoutesText}>No routes yet</Text>
-            ) : (
-                routes.map((route, index) => (
-                    <RouteCard key={index} route={route} />
-                ))
-            )}
-
+            <ScrollView style={styles.routesList} contentContainerStyle={styles.contentContainerStyle}>
+                {routes.length === 0 ? (
+                    <Text style={styles.noRoutesText}>No routes yet</Text>
+                ) : (
+                    routes.map((route, index) => (
+                        <RouteCard key={index} route={route} />
+                    ))
+                )}
+            </ScrollView>
             <Pressable style={styles.addVehicleButton} onPress={() => navigation.navigate('AddNewRoute', { vehicle, familyId })}>
                 <Text style={styles.addVehicleText}>Add a new route</Text>
             </Pressable>
@@ -115,5 +122,15 @@ const styles = StyleSheet.create({
         color: 'white',
         fontWeight: '500',
         textAlign: 'center',
+    },
+    contentContainerStyle: {
+        alignItems: 'center',
+        paddingBottom: 20,
+    },
+    routesList: {
+        flex: 1,
+        width: '100%',
+        paddingHorizontal: 10,
+        marginBottom: 65,
     },
 });

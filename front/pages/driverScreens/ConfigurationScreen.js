@@ -46,6 +46,15 @@ export function ConfigurationScreen({ navigation }) {
                     <Text style={styles.subtitle}>View Profile</Text>
                 </TouchableOpacity>
             </View>
+            <View style={styles.headerContainer}>
+                <TouchableOpacity style={styles.buttonContainer} onPress={() => navigation.navigate('ViewRoutes')}>
+                    <StyledButton2
+                        onPress={() => navigation.navigate('ViewRoutes')}
+                        icon={require('../../assets/route.png')}
+                    />
+                    <Text style={styles.subtitle}>View Profile</Text>
+                </TouchableOpacity>
+            </View>
         </ImageBackground>
     );
 }
@@ -61,27 +70,27 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-evenly',
         alignItems: 'center',
-        width: '100%',
+        padding: 16,
+        width: '85%',
     },
     title: {
         fontSize: 60,
         color: 'white',
         fontWeight: 'bold',
-        marginBottom: 10,
+        paddingBottom: 20,
     },
     subtitle: {
         color: 'white',
         fontSize: 30,
         fontWeight: 'bold', // Make the title bold
-        marginBottom: 10, // Space below the title
+        marginRight: 35,
     },
     buttonContainer: {
         height: 100,
-        width: '25%',
+        width: '30%',
         flexDirection: 'row',
-        padding: 10,
-        paddingRight: 55,
-        justifyContent: 'center',
+        padding: 20,
+        justifyContent: 'space-around',
         alignItems: 'center',
         shadowOffset: {
             width: 0,

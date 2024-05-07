@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import {View, Text, TextInput, Button, StyleSheet, ImageBackground,} from 'react-native';
+import {View, Text, TextInput, Button, StyleSheet, ImageBackground, Pressable,} from 'react-native';
 
 function AddFamilyScreen({ navigation, route }) {
     const [surname, setSurname] = useState('');
@@ -37,21 +37,25 @@ function AddFamilyScreen({ navigation, route }) {
         <ImageBackground source={require('../../../assets/BackgroundUnlocked.jpg')} style={styles.container}>
             <View style={styles.container}>
                     <Text style={styles.title}>Add New Family</Text>
+                    <Text style={styles.label}>Surname</Text>
                     <TextInput
-                        style={styles.input}
-                        value={surname}
-                        onChangeText={setSurname}
-                        placeholder="Surname"
-                    />
+                            style={styles.input}
+                            value={surname}
+                            onChangeText={setSurname}
+                            placeholder="Surname"
+                        />
+                    <Text style={styles.label}>Password</Text>
                     <TextInput // Add this block
                         style={styles.input}
                         value={password}
                         onChangeText={setPassword}
                         placeholder="Password"
-                        //secureTextEntry
+                        secureTextEntry={true}
                     />
-                {errorMessage ? <Text style={styles.errorText}>{errorMessage}</Text> : <Text style={styles.errorText}></Text>}
-                <Button title="Agregar familia nueva" onPress={addFamily} />
+                    {errorMessage ? <Text style={styles.errorText}>{errorMessage}</Text> : <Text style={styles.errorText}></Text>}
+                    <Pressable style={styles.addFamilyButton} onPress={() => { addFamily() }}>
+                        <Text style={styles.addFamilyText}>Add new Family</Text>
+                    </Pressable>
                 </View>
         </ImageBackground>
     );
@@ -60,27 +64,53 @@ function AddFamilyScreen({ navigation, route }) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'center',
-        padding: 20,
+        justifyContent: 'flex-start', // Start content from the top
+        alignItems: 'center', // Center content horizontally
+        padding: 16,
+    },
+    label: {
+        alignSelf: 'flex-start',
+        color: 'white',
+        fontSize: 16,
+        fontWeight: 'bold',
+        marginLeft: 2,
+        marginBottom: 3,
     },
     input: {
-        color: 'white',
-        height: 40,
+        width: '100%',
+        color: '#FFFFFF80',
         borderColor: 'gray',
+        padding: 10,
+        borderRadius: 2,
         borderWidth: 1,
-        marginBottom: 20,
-        paddingLeft: 10,
+        marginBottom: 15,
     },
     title: {
         fontSize: 60,
         color: 'white',
         fontWeight: 'bold',
-        marginBottom: 10,
-        alignContent: 'center',
+        paddingBottom: 20,
     },
     errorText: {
         fontSize: 16,
         color: 'red',
+    },
+    addFamilyButton: {
+        width: '80%',
+        paddingVertical: 12,
+        paddingHorizontal: 20,
+        marginVertical: 10,
+        backgroundColor: '#32cd32',
+        borderRadius: 20,
+        position: 'absolute',
+        bottom: 10,
+        alignSelf: 'center',
+    },
+    addFamilyText: {
+        fontSize: 18,
+        color: 'white',
+        fontWeight: '500',
+        textAlign: 'center',
     },
 });
 

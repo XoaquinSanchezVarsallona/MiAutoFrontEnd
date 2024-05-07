@@ -1,13 +1,12 @@
-import React, {} from 'react';
+import React, {useEffect} from 'react';
 import {StyleSheet, View, Text, ImageBackground, Pressable, ScrollView} from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 
 export function VehiclesScreen({ navigation, route }) {
     const { familySurname, familyId } = route.params;
-    const [patentesData, setPatentes] = React.useState([]);
     const [vehiclesData, setVehicles] = React.useState([]);
 
-    const fetchPatentes = async (familySurname, data) => {
+    const fetchPatentes = async (data) => {
         try {
             const response = await fetch(`http://localhost:9002/vehicles/family/${familyId}`, {
                 method: 'POST',
@@ -43,31 +42,25 @@ export function VehiclesScreen({ navigation, route }) {
         }
     };
 
-    useFocusEffect(
-        React.useCallback(() => {
+    useEffect(
+        () => {
             const fetchAndSetPatentes = async () => {
-                const fetchedPatentes = await fetchPatentes(familySurname);
-                setPatentes(fetchedPatentes);
+                return await fetchPatentes(familySurname);
             };
-
-            fetchAndSetPatentes().then(r => console.log(r));
-        }, [familySurname])
-    );
-
-    useFocusEffect(
-        React.useCallback(() => {
-            const fetchAndSetVehicles = async () => {
+            const fetchAndSetVehicles = async (patentesData) => {
                 const fetchedVehicles = await fetchVehicles(patentesData);
                 setVehicles(fetchedVehicles);
             };
 
-            fetchAndSetVehicles().then(r => console.log(r));
-        }, [patentesData])
+            fetchAndSetPatentes().then(r => fetchAndSetVehicles(r));
+        }, [familySurname]
     );
+
+
     return (
         <ImageBackground source={require('../../../assets/BackgroundUnlocked.jpg')} style={styles.container}>
             <View style={styles.headerContainer}>
-                <Text style={styles.title}>Autos de la familia {familySurname}</Text>
+                <Text style={styles.title}>{familySurname}'s vehicles</Text>
             </View>
             <ScrollView style={styles.vehiclesList}>
                 {vehiclesData != null && vehiclesData.length > 0 ? (
@@ -80,16 +73,22 @@ export function VehiclesScreen({ navigation, route }) {
                                     navigation.navigate('VehicleProfile', { vehicle: vehicle, familySurname: familySurname, familyId: familyId });
                                 }}
                             >
-                                <Text style={styles.vehicleText}>Year: {vehicle.ano}</Text>
-                                <Text style={styles.vehicleText}>Insurance Expiry: {vehicle.fechaVencimientoSeguro}</Text>
-                                <Text style={styles.vehicleText}>VTV Expiry: {vehicle.fechaVencimientoVTV}</Text>
-                                <Text style={styles.vehicleText}>Mileage: {vehicle.kilometraje}</Text>
-                                <Text style={styles.vehicleText}>Brand: {vehicle.marca}</Text>
-                                <Text style={styles.vehicleText}>Model: {vehicle.modelo}</Text>
-                                <Text style={styles.vehicleText}>License Plate: {vehicle.patente}</Text>
-                                <View style={styles.stateStyle}>
-                                    <Text style={styles.vehicleText}>State:</Text>
-                                    <View style={[styles.stateIndicator, {backgroundColor: '#32cd32', borderRadius: 4}]}/>
+                                <View style={styles.columnsContainer}>
+                                    <View style={styles.column}>
+                                        <Text style={styles.vehicleText}>Brand: {vehicle.marca}</Text>
+                                        <Text style={styles.vehicleText}>Model: {vehicle.modelo}</Text>
+                                        <Text style={styles.vehicleText}>License Plate: {vehicle.patente}</Text>
+                                        <Text style={styles.vehicleText}>Year: {vehicle.ano}</Text>
+                                    </View>
+                                    <View style={styles.column}>
+                                        <Text style={styles.vehicleText}>Insurance Expiry: {vehicle.fechaVencimientoSeguro}</Text>
+                                        <Text style={styles.vehicleText}>VTV Expiry: {vehicle.fechaVencimientoVTV}</Text>
+                                        <Text style={styles.vehicleText}>Mileage: {vehicle.kilometraje}</Text>
+                                        <View style={styles.stateStyle}>
+                                            <Text style={styles.vehicleText}>State:</Text>
+                                            <View style={[styles.stateIndicator, {backgroundColor: '#32cd32', borderRadius: 4}]}/>
+                                        </View>
+                                    </View>
                                 </View>
                             </Pressable>
                         )
@@ -177,5 +176,14 @@ const styles = StyleSheet.create({
     },
     stateStyle: {
         flexDirection: 'row',
+    },
+    columnsContainer: {
+        flex: 1,
+        flexDirection: 'row',
+        alignItems: 'flex-start',
+        justifyContent: 'flex-start',
+    },
+    column: {
+        padding: 5,
     },
 });

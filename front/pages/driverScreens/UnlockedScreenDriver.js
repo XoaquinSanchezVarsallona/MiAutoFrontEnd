@@ -113,7 +113,7 @@ const styles = StyleSheet.create({
         padding: 30,
     },
     subTitle: {
-        paddingTop: 120,
+        paddingTop: 70,
         padding: 20,
         fontSize: 30,
         color: '#FFFFFF',
