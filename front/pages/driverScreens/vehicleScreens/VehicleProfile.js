@@ -12,7 +12,8 @@ export function VehicleProfile({ navigation, route }) {
             });
             if (response.ok) {
                 alert('Vehicle deleted successfully');
-                navigation.goBack();
+                let isUpdated = null;
+                navigation.navigate('VehiclesScreen', { familySurname, familyId, isUpdated });
             } else {
                 console.error('Failed to delete vehicle');
             }

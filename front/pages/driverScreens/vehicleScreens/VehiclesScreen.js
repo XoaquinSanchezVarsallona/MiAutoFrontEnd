@@ -1,9 +1,8 @@
 import React, {useEffect} from 'react';
 import {StyleSheet, View, Text, ImageBackground, Pressable, ScrollView} from 'react-native';
-import { useFocusEffect } from '@react-navigation/native';
 
 export function VehiclesScreen({ navigation, route }) {
-    const { familySurname, familyId } = route.params;
+    let { familySurname, familyId, isUpdated } = route.params;
     const [vehiclesData, setVehicles] = React.useState([]);
 
     const fetchPatentes = async (data) => {
@@ -53,7 +52,8 @@ export function VehiclesScreen({ navigation, route }) {
             };
 
             fetchAndSetPatentes().then(r => fetchAndSetVehicles(r));
-        }, [familySurname]
+            isUpdated = false
+        }, [familySurname, isUpdated]
     );
 
 

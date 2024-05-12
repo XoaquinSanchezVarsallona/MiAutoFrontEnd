@@ -1,6 +1,7 @@
 import React, {useContext, useState, useEffect } from 'react';
 import {TextInput, Text, StyleSheet, Pressable, ImageBackground, View} from 'react-native';
 import {AuthContext} from "./AuthContext";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export function Login({navigation, route}) {
     const {userType} = route.params;
@@ -38,26 +39,29 @@ export function Login({navigation, route}) {
                 }
                 return response.json();
             })
-            .then(data => {
+            .then(async data => {
                 if (data.token) {
 
                     console.log('Login successful with token:', data.token);
                     signIn(data.token);
                     console.log('Sign in complete, waiting for userToken update');
 
+                    const expirationTime = new Date().getTime() + 2 * 60 * 60 * 1000; // 2 hours from now
+                    await AsyncStorage.setItem('userToken', data.token);
+                    await AsyncStorage.setItem('expirationTime', expirationTime.toString());
+                    await AsyncStorage.setItem('userEmail', email);
                     //crea una nueva ruta que comienza en la página unlockedScreen, para que no pueda volver al login.
                     if (userType === 'driver') {
                         navigation.reset({
                             index: 0,
-                            routes: [{ name: 'UnlockedScreenDriver', params: { email: email }}],
+                            routes: [{name: 'UnlockedScreenDriver', params: {email: email}}],
                         });
                     } else if (userType === 'service') {
                         navigation.reset({
                             index: 0,
-                            routes: [{ name: 'UnlockedScreenService', params: { email: email }}],
+                            routes: [{name: 'UnlockedScreenService', params: {email: email}}],
                         });
                     }
-
                 } else {
                     throw new Error('Token not found in response');
                 }

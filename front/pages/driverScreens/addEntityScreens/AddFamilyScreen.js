@@ -18,9 +18,7 @@ function AddFamilyScreen({ navigation, route }) {
             });
             if (response.ok) {
                 const familias = await response.json(); // Parse the JSON response from the server
-
                 alert('Family added successfully');
-
                 navigation.navigate('FamilyProfile', { email: email, families: familias, username: username });
             } else if (response.status === 400) {
                 alert("Family already exists");

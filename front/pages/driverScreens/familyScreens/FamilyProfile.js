@@ -50,7 +50,7 @@ export function FamilyProfile({ navigation, route }) {
 
             <ScrollView style={styles.familiesScrollView} contentContainerStyle={styles.familiesContentContainer}>
                 {familiesData.length > 0 ? (
-                    familiesData.map((family, index) => (
+                    familiesData.sort((a, b) => b.familyId - a.familyId).map((family, index) => (
                         family && ( // Check if family is not null
                             <Pressable
                                 key={index}

@@ -36,31 +36,35 @@ export function ViewRoutes({ }) {
             }
         };
 
-        loadUserProfile();
+        loadUserProfile().then();
     }, []);
 
+
     // Fetch all routes for user after userID is updated
+    const fetchRoutes = async (id) => {
+        try {
+            const response = await fetch(`http://localhost:9002/user/${id}/routes`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+            if (response.ok) {
+                const userRoutes = await response.json();
+                console.log(`Routes for user ${id}:`, userRoutes);
+                return userRoutes;
+            }
+        } catch (error) {
+            console.error('Error fetching routes for user:', id, error);
+        }
+    };
+
     useEffect(() => {
         if (inputs.userID) { // Ensure userID is not empty
-            const fetchRoutes = async () => {
-                try {
-                    const response = await fetch(`http://localhost:9002/user/${inputs.userID}/routes`, {
-                        method: 'GET',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                    });
-                    if (response.ok) {
-                        const userRoutes = await response.json();
-                        console.log(`Routes for user ${inputs.userID}:`, userRoutes);
-                        setRoutes(userRoutes);
-                    }
-                } catch (error) {
-                    console.error('Error fetching routes for user:', inputs.userID, error);
-                }
-            };
-
-            fetchRoutes();
+            fetchRoutes(inputs.userID).then(fetchedRoutes => {
+                console.log('Routes fetched successfully', fetchedRoutes);
+                setRoutes(fetchedRoutes)
+            });
         }
     }, [inputs.userID]);
 
@@ -81,6 +85,7 @@ export function ViewRoutes({ }) {
         </ImageBackground>
     );
 }
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,

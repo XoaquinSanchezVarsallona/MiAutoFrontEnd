@@ -3,10 +3,11 @@ import React, {useEffect, useState} from "react";
 import RouteCard from "../../../components/RouteCard";
 
 export function VehicleRoutes({ navigation, route }) {
-    const { vehicle, familyId } = route.params;
+    const { vehicle, familyId, routesPassed } = route.params;
+    const [routes, setRoutes] = useState([]);
     const patente = vehicle.patente;
     const [users, setUsers] = useState([]);
-    const [routes, setRoutes] = useState([]);
+    const [routesUpdated, setRoutesUpdated] = useState(false);
 
     // Fetch de todas las rutas de un vehículo
     const fetchRoutes = async (users) => {
@@ -35,10 +36,12 @@ export function VehicleRoutes({ navigation, route }) {
     useEffect(() => {
         fetchUsers().then(users => {
             if (users && users.length) {
-                fetchRoutes(users);
+                fetchRoutes(users).then();
             }
         });
-    }, [familyId]);
+        setRoutesUpdated(false);
+    }, [routesPassed, routesUpdated]);
+
 
     const fetchUsers = async () => {
         try {
@@ -65,17 +68,36 @@ export function VehicleRoutes({ navigation, route }) {
         }
     };
 
+    const deleteRoute = async (routeId) => {
+        try {
+            const response = await fetch(`http://localhost:9002/route/${routeId}/deleteRoute`, {
+                method: 'DELETE',
+            });
+            if (response.ok) {
+                alert('Route deleted successfully');
+                setRoutesUpdated(true);
+            } else if (response.status === 400) {
+                const errorMessage = await response.text();
+                alert(errorMessage);
+            } else {
+                console.error('Failed to delete route');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+
     return (
         <ImageBackground source={require('../../../assets/BackgroundUnlocked.jpg')} style={styles.container}>
             <View>
                 <Text style={styles.title}>Routes of {vehicle.marca} {vehicle.modelo}</Text>
             </View>
             <ScrollView style={styles.routesList} contentContainerStyle={styles.contentContainerStyle}>
-                {routes.length === 0 ? (
+                {routes && routes.length === 0 ? (
                     <Text style={styles.noRoutesText}>No routes yet</Text>
                 ) : (
                     routes.map((route, index) => (
-                        <RouteCard key={index} route={route} />
+                        <RouteCard key={index} route={route} deleteRoute={deleteRoute} navigation={navigation} />
                     ))
                 )}
             </ScrollView>
@@ -116,6 +138,11 @@ const styles = StyleSheet.create({
         position: 'absolute',
         bottom: 10,
         alignSelf: 'center',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.25,
+        shadowRadius: 5,
+        elevation: 5,
     },
     addVehicleText: {
         fontSize: 18,

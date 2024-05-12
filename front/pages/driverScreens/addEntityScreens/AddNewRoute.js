@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, TextInput, Button, StyleSheet, ImageBackground, Pressable} from 'react-native';
+import {View, Text, TextInput, StyleSheet, ImageBackground, Pressable} from 'react-native';
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import {VehicleRoutes} from "../vehicleScreens/VehicleRoutes";
 import {LocalizationProvider} from "@mui/x-date-pickers/LocalizationProvider";
 import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
 import {DatePicker} from "@mui/x-date-pickers/DatePicker";
@@ -50,6 +49,9 @@ function AddNewRoute({ navigation, route }) {
             });
             if (response.ok) {
                 alert('Route added successfully');
+                const routes = await response.json();
+                console.log('Routes:', routes)
+                navigation.navigate('VehicleRoutes', { vehicle : vehicle, familyId : familyId, routesPassed : routes});
             } else if (response.status === 400) {
                 const errorMessage = await response.text();
                 alert(errorMessage);
@@ -88,7 +90,7 @@ function AddNewRoute({ navigation, route }) {
                     />
                 </LocalizationProvider>
                 {errorMessage ? <Text style={styles.errorText}>{errorMessage}</Text> : <Text style={styles.errorText}></Text>}
-                <Pressable style={styles.addVehicleButton} onPress={() => { addRoute().then(navigation.navigate('VehicleRoutes', {vehicle, familyId})) }}>
+                <Pressable style={styles.addVehicleButton} onPress={() => { addRoute().then() }}>
                     <Text style={styles.addVehicleText}>Add route</Text>
                 </Pressable>
             </View>

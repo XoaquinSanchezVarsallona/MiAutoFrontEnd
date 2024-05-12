@@ -46,7 +46,7 @@ export function FamilyVehiclesScreen({ navigation, route }) {
 
             <ScrollView style={styles.familiesList} contentContainerStyle={styles.contentContainerStyle}>
                 {familiesData.length > 0 ? (
-                    familiesData.map((family, index) => (
+                    familiesData.sort((a, b) => b.familyId - a.familyId).map((family, index) => (
                         family && (
                             <Pressable
                                 key={index}

@@ -47,21 +47,14 @@ function FamilyDetailsScreen({ route, navigation }) {
                 },
             });
             if (response.ok) {
+                navigation.goBack()
                 console.log('Family deleted successfully');
-                navigation.reset({
-                    index: 0,
-                    routes: [{ name: 'UnlockedScreenDriver', params: { email: email }}],
-                });
             } else {
                 console.error('Failed to delete family');
             }
         } catch (error) {
             console.error('Error:', error);
         }
-    };
-    const addUserToFamily = async (username) => {
-        // API call to add user to family
-        console.log('Add user to family:', username);
     };
 
     return (

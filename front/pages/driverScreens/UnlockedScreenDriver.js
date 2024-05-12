@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {StyleSheet, View, Text, ImageBackground} from 'react-native';
 import StyledButton from "../../components/StyledButton";
 import { useFocusEffect } from '@react-navigation/native';
@@ -108,12 +108,11 @@ const styles = StyleSheet.create({
     },
     configurationButton: {
         position: 'absolute',
-        right: 0, // Align the button to the right
+        right: 0,
         top: 0,
         padding: 30,
     },
     subTitle: {
-        paddingTop: 70,
         padding: 20,
         fontSize: 30,
         color: '#FFFFFF',

@@ -20,7 +20,7 @@ export const AuthProvider = ({ children }) => {
             }
         };
 
-        bootstrapAsync();
+        bootstrapAsync().then();
     }, [userToken]);
 
     const authContext = {

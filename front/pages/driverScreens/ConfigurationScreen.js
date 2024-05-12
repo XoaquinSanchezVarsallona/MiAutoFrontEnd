@@ -6,7 +6,6 @@ import StyledButton2 from "../../components/StyledButton2";
 export function ConfigurationScreen({ navigation }) {
     const logout = async () => {
         try {
-            //
             //elimino el token del storage local
             await AsyncStorage.removeItem('userToken');
 

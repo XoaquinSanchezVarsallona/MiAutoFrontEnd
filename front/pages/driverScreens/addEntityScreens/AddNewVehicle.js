@@ -26,7 +26,8 @@ export function AddNewVehicle({ navigation, route }) {
             });
             if (response.ok) {
                 alert('Vehicle added successfully');
-                navigation.navigate('VehiclesScreen', { familySurname: familySurname, familyId: familyId });
+                let isUpdated = true
+                navigation.navigate('VehiclesScreen', { familySurname: familySurname, familyId: familyId, isUpdated : isUpdated });
             } else if (response.status === 400) {
                 const errorMessage = await response.text();
                 alert(errorMessage);
