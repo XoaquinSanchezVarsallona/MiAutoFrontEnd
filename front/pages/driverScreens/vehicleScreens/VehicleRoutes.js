@@ -3,7 +3,7 @@ import React, {useEffect, useState} from "react";
 import RouteCard from "../../../components/RouteCard";
 
 export function VehicleRoutes({ navigation, route }) {
-    const { vehicle, familyId, routesPassed } = route.params;
+    const { vehicle, familyId, routesPassed, distance } = route.params;
     const [routes, setRoutes] = useState([]);
     const patente = vehicle.patente;
     const [users, setUsers] = useState([]);
@@ -40,7 +40,7 @@ export function VehicleRoutes({ navigation, route }) {
             }
         });
         setRoutesUpdated(false);
-    }, [routesPassed, routesUpdated]);
+    }, [routesPassed, routesUpdated, distance]);
 
 
     const fetchUsers = async () => {
@@ -67,6 +67,7 @@ export function VehicleRoutes({ navigation, route }) {
             console.error('Error:', error);
         }
     };
+
 
     const deleteRoute = async (routeId) => {
         try {
@@ -97,7 +98,7 @@ export function VehicleRoutes({ navigation, route }) {
                     <Text style={styles.noRoutesText}>No routes yet</Text>
                 ) : (
                     routes.map((route, index) => (
-                        <RouteCard key={index} route={route} deleteRoute={deleteRoute} navigation={navigation} />
+                        <RouteCard key={index} route={route} deleteRoute={deleteRoute} navigation={navigation} vehicle={vehicle} familyId={familyId}  />
                     ))
                 )}
             </ScrollView>

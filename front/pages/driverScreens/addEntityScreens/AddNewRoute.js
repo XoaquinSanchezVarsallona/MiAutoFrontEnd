@@ -49,9 +49,9 @@ function AddNewRoute({ navigation, route }) {
             });
             if (response.ok) {
                 alert('Route added successfully');
-                const routes = await response.json();
-                console.log('Routes:', routes)
-                navigation.navigate('VehicleRoutes', { vehicle : vehicle, familyId : familyId, routesPassed : routes});
+                const route = await response.json();
+                console.log('Route Created:', route)
+                navigation.navigate('VehicleRoutes', { vehicle : vehicle, familyId : familyId, routesPassed : route});
             } else if (response.status === 400) {
                 const errorMessage = await response.text();
                 alert(errorMessage);
@@ -61,37 +61,6 @@ function AddNewRoute({ navigation, route }) {
         } catch (error) {
             console.error('Error:', error);
             setErrorMessage(error.message || 'Add route error. Please try again.')
-        }
-        handleSave().then(r => console.log('Car mileage updated'));
-    };
-
-    // Aca va la logic de agregar los km al mileage del auto
-    const handleSave = async () => {
-        const [inputs, setInputs] = useState({
-            Distance: kilometraje,
-        });
-        const routeId = route.params.routeId;
-        try {
-            const response = await fetch('http://localhost:9002/route/editRoute', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    routeId,
-                    updates: inputs,
-                }),
-            });
-
-            if (!response.ok) {
-                throw new Error('Failed to update route');
-            }
-
-            const data = await response.json(); // Assuming the server responds with JSON
-            alert('Updated successfully!');
-        } catch (error) {
-            console.error('Error updating route:', error);
-            alert('Failed to update route. Please try again.');
         }
     };
 

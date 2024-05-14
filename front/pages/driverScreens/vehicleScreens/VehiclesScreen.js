@@ -73,21 +73,10 @@ export function VehiclesScreen({ navigation, route }) {
                                     navigation.navigate('VehicleProfile', { vehicle: vehicle, familySurname: familySurname, familyId: familyId });
                                 }}
                             >
-                                <View style={styles.columnsContainer}>
-                                    <View style={styles.column}>
-                                        <Text style={styles.vehicleText}>Brand: {vehicle.marca}</Text>
-                                        <Text style={styles.vehicleText}>Model: {vehicle.modelo}</Text>
-                                        <Text style={styles.vehicleText}>License Plate: {vehicle.patente}</Text>
-                                        <Text style={styles.vehicleText}>Year: {vehicle.ano}</Text>
-                                    </View>
-                                    <View style={styles.column}>
-                                        <Text style={styles.vehicleText}>Insurance Expiry: {vehicle.fechaVencimientoSeguro}</Text>
-                                        <Text style={styles.vehicleText}>VTV Expiry: {vehicle.fechaVencimientoVTV}</Text>
-                                        <Text style={styles.vehicleText}>Mileage: {vehicle.kilometraje}</Text>
-                                        <View style={styles.stateStyle}>
-                                            <Text style={styles.vehicleText}>State:</Text>
-                                            <View style={[styles.stateIndicator, {backgroundColor: '#32cd32', borderRadius: 4}]}/>
-                                        </View>
+                                <View style={styles.rowContainer}>
+                                    <Text style={styles.vehicleText}>{vehicle.marca} {vehicle.modelo} - {vehicle.patente}</Text>
+                                    <View style={styles.stateStyle}>
+                                        <View style={[styles.stateIndicator, {backgroundColor: '#32cd32', borderRadius: 4}]}/>
                                     </View>
                                 </View>
                             </Pressable>
@@ -169,7 +158,7 @@ const styles = StyleSheet.create({
         elevation: 5,
     },
     vehicleText: {
-        fontSize: 14,
+        fontSize: 30,
         color: 'white',
         fontWeight: '500',
     },
@@ -180,20 +169,20 @@ const styles = StyleSheet.create({
         marginTop: 20, // Add some space at the top of the message
     },
     stateIndicator: {
-        height: 20,
-        width: 20,
-        marginLeft: 10,
+        height: 40,
+        width: 40,
+        padding: 5,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.25,
+        shadowRadius: 5,
+        elevation: 5,
     },
     stateStyle: {
         flexDirection: 'row',
     },
-    columnsContainer: {
-        flex: 1,
+    rowContainer: {
         flexDirection: 'row',
-        alignItems: 'flex-start',
-        justifyContent: 'flex-start',
-    },
-    column: {
-        padding: 5,
-    },
+        justifyContent: 'space-between',
+    }
 });

@@ -1,9 +1,24 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {Image, View, Text, StyleSheet, ImageBackground, TouchableOpacity} from 'react-native';
 
 export function VehicleProfile({ navigation, route }) {
     const { vehicle, familySurname, familyId } = route.params;
     const carName = vehicle.marca + ' ' + vehicle.modelo;
+    const [vehicleFetched, setVehicle] = React.useState([]);
+
+    const fetchVehicle = async () => {
+        try {
+            const response = await fetch(`http://localhost:9002/car/${vehicle.patente}`);
+            if (response.ok) {
+                const data = await response.json();
+                setVehicle(data);
+            } else {
+                console.log(`Failed to fetch vehicle with patente: ${vehicle.patente}`);
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
 
     const deleteVehicle = async () => {
         try {
@@ -22,14 +37,34 @@ export function VehicleProfile({ navigation, route }) {
         }
     };
 
+    useEffect(() => {
+        fetchVehicle().then();
+    });
+
     return (
         <ImageBackground source={require('../../../assets/BackgroundUnlocked.jpg')} style={styles.container}>
             <View style={styles.content}>
                 <View>
-                    <Text style={styles.title}>{vehicle.marca} {vehicle.modelo} de los {familySurname}</Text>
-                    <Text style={styles.detail}>Model: {vehicle.modelo}</Text>
-                    <Text style={styles.detail}>Year: {vehicle.ano}</Text>
-                    <Text style={styles.detail}>Brand: {vehicle.marca}</Text>
+                    <Text style={styles.title}>{vehicleFetched.marca} {vehicleFetched.modelo} de los {familySurname}</Text>
+                    <View style={styles.columnsContainer}>
+                        <View style={styles.column}>
+                            <View style={styles.detailContainer}>
+                                <Text style={styles.detail}><Text style={styles.bold}>License Plate:</Text> {vehicleFetched.patente}</Text>
+                                <Text style={styles.detail}><Text style={styles.bold}>Year:</Text> {vehicleFetched.ano}</Text>
+                                <Text style={styles.detail}><Text style={styles.bold}>Mileage:</Text> {vehicleFetched.kilometraje}</Text>
+                            </View>
+                        </View>
+                        <View style={styles.column}>
+                            <View style={styles.detailContainer}>
+                                <Text style={styles.detail}><Text style={styles.bold}>Insurance Expiry:</Text> {vehicle.fechaVencimientoSeguro}</Text>
+                                <Text style={styles.detail}><Text style={styles.bold}>VTV Expiry:</Text> {vehicle.fechaVencimientoVTV}</Text>
+                                <View style={styles.stateStyle}>
+                                    <Text style={styles.detail}><Text style={styles.bold}>State:</Text></Text>
+                                    <View style={[styles.stateIndicator, {backgroundColor: '#32cd32', borderRadius: 4, padding: 3,}]}/>
+                                </View>
+                            </View>
+                        </View>
+                    </View>
                 </View>
                 <View>
                     <Image source={require('../../../assets/grayCar.png')} style={styles.icon} />
@@ -38,7 +73,7 @@ export function VehicleProfile({ navigation, route }) {
             <View style={styles.content}>
                 <View>
                     <Text style={styles.title}>Information in case of accident</Text>
-                    <Text style={styles.detail}>Expiry: {vehicle.fechaVencimientoSeguro}</Text>
+                    <Text style={styles.detail}>Expiry: {vehicleFetched.fechaVencimientoSeguro}</Text>
                     <View style={{ flexDirection: 'row' }}>
                         <TouchableOpacity style={styles.notifyButton} >
                             <Text style={styles.buttonText}>Notify Accident</Text>
@@ -56,7 +91,7 @@ export function VehicleProfile({ navigation, route }) {
                 <View>
                     <Text style={styles.title}>Usage of car</Text>
                     <Text style={styles.detail}>Add / Modify / Delete / View routes from {carName}</Text>
-                    <TouchableOpacity style={styles.routesButton} onPress={() => navigation.navigate('VehicleRoutes', { vehicle, familySurname, familyId })}>
+                    <TouchableOpacity style={styles.routesButton} onPress={() => navigation.navigate('VehicleRoutes', { vehicle, familySurname, familyId, distance : 0 })}>
                         <Text style={styles.buttonText}>View routes</Text>
                     </TouchableOpacity>
                 </View>
@@ -153,6 +188,9 @@ const styles = StyleSheet.create({
     detail: {
         fontSize: 16,
     },
+    detailContainer: {
+        marginTop: 7,
+    },
     notifyButton: {
         width: '50%',
         paddingVertical: 6,
@@ -205,7 +243,33 @@ const styles = StyleSheet.create({
     statIcon: {
         height: 100,
         width: 100,
-    }
+    },
+    bold: {
+        fontWeight: '500'
+    },
+    columnsContainer: {
+        flex: 1,
+        flexDirection: 'row',
+        alignItems: 'flex-start',
+        justifyContent: 'flex-start',
+    },
+    column: {
+        padding: 5,
+    },
+    stateIndicator: {
+        height: 20,
+        width: 20,
+        margin: 3.5,
+        marginLeft: 5,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.25,
+        shadowRadius: 5,
+        elevation: 5,
+    },
+    stateStyle: {
+        flexDirection: 'row',
+    },
 });
 
 export default VehicleProfile;

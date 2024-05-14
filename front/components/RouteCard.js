@@ -1,13 +1,14 @@
 import {StyleSheet, View, Text, TouchableOpacity, Dimensions} from 'react-native';
 import React from "react";
 
-const RouteCard = ({ route, deleteRoute, navigation }) => {
+const RouteCard = ({ route, deleteRoute, navigation, vehicle, familyId }) => {
+    let { kilometraje } = route;
     return (
         <View style={styles.routeCard}>
             <View style={styles.row}>
                 <View style={styles.column}>
                     <Text style={styles.text}><Text style={styles.bold}>Driver:</Text> {route.username}</Text>
-                    <Text style={styles.text}><Text style={styles.bold}>Distance:</Text> {route.kilometraje} km</Text>
+                    <Text style={styles.text}><Text style={styles.bold}>Distance:</Text> {kilometraje} km</Text>
                 </View>
                 <View style={styles.column}>
                     <Text style={styles.text}><Text style={styles.bold}>Date:</Text> {route.date}</Text>
@@ -18,14 +19,13 @@ const RouteCard = ({ route, deleteRoute, navigation }) => {
                 <TouchableOpacity style={styles.deleteButton} onPress={() => deleteRoute(route.routeId)}>
                     <Text style={styles.buttonText}>Delete</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.modifyButton} onPress={() => navigation.navigate('EditRoute', { routeId : route.routeId })} >
+                <TouchableOpacity style={styles.modifyButton} onPress={() => navigation.navigate('EditRoute', { vehicle, familyId, routeId : route.routeId, distance : kilometraje })} >
                     <Text style={styles.buttonText}>Modify</Text>
                 </TouchableOpacity>
             </View>
         </View>
     );
 }
-const { width } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
     row: {
@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.25,
         shadowRadius: 5,
         elevation: 5,
-        width: width * 0.9 / 4, // 90% of screen width divided by 4
+        width: '25%',
     },
     text: {
         fontSize: 14,
