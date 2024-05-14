@@ -31,7 +31,7 @@ export function StoreProfile({ navigation, route }) {
                     <TouchableOpacity style={styles.deleteButton} onPress={deleteStore}>
                         <Text style={styles.buttonText}>Delete Store</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.modifyButton} onPress={() => { navigation.navigate("EditStoreProfile", {email : store.storeEmail} ) }}>
+                    <TouchableOpacity style={styles.modifyButton} onPress={() => { navigation.navigate("EditVisualStoreProfile", {email : store.storeEmail} ) }}>
                         <Text style={styles.buttonText}>Modify Store Details</Text>
                     </TouchableOpacity>
                 </View>
