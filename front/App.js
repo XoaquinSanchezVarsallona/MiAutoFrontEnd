@@ -36,6 +36,8 @@ import {ViewRoutes} from "./pages/driverScreens/routeScreens/ViewRoutes";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import LoadingScreen from './pages/LoadingScreen';
 import {EditRoute} from "./pages/driverScreens/routeScreens/EditRoute";
+import {EditVisualStoreProfile} from "./pages/serviceScreens/EditVisualStoreProfile";
+import {VisualStoreProfile} from "./pages/driverScreens/storesScreens/VisualStoreProfile";
 
 const Stack = createNativeStackNavigator(); //used to configure the screens
 
@@ -135,7 +137,9 @@ function AppNavigation() {
                                 <Stack.Screen name="AddNewStore" component={AddNewStore}/>
                                 <Stack.Screen name="StoreProfile" component={StoreProfile}/>
                                 <Stack.Screen name="EditStoreProfile" component={EditStoreProfile}/>
+                                <Stack.Screen name="EditVisualStoreProfile" component={EditVisualStoreProfile}/>
                                 <Stack.Screen name="StoreUnlockedScreen" component={StoreUnlockedScreen}/>
+                                <Stack.Screen name="VisualStoreProfile" component={VisualStoreProfile}/>
                                 <Stack.Screen name="VehicleRoutes" component={VehicleRoutes}/>
                                 <Stack.Screen name="AddNewRoute" component={AddNewRoute}/>
                                 <Stack.Screen name="ViewRoutes" component={ViewRoutes}/>
