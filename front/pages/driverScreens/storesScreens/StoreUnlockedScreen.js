@@ -54,7 +54,7 @@ export function StoreUnlockedScreen({ navigation, route }) {
                             key={index}
                             style={styles.storeButton}
                             onPress={() => {
-                                navigation.navigate('StoreProfile', { store: store });
+                                navigation.navigate('VisualStoreProfile', { store: store });
                             }}
                         >
                             <Text style={styles.storeName}>Store Name: {store.storeName}</Text>
