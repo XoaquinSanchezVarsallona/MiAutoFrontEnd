@@ -106,14 +106,14 @@ const styles = StyleSheet.create({
         padding: 15,
         marginVertical: 8,
         marginHorizontal: 12,
-        backgroundColor: '#1e90ff', // A nice blue color
+        backgroundColor: '#1e90ff',
         borderRadius: 10,
-        elevation: 3, // Adds a subtle shadow effect on Android
-        shadowColor: '#000', // Shadow for iOS
-        shadowOffset: { width: 0, height: 2 }, // Shadow for iOS
-        shadowOpacity: 0.25, // Shadow for iOS
-        shadowRadius: 3.84, // Shadow for iOS
-        alignItems: 'center', // Centers the text inside the button
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.25,
+        shadowRadius: 5,
+        elevation: 5,
+        alignItems: 'center',
     },
     title: {
         fontSize: 60,
@@ -139,11 +139,11 @@ const styles = StyleSheet.create({
         marginVertical: 8,
         backgroundColor: '#32cd32', // A vibrant green color
         borderRadius: 20,
-        elevation: 4,
-        shadowColor: '#000', // Shadow for iOS
-        shadowOffset: { width: 0, height: 2 }, // Shadow for iOS
-        shadowOpacity: 0.25, // Shadow for iOS
-        shadowRadius: 3.84, // Shadow for iOS
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.25,
+        shadowRadius: 5,
+        elevation: 5,
     },
     familyName: {
         fontSize: 18,

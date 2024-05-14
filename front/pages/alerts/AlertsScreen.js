@@ -42,17 +42,17 @@ export function AlertScreen({ navigation, route }) {
                 <Text style={styles.title}>My Alerts</Text>
 
                 {familiesData.length > 0 ? (
-                    familiesData.map((family, index) => (
-                        family && ( // Check if family is not null
+                    familiesData.sort((a, b) => b.familyId - a.familyId).map((family, index) => (
+                        family && (
                             <Pressable
                                 key={index}
-                                style={styles.familyContainer}
+                                style={styles.familyButton}
                                 onPress={() => {
                                     console.log(`Pressed: ${family.surname}`);
                                     navigation.navigate('AlertsFromFamilyScreen', { family: family, email: email  });
                                 }}
                             >
-                                <Text style={styles.addFamilyText}>{family.surname}</Text>
+                                <Text style={styles.familyName}>{family.surname}</Text>
                             </Pressable>
                         )
                     ))
@@ -74,18 +74,30 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         padding: 16,
     },
-    familyContainer: {
+    headerContainer: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 16,
+        width: '40%',
+    },
+    familyName: {
+        fontSize: 18,
+        color: 'white',
+        fontWeight: '500',
+    },
+    familyButton: {
         padding: 15,
         marginVertical: 8,
-        marginHorizontal: 12,
-        backgroundColor: '#1e90ff', // A nice blue color
+        backgroundColor: '#1e90ff',
         borderRadius: 10,
-        elevation: 3, // Adds a subtle shadow effect on Android
-        shadowColor: '#000', // Shadow for iOS
-        shadowOffset: { width: 0, height: 2 }, // Shadow for iOS
-        shadowOpacity: 0.25, // Shadow for iOS
-        shadowRadius: 3.84, // Shadow for iOS
-        alignItems: 'center', // Centers the text inside the button
+        alignItems: 'center',
+        width: '100%',
+        alignSelf: 'center',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.25,
+        shadowRadius: 5,
+        elevation: 5,
     },
     title: {
         fontSize: 60,

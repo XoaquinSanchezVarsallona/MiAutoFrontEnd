@@ -35,7 +35,7 @@ export function AlertsFromFamilyScreen({ navigation, route }) {
     };
 
     useEffect(() => {
-        fetchAlerts();
+        fetchAlerts().then();
     }, []);
 
     return (
@@ -64,12 +64,15 @@ export function AlertsFromFamilyScreen({ navigation, route }) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        justifyContent: 'space-between',
+        alignItems: 'center',
         padding: 16,
     },
     title: {
-        fontSize: 24,
+        fontSize: 60,
+        color: 'white',
         fontWeight: 'bold',
-        marginBottom: 16,
+        marginBottom: 10,
     },
     alertContainer: {
         flexDirection: 'row',
@@ -85,5 +88,11 @@ const styles = StyleSheet.create({
     },
     alertButtonContainer: {
         flex: 0.2,
+    },
+    noAlertsText: {
+        fontSize: 18,
+        color: 'white',
+        fontWeight: '500',
+        textAlign: 'center',
     },
 });

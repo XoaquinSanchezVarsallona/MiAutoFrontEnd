@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {useFonts} from 'expo-font';
+import {isLoading, useFonts} from 'expo-font';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {Login} from "./pages/Login"
@@ -66,7 +66,6 @@ function AppNavigation() {
 
         checkToken().then();
     }, []);
-
 
     if (!fontsLoaded || isLoading) {
         return <LoadingScreen />

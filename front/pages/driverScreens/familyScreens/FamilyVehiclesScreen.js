@@ -98,12 +98,16 @@ const styles = StyleSheet.create({
     familyButton: {
         padding: 15,
         marginVertical: 8,
-        // Removed marginHorizontal
         backgroundColor: '#1e90ff',
         borderRadius: 10,
         alignItems: 'center',
-        width: '50%', // This sets the button width to half of its container width
-        alignSelf: 'center', // This will center each button within the ScrollView
+        width: '50%',
+        alignSelf: 'center',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.25,
+        shadowRadius: 5,
+        elevation: 5,
     },
     familyName: {
         fontSize: 18,
