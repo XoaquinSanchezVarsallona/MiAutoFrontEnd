@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "expo-file-system": "^17.0.1",
+    "react-dropzone": "^14.2.3"
+  }
+}
