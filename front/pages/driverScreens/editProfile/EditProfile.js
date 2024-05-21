@@ -38,6 +38,7 @@ export function EditProfile({  }) {
     useEffect(() => {
         async function loadUserProfile() {
             const token = await AsyncStorage.getItem('userToken');
+            console.log("Antes...")
             if (token) {
                 const response = await fetch('http://localhost:9002/validateToken', {
                     method: 'POST',
@@ -46,6 +47,7 @@ export function EditProfile({  }) {
                         'Content-Type': 'application/json',
                     },
                 });
+                console.log("Paso!!")
                 const data = await response.json();
                 if (response.ok) {
                     setInputs(prevInputs => ({
@@ -236,13 +238,7 @@ export function EditProfile({  }) {
                             <View key={index} style={styles.inputContainer}>
                                 <Text style={styles.label}>{field.charAt(0).toUpperCase() + field.slice(1)}</Text>
                                 <View style={styles.inputRow}>
-                                    <ImageInput onChange={(image) => handleInputChange(field, image)}/>
-                                    {/*
-                                    <StyledButton2
-                                         icon={icons[`Edit ${field}`]}
-                                         onPress={() => handleImageSave(image)}
-                                    />
-                                    */}
+                                    <ImageInput userId={inputs.userID} patente={null} field={field} onChange={(image) => handleInputChange(field, image) }/>
                                 </View>
                             </View>
                         ))}
