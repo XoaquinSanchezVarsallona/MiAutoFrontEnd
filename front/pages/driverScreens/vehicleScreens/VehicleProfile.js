@@ -39,7 +39,7 @@ export function VehicleProfile({ navigation, route }) {
 
     useEffect(() => {
         fetchVehicle().then();
-    });
+    }, []);
 
     return (
         <ImageBackground source={require('../../../assets/BackgroundUnlocked.jpg')} style={styles.container}>
@@ -76,7 +76,7 @@ export function VehicleProfile({ navigation, route }) {
                     <Text style={styles.detail}>Expiry: {vehicleFetched.fechaVencimientoSeguro}</Text>
                     <View style={{ flexDirection: 'row' }}>
                         <TouchableOpacity style={styles.notifyButton} >
-                            <Text style={styles.buttonText}>Notify Accident</Text>
+                            <Text style={styles.buttonText} onPress={() => navigation.navigate('AccidentInformation', {patente : vehicleFetched.patente})}>Notify Accident</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.modifyInfoButton} >
                             <Text style={styles.buttonText}>Modify Info</Text>

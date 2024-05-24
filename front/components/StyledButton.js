@@ -20,8 +20,7 @@ const styles = StyleSheet.create({
         fontSize: 20,
         fontWeight: 'bold',
         marginTop: 10,
-    }
-
+    },
 });
 
 export default StyledButton;

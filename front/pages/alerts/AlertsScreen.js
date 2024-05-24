@@ -137,7 +137,7 @@ const styles = StyleSheet.create({
     },
     noFamiliesText: {
         fontSize: 18,
-        color: 'white', // This will make the text color white
+        color: 'white',
         fontWeight: '500',
         textAlign: 'center',
     },

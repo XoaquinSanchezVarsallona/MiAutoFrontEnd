@@ -41,6 +41,7 @@ export function FamilyProfile({ navigation, route }) {
     useEffect(() => {
         console.log('Families:', familiesData);
     }, [familiesData]);
+    const validFamiliesData = familiesData.filter(family => family !== null);
 
     return (
         <ImageBackground source={require('../../../assets/BackgroundUnlocked.jpg')} style={styles.container}>
@@ -49,8 +50,8 @@ export function FamilyProfile({ navigation, route }) {
             </View>
 
             <ScrollView style={styles.familiesScrollView} contentContainerStyle={styles.familiesContentContainer}>
-                {familiesData.length > 0 ? (
-                    familiesData.sort((a, b) => b.familyId - a.familyId).map((family, index) => (
+                {validFamiliesData.length > 0 ? (
+                    validFamiliesData.sort((a, b) => b.familyId - a.familyId).map((family, index) => (
                         family && ( // Check if family is not null
                             <Pressable
                                 key={index}
@@ -70,7 +71,7 @@ export function FamilyProfile({ navigation, route }) {
             </ScrollView>
 
             <View style={styles.buttonsContainer}>
-                <Pressable style={styles.addFamilyButton} onPress={() => navigation.navigate('AddFamilyScreen', { username, email, familiesData })}>
+                <Pressable style={styles.addFamilyButton} onPress={() => navigation.navigate('AddFamilyScreen', { username, email, validFamiliesData })}>
                     <Text style={styles.addFamilyText}>Add a new family</Text>
                 </Pressable>
                 <Pressable style={styles.addFamilyButton} onPress={() => navigation.navigate('JoinFamilyScreen', { username, email })}>

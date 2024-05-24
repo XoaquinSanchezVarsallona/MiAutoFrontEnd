@@ -4,13 +4,14 @@ import StyledButton from "../../components/StyledButton";
 import { useFocusEffect } from '@react-navigation/native';
 import StyledButton2 from "../../components/StyledButton2";
 import StyledButton4 from "../../components/StyledButton4";
+import LoadingScreen from "../LoadingScreen";
 
 
 export function UnlockedScreenDriver({ navigation, route, children }) {
     const { email } = route.params; //
     const [username, setUsername] = useState('');
     const [familias, setFamilies] = useState([]);
-
+    const [isLoading, setLoading] = useState(true);
 
     // UseEffect tiene el objetivo de obtener el username en base al email
     useFocusEffect(
@@ -30,59 +31,59 @@ export function UnlockedScreenDriver({ navigation, route, children }) {
                     console.log('Fetched families:', data.familias);
                 } catch (error) {
                     console.error('Error:', error);
+                } finally {
+                    setLoading(false);
                 }
             };
             fetchAndSetUser().then(r => console.log(r));
         }, [])
     );
-
     return (
         <ImageBackground source={require('../../assets/BackgroundUnlocked.jpg')} style={styles.container}>
-            <StyledButton2 style={styles.configurationButton}
-                icon={require('../../assets/configuration.png')}
-                onPress={() => navigation.navigate('ConfigurationScreen')}
-            />
+            {isLoading ? (
+                <LoadingScreen />
+            ) : (
             <View style={styles.header}>
+                <StyledButton2 style={styles.configurationButton}
+                               icon={require('../../assets/configuration.png')}
+                               onPress={() => navigation.navigate('ConfigurationScreen')}
+                />
                 <Text style={styles.headerTitle}>MIAUTO</Text>
-            </View>
-
-            <View>
                 <Text style={styles.subTitle}>Welcome {username}!</Text>
-            </View>
+                <View style={styles.buttonRow}>
+                    <StyledButton
+                        icon={require('../../assets/alert.png')}
+                        onPress={() => navigation.navigate('AlertsScreen', { families: familias, email: email, username: username } )}
+                        text={'Alerts'}
+                    />
 
+                    <StyledButton
+                        icon={require('../../assets/hammer.png')}
+                        onPress={() => navigation.navigate('StoreUnlockedScreen', { email: email, username: username } )}
+                        text={'Stores'}
+                    />
+
+                    <StyledButton4
+                        icon={require('../../assets/family.png')}
+                        onPress={() => navigation.navigate('FamilyProfile', { families: familias, email: email, username: username } )}
+                        text={'Families'}
+                    />
+
+                    <StyledButton
+                        icon={require('../../assets/car.png')}
+                        onPress={() => {
+                            if (familias.length === 0) {
+                                navigation.navigate('VehiclesScreen', { username: username });
+                            } else {
+                                navigation.navigate('FamilyVehiclesScreen', { families: familias });
+                            }
+                        }}
+                        text={'Vehicles'}
+                    />
+                </View>
+            </View>
+            )}
             {children}
-
-            <View style={styles.buttonRow}>
-                <StyledButton
-                    icon={require('../../assets/alert.png')}
-                    onPress={() => navigation.navigate('AlertsScreen', { families: familias, email: email, username: username } )}
-                    text={'Alerts'}
-                />
-
-                <StyledButton
-                    icon={require('../../assets/hammer.png')}
-                    onPress={() => navigation.navigate('StoreUnlockedScreen', { email: email, username: username } )}
-                    text={'Stores'}
-                />
-
-                <StyledButton4
-                    icon={require('../../assets/family.png')}
-                    onPress={() => navigation.navigate('FamilyProfile', { families: familias, email: email, username: username } )}
-                    text={'Families'}
-                />
-
-                <StyledButton
-                    icon={require('../../assets/car.png')}
-                    onPress={() => {
-                        if (familias.length === 0) {
-                            navigation.navigate('VehiclesScreen', { username: username });
-                        } else {
-                            navigation.navigate('FamilyVehiclesScreen', { families: familias });
-                        }
-                    }}
-                    text={'Vehicles'}
-                />
-            </View>
         </ImageBackground>
     );
 }
@@ -94,9 +95,9 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     header: {
-        padding: 20,
-        position: 'absolute',
-        top: 0,
+        paddingTop: 5,
+        alignItems: 'center',
+        width: '100%',
     },
     headerTitle: {
         marginLeft: 25,
@@ -110,10 +111,9 @@ const styles = StyleSheet.create({
         position: 'absolute',
         right: 0,
         top: 0,
-        padding: 30,
+        paddingRight: 15,
     },
     subTitle: {
-        padding: 20,
         fontSize: 30,
         color: '#FFFFFF',
     },
@@ -123,10 +123,9 @@ const styles = StyleSheet.create({
         marginVertical: 30, // Provides space between the icon and the buttons
     },
     buttonRow: {
+        width: '80%',
         paddingTop: 35,
         flexDirection: 'row',
         justifyContent: 'space-between',
-        alignItems: 'center',
-        width: '80%',
     },
 });

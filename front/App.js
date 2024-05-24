@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {isLoading, useFonts} from 'expo-font';
+import {useFonts} from 'expo-font';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {Login} from "./pages/Login"
@@ -38,6 +38,8 @@ import LoadingScreen from './pages/LoadingScreen';
 import {EditRoute} from "./pages/driverScreens/routeScreens/EditRoute";
 import {EditVisualStoreProfile} from "./pages/serviceScreens/EditVisualStoreProfile";
 import {VisualStoreProfile} from "./pages/driverScreens/storesScreens/VisualStoreProfile";
+import AccidentInformation from "./pages/driverScreens/vehicleScreens/AccidentInformation";
+
 
 const Stack = createNativeStackNavigator(); //used to configure the screens
 
@@ -110,6 +112,7 @@ function AppNavigation() {
                                 <Stack.Screen name="AddNewRoute" component={AddNewRoute}/>
                                 <Stack.Screen name="ViewRoutes" component={ViewRoutes}/>
                                 <Stack.Screen name="EditRoute" component={EditRoute}/>
+                                <Stack.Screen name="AccidentInformation" component={AccidentInformation}/>
                             </>
                         ) : (
                             <>
@@ -143,6 +146,7 @@ function AppNavigation() {
                                 <Stack.Screen name="AddNewRoute" component={AddNewRoute}/>
                                 <Stack.Screen name="ViewRoutes" component={ViewRoutes}/>
                                 <Stack.Screen name="EditRoute" component={EditRoute}/>
+                                <Stack.Screen name="AccidentInformation" component={AccidentInformation}/>
                             </>
                         )}
                     </Stack.Navigator>

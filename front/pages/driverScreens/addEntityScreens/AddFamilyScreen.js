@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
-import {View, Text, TextInput, Button, StyleSheet, ImageBackground, Pressable,} from 'react-native';
+import React, { useState, useContext } from 'react';
+import {View, Text, TextInput, StyleSheet, ImageBackground, Pressable,} from 'react-native';
 
 function AddFamilyScreen({ navigation, route }) {
     const [surname, setSurname] = useState('');
     const [password, setPassword] = useState(''); // Add this line
     const { username, email } = route.params;
     const [errorMessage, setErrorMessage] = useState('');
+    const inputStyleSurname = surname.length > 0 ? styles.inputNormal : styles.inputItalic;
+    const inputStylePassword = password.length > 0 ? styles.inputNormal : styles.inputItalic;
 
     const addFamily = async () => {
         try {
@@ -18,15 +20,15 @@ function AddFamilyScreen({ navigation, route }) {
             });
             if (response.ok) {
                 const familias = await response.json(); // Parse the JSON response from the server
-                alert('Family added successfully');
                 navigation.navigate('FamilyProfile', { email: email, families: familias, username: username });
+                alert("Family added successfully")
             } else if (response.status === 400) {
-                alert("Family already exists");
+                setErrorMessage('Family already exists')
             } else {
                 console.error('Failed to add family');
             }
         } catch (error) {
-            setErrorMessage(error.message || 'Login error. Please try again.')
+            setErrorMessage(error.message || 'Add family error. Please try again.')
             console.error('Error:', error);
         }
     };
@@ -37,14 +39,14 @@ function AddFamilyScreen({ navigation, route }) {
                     <Text style={styles.title}>Add New Family</Text>
                     <Text style={styles.label}>Surname</Text>
                     <TextInput
-                            style={styles.input}
+                            style={inputStyleSurname}
                             value={surname}
                             onChangeText={setSurname}
                             placeholder="Surname"
                         />
                     <Text style={styles.label}>Password</Text>
-                    <TextInput // Add this block
-                        style={styles.input}
+                    <TextInput
+                        style={inputStylePassword}
                         value={password}
                         onChangeText={setPassword}
                         placeholder="Password"
@@ -62,8 +64,8 @@ function AddFamilyScreen({ navigation, route }) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'flex-start', // Start content from the top
-        alignItems: 'center', // Center content horizontally
+        justifyContent: 'flex-start',
+        alignItems: 'center',
         padding: 16,
     },
     label: {
@@ -74,14 +76,22 @@ const styles = StyleSheet.create({
         marginLeft: 2,
         marginBottom: 3,
     },
-    input: {
+    inputNormal: {
         width: '100%',
-        color: '#FFFFFF80',
+        color: 'white',
         borderColor: 'gray',
         padding: 10,
         borderRadius: 2,
         borderWidth: 1,
-        marginBottom: 15,
+    },
+    inputItalic: {
+        width: '100%',
+        color: '#FFFFFF80',
+        borderColor: 'gray',
+        padding: 10,
+        marginBottom: 5,
+        fontStyle: 'italic',
+        borderWidth: 1,
     },
     title: {
         fontSize: 60,

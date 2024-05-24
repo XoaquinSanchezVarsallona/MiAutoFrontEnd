@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {View, Text, Button, StyleSheet, ImageBackground} from 'react-native';
+import {View, Text, StyleSheet, ImageBackground, TouchableOpacity, ScrollView} from 'react-native';
 
 export function AlertsFromFamilyScreen({ navigation, route }) {
     const { family, email } = route.params;
@@ -7,7 +7,7 @@ export function AlertsFromFamilyScreen({ navigation, route }) {
 
     const fetchAlerts = async () => {
         try {
-            const response = await fetch(`http://localhost:9002/alertasss/family/${family.surname}`);
+            const response = await fetch(`http://localhost:9002/alertas/family/${family.surname}`);
             if (response.ok) {
                 console.log("Fetching alerts for family: ", family.surname);
                 const alerts = await response.json();
@@ -38,24 +38,42 @@ export function AlertsFromFamilyScreen({ navigation, route }) {
         fetchAlerts().then();
     }, []);
 
+    const readAlert = async (idAlert) => {
+        const response = await fetch(`http://localhost:9002/alerts/setAsRead/${idAlert}`, {
+            method: 'POST',
+        });
+        if (response.ok) {
+            console.log('Alert read successfully');
+        } else {
+            console.log(`Failed to read alert with ID: ${idAlert}`);
+        }
+    };
+
     return (
         <ImageBackground source={require('../../assets/BackgroundUnlocked.jpg')} style={styles.container}>
             <View style={styles.container}>
-                <Text style={styles.title}>Alerts for {family.surname}</Text>
-                {alerts.length > 0 ? (
-                    alerts.map((alert, index) => (
-                        <View key={index} style={styles.alertContainer}>
-                            <View style={styles.alertTextContainer}>
-                                <Text>{alert.message}</Text>
+                <Text style={styles.title}>Alerts of {family.surname}'s</Text>
+                <ScrollView style={styles.alertsList} contentContainerStyle={styles.contentContainerStyle}>
+                    {alerts.length > 0 ? (
+                        alerts.map((alert, index) => (
+                            <View key={index} style={styles.alertContainer}>
+                                <View>
+                                    <Text>{alert.message}</Text>
+                                </View>
+                                <View style={styles.buttonRow}>
+                                    <TouchableOpacity style={styles.readButton} >
+                                        <Text style={styles.buttonText} onPress={() => readAlert(alert.idAlert)}>Read</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity style={styles.doneButton} >
+                                        <Text style={styles.buttonText} onPress={() => deleteAlert(alert.idAlert)}>Done</Text>
+                                    </TouchableOpacity>
+                                </View>
                             </View>
-                            <View style={styles.alertButtonContainer}>
-                                <Button title="Delete" onPress={() => deleteAlert(alert.idAlert)} />
-                            </View>
-                        </View>
-                    ))
-                ) : (
-                    <Text>No alerts available</Text>
-                )}
+                        ))
+                    ) : (
+                        <Text style={styles.noAlertsText}>No alerts available</Text>
+                    )}
+                </ScrollView>
             </View>
         </ImageBackground>
     );
@@ -64,9 +82,10 @@ export function AlertsFromFamilyScreen({ navigation, route }) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'space-between',
+        justifyContent: 'flex-start',
         alignItems: 'center',
         padding: 16,
+        width: '100%',
     },
     title: {
         fontSize: 60,
@@ -75,6 +94,7 @@ const styles = StyleSheet.create({
         marginBottom: 10,
     },
     alertContainer: {
+        width: '100%',
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
@@ -82,12 +102,11 @@ const styles = StyleSheet.create({
         backgroundColor: '#f8f8f8',
         marginBottom: 8,
         borderRadius: 8,
-    },
-    alertTextContainer: {
-        flex: 0.8,
-    },
-    alertButtonContainer: {
-        flex: 0.2,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.25,
+        shadowRadius: 5,
+        elevation: 5,
     },
     noAlertsText: {
         fontSize: 18,
@@ -95,4 +114,49 @@ const styles = StyleSheet.create({
         fontWeight: '500',
         textAlign: 'center',
     },
-});
+    readButton: {
+        width: '50%',
+        paddingVertical: 6,
+        paddingHorizontal: 10,
+        marginVertical: 5,
+        marginRight: 10,
+        top: 2,
+        backgroundColor: '#1e90ff',
+        borderRadius: 10,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.25,
+        shadowRadius: 5,
+        elevation: 5,
+    },
+    doneButton: {
+        width: '50%',
+        paddingVertical: 6,
+        paddingHorizontal: 10,
+        marginVertical: 5,
+        marginRight: 10,
+        top: 2,
+        backgroundColor: '#32cd32',
+        borderRadius: 10,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.25,
+        shadowRadius: 5,
+        elevation: 5,
+    },
+    buttonText: {
+        color: 'white',
+        fontWeight: 'bold',
+        textAlign: 'center',
+    },
+    buttonRow: {
+        flexDirection: 'row',
+        justifyContent: 'flex-end',
+        width: '30%',
+    },
+    alertsList: {
+        flex: 1,
+        width: '60%',
+        marginBottom: 20,
+    },
+})
