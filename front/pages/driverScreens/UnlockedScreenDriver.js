@@ -6,11 +6,14 @@ import StyledButton2 from "../../components/StyledButton2";
 import StyledButton4 from "../../components/StyledButton4";
 import LoadingScreen from "../LoadingScreen";
 
+import NotificationsPopUp from '../../components/NotificationsPopUp';
 
 export function UnlockedScreenDriver({ navigation, route, children }) {
     const { email } = route.params; //
     const [username, setUsername] = useState('');
     const [familias, setFamilies] = useState([]);
+    const [isNotificationVisible, setIsNotificationVisible] = useState(false);
+
     const [isLoading, setLoading] = useState(true);
 
     // UseEffect tiene el objetivo de obtener el username en base al email
@@ -48,6 +51,10 @@ export function UnlockedScreenDriver({ navigation, route, children }) {
                                icon={require('../../assets/configuration.png')}
                                onPress={() => navigation.navigate('ConfigurationScreen')}
                 />
+                <StyledButton2 style={styles.notificationButton}
+                               icon={require('../../assets/alert.png')}
+                               onPress={() => setIsNotificationVisible(true)}
+                />
                 <Text style={styles.headerTitle}>MIAUTO</Text>
                 <Text style={styles.subTitle}>Welcome {username}!</Text>
                 <View style={styles.buttonRow}>
@@ -82,8 +89,13 @@ export function UnlockedScreenDriver({ navigation, route, children }) {
                     />
                 </View>
             </View>
-            )}
-            {children}
+                )}
+                {children}
+            <NotificationsPopUp
+                isVisible={isNotificationVisible}
+                onClose={() => setIsNotificationVisible(false)}
+                email={email}
+            />
         </ImageBackground>
     );
 }
@@ -112,6 +124,13 @@ const styles = StyleSheet.create({
         right: 0,
         top: 0,
         paddingRight: 15,
+        padding: 30,
+    },
+    notificationButton: {
+        position: 'absolute',
+        right: 90,
+        top: 0,
+        padding: 30,
     },
     subTitle: {
         fontSize: 30,
