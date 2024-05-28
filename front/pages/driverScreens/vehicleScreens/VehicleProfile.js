@@ -78,7 +78,8 @@ export function VehicleProfile({ navigation, route }) {
                         <TouchableOpacity style={styles.notifyButton} >
                             <Text style={styles.buttonText} onPress={() => navigation.navigate('AccidentInformation', {patente : vehicleFetched.patente})}>Notify Accident</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.modifyInfoButton} >
+                        <TouchableOpacity style={styles.modifyInfoButton} onPress={() => {navigation.navigate('EditPapers', {patente: vehicle.patente})}}
+                        >
                             <Text style={styles.buttonText}>Modify Info</Text>
                         </TouchableOpacity>
                     </View>
@@ -103,7 +104,8 @@ export function VehicleProfile({ navigation, route }) {
                 <TouchableOpacity style={styles.deleteButton} onPress={deleteVehicle}>
                     <Text style={styles.buttonText}>Delete Vehicle</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.modifyButton} onPress={() => { navigation.navigate("EditCarProfile", {patente : vehicle.patente} ) }}>
+                <TouchableOpacity style={styles.modifyButton} onPress={() => {
+                    navigation.navigate("EditCarProfile", {patente : vehicle.patente} ) }}>
                     <Text style={styles.buttonText}>Modify Vehicle Details</Text>
                 </TouchableOpacity>
             </View>

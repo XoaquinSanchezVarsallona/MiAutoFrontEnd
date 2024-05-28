@@ -38,6 +38,7 @@ import LoadingScreen from './pages/LoadingScreen';
 import {EditRoute} from "./pages/driverScreens/routeScreens/EditRoute";
 import {EditVisualStoreProfile} from "./pages/serviceScreens/EditVisualStoreProfile";
 import {VisualStoreProfile} from "./pages/driverScreens/storesScreens/VisualStoreProfile";
+import {EditPapers} from "./pages/driverScreens/editProfile/EditPapers"
 import AccidentInformation from "./pages/driverScreens/vehicleScreens/AccidentInformation";
 import {NotificationProvider} from "./components/notification/NotificationProvider";
 import AppNotification from "./components/notification/AppNotification";
@@ -117,6 +118,7 @@ function AppNavigation() {
                                     <Stack.Screen name="ViewRoutes" component={ViewRoutes}/>
                                     <Stack.Screen name="EditRoute" component={EditRoute}/>
                                     <Stack.Screen name="AccidentInformation" component={AccidentInformation}/>
+                                    <Stack.Screen name="EditPapers" component={EditPapers}/>
                                 </>
                             ) : (
                                 <>
@@ -151,6 +153,7 @@ function AppNavigation() {
                                     <Stack.Screen name="ViewRoutes" component={ViewRoutes}/>
                                     <Stack.Screen name="EditRoute" component={EditRoute}/>
                                     <Stack.Screen name="AccidentInformation" component={AccidentInformation}/>
+                                    <Stack.Screen name="EditPapers" component={EditPapers}/>
                                 </>
                             )}
                         </Stack.Navigator>
