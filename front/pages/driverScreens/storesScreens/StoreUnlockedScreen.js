@@ -47,7 +47,7 @@ export function StoreUnlockedScreen({ navigation, route }) {
                 value={search}
                 placeholder="Search for stores"
             />
-            <ScrollView style={styles.vehiclesList}>
+            <ScrollView style={styles.storesList}>
                 {stores != null && stores.length > 0 ? (
                     stores.filter(store => store.storeName.startsWith(search)).map((store, index) => (
                         <Pressable
@@ -57,7 +57,7 @@ export function StoreUnlockedScreen({ navigation, route }) {
                                 navigation.navigate('VisualStoreProfile', { store: store });
                             }}
                         >
-                            <Text style={styles.storeName}>Store Name: {store.storeName}</Text>
+                            <Text style={styles.storeName}>{store.storeName}</Text>
                         </Pressable>
                     ))
                 ) : (
@@ -101,7 +101,7 @@ const styles = StyleSheet.create({
     },
     storesList: {
         flex: 1,
-        width: '100%',
+        width: '80%',
         marginBottom: 20,
     },
     storeButton: {
@@ -110,7 +110,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#1e90ff',
         borderRadius: 10,
         alignItems: 'center',
-        width: '50%',
+        width: '80%',
         alignSelf: 'center',
     },
     storeName: {
