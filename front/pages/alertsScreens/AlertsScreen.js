@@ -41,7 +41,6 @@ export function AlertScreen({ navigation, route }) {
         } catch (error) {
             console.error('Error:', error);
         }
-
     }
 
     useEffect(() => {

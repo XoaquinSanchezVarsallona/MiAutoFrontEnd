@@ -1,18 +1,27 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {StyleSheet, View, Text, ImageBackground} from 'react-native';
 import StyledButton from "../../components/StyledButton";
-import { useFocusEffect } from '@react-navigation/native';
+import {useFocusEffect, useIsFocused} from '@react-navigation/native';
 import StyledButton2 from "../../components/StyledButton2";
 import StyledButton4 from "../../components/StyledButton4";
 import LoadingScreen from "../LoadingScreen";
+import * as PropTypes from "prop-types";
+import StyledButtonWithAddOn from "../../components/StyledButtonWithAddOn";
 
+
+StyledButtonWithAddOn.propTypes = {
+    onPress: PropTypes.func,
+    icon: PropTypes.any,
+    text: PropTypes.string
+};
 
 export function UnlockedScreenDriver({ navigation, route, children }) {
     const { email } = route.params; //
     const [username, setUsername] = useState('');
     const [familias, setFamilies] = useState([]);
     const [isLoading, setLoading] = useState(true);
-
+    const [AllUnreadAlertsCount, setAllUnreadAlertsCount] = useState(0);
+    const isFocused = useIsFocused();
     // UseEffect tiene el objetivo de obtener el username en base al email
     useFocusEffect(
         React.useCallback(() => {
@@ -38,6 +47,33 @@ export function UnlockedScreenDriver({ navigation, route, children }) {
             fetchAndSetUser().then(r => console.log(r));
         }, [])
     );
+
+    const countUnreadAlerts = async (familyId) => {
+        try {
+            const response = await fetch(`http://localhost:9002/alerts/unreadAlertsWithId/${familyId}`, {
+                method: 'POST',
+            });
+            if (response.ok) {
+                return await response.json();
+            } else {
+                console.log(`Failed to count unread alerts for family with ID: ${familyId}`);
+                return null;
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+
+    const fetchUnreadAlertsCount = async () => {
+        const counts = await Promise.all(familias.map(family => countUnreadAlerts(family)));
+        const totalUnreadAlertsCount = counts.reduce((a, b) => a + b, 0);
+        setAllUnreadAlertsCount(totalUnreadAlertsCount);
+    };
+
+    useEffect(() => {
+        fetchUnreadAlertsCount().then();
+    }, [isFocused, familias]);
+
     return (
         <ImageBackground source={require('../../assets/BackgroundUnlocked.jpg')} style={styles.container}>
             {isLoading ? (
@@ -51,7 +87,8 @@ export function UnlockedScreenDriver({ navigation, route, children }) {
                 <Text style={styles.headerTitle}>MIAUTO</Text>
                 <Text style={styles.subTitle}>Welcome {username}!</Text>
                 <View style={styles.buttonRow}>
-                    <StyledButton
+                    <StyledButtonWithAddOn
+                        unreadAlertsCount={AllUnreadAlertsCount}
                         icon={require('../../assets/alert.png')}
                         onPress={() => navigation.navigate('AlertsScreen', { families: familias, email: email, username: username } )}
                         text={'Alerts'}
