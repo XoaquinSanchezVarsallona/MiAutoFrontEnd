@@ -88,7 +88,7 @@ export function UnlockedScreenDriver({ navigation, route, children }) {
                                onPress={() => navigation.navigate('ConfigurationScreen')}
                 />
                 <StyledButton2 style={styles.notificationButton}
-                               icon={require('../../assets/alert.png')}
+                               icon={require('../../assets/notification.png')}
                                onPress={() => setIsNotificationVisible(true)}
                 />
                 <Text style={styles.headerTitle}>MIAUTO</Text>
@@ -149,7 +149,7 @@ const styles = StyleSheet.create({
         width: '100%',
     },
     headerTitle: {
-        marginLeft: 25,
+        marginLeft: 36,
         fontFamily: 'Vidaloka-Regular',
         fontSize: 125,
         fontWeight: 'bold',
@@ -158,14 +158,14 @@ const styles = StyleSheet.create({
     },
     configurationButton: {
         position: 'absolute',
-        right: 0,
+        right: 10,
         top: 0,
         paddingRight: 15,
         padding: 30,
     },
     notificationButton: {
         position: 'absolute',
-        right: 90,
+        right: 110,
         top: 0,
         padding: 30,
     },
