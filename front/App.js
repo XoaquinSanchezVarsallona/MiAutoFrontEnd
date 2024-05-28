@@ -143,6 +143,7 @@ function AppNavigation() {
                                 <Stack.Screen name="AddNewRoute" component={AddNewRoute}/>
                                 <Stack.Screen name="ViewRoutes" component={ViewRoutes}/>
                                 <Stack.Screen name="EditRoute" component={EditRoute}/>
+
                             </>
                         )}
                     </Stack.Navigator>
