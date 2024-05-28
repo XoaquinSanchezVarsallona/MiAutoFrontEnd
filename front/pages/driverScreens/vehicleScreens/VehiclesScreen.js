@@ -69,9 +69,7 @@ export function VehiclesScreen({ navigation, route }) {
                             <Pressable
                                 key={index}
                                 style={styles.vehicleButton}
-                                onPress={() => {
-                                    navigation.navigate('VehicleProfile', { vehicle: vehicle, familySurname: familySurname, familyId: familyId });
-                                }}
+                                onPress={() => {navigation.navigate('VehicleProfile', { vehicle: vehicle, familySurname: familySurname, familyId: familyId });}}
                             >
                                 <View style={styles.rowContainer}>
                                     <Text style={styles.vehicleText}>{vehicle.marca} {vehicle.modelo} - {vehicle.patente}</Text>

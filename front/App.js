@@ -38,6 +38,7 @@ import LoadingScreen from './pages/LoadingScreen';
 import {EditRoute} from "./pages/driverScreens/routeScreens/EditRoute";
 import {EditVisualStoreProfile} from "./pages/serviceScreens/EditVisualStoreProfile";
 import {VisualStoreProfile} from "./pages/driverScreens/storesScreens/VisualStoreProfile";
+import {EditPapers} from "./pages/driverScreens/editProfile/EditPapers"
 
 const Stack = createNativeStackNavigator(); //used to configure the screens
 
@@ -110,6 +111,7 @@ function AppNavigation() {
                                 <Stack.Screen name="AddNewRoute" component={AddNewRoute}/>
                                 <Stack.Screen name="ViewRoutes" component={ViewRoutes}/>
                                 <Stack.Screen name="EditRoute" component={EditRoute}/>
+                                <Stack.Screen name="EditPapers" component={EditPapers}/>
                             </>
                         ) : (
                             <>
@@ -143,6 +145,7 @@ function AppNavigation() {
                                 <Stack.Screen name="AddNewRoute" component={AddNewRoute}/>
                                 <Stack.Screen name="ViewRoutes" component={ViewRoutes}/>
                                 <Stack.Screen name="EditRoute" component={EditRoute}/>
+                                <Stack.Screen name={"EditPapers"} component={EditPapers}/>
                             </>
                         )}
                     </Stack.Navigator>

@@ -79,7 +79,7 @@ const ImageInput = (requiered) => {
 
 const styles = StyleSheet.create({
     imagen: { width: 100, height: 100, marginRight: 20},
-    container: { flex: 1, alignItems: 'center', justifyContent: 'center', flexDirection: 'row', },
+    container: { flex: 1, alignItems: 'center', flexDirection: 'row', },
     boton: { color: 'white', fontSize: 20, fontWeight: 'bold', marginLeft: 20},
 });
 
