@@ -1,5 +1,6 @@
 import React, {useEffect} from 'react';
 import {ImageBackground, Pressable, StyleSheet, Text, View} from 'react-native';
+import CustomScrollBar from "../../components/CustomScrollBar";
 
 export function AlertScreen({ navigation, route }) {
     const [familiesData, setFamilies] = React.useState([]);
@@ -41,24 +42,26 @@ export function AlertScreen({ navigation, route }) {
             <View style={styles.headerContainer}>
                 <Text style={styles.title}>My Alerts</Text>
 
-                {familiesData.length > 0 ? (
-                    familiesData.sort((a, b) => b.familyId - a.familyId).map((family, index) => (
-                        family && (
-                            <Pressable
-                                key={index}
-                                style={styles.familyButton}
-                                onPress={() => {
-                                    console.log(`Pressed: ${family.surname}`);
-                                    navigation.navigate('AlertsFromFamilyScreen', { family: family, email: email  });
-                                }}
-                            >
-                                <Text style={styles.familyName}>{family.surname}</Text>
-                            </Pressable>
-                        )
-                    ))
-                ) : (
-                    <Text style={styles.noFamiliesText}>No families available</Text>
-                )}
+                <CustomScrollBar style={styles.familiesScrollView} contentContainerStyle={styles.familiesContentContainer}>
+                    {familiesData.length > 0 ? (
+                        familiesData.sort((a, b) => b.familyId - a.familyId).map((family, index) => (
+                            family && (
+                                <Pressable
+                                    key={index}
+                                    style={styles.familyButton}
+                                    onPress={() => {
+                                        console.log(`Pressed: ${family.surname}`);
+                                        navigation.navigate('AlertsFromFamilyScreen', { family: family, email: email  });
+                                    }}
+                                >
+                                    <Text style={styles.familyName}>{family.surname}</Text>
+                                </Pressable>
+                            )
+                        ))
+                    ) : (
+                        <Text style={styles.noFamiliesText}>No families available</Text>
+                    )}
+                </CustomScrollBar>
             </View>
             <Pressable style={styles.addAlertButton} onPress={() => navigation.navigate('AddAlertScreen', { username, email })}>
                 <Text style={styles.addAlertText}>Add a new alert</Text>
@@ -107,16 +110,16 @@ const styles = StyleSheet.create({
     },
     addAlertButton: {
         width: '40%',
-        paddingVertical: 12, // Increase padding for a larger touch area
+        paddingVertical: 12,
         paddingHorizontal: 20,
         marginVertical: 8,
-        backgroundColor: '#32cd32', // A vibrant green color
+        backgroundColor: '#32cd32',
         borderRadius: 20,
-        elevation: 4, // Adds a subtle shadow effect on Android
-        shadowColor: '#000', // Shadow for iOS
-        shadowOffset: { width: 0, height: 2 }, // Shadow for iOS
-        shadowOpacity: 0.25, // Shadow for iOS
-        shadowRadius: 3.84, // Shadow for iOS
+        elevation: 4,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
     },
     alertMessage: {
         fontSize: 18,

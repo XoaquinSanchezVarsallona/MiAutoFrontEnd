@@ -39,6 +39,8 @@ import {EditRoute} from "./pages/driverScreens/routeScreens/EditRoute";
 import {EditVisualStoreProfile} from "./pages/serviceScreens/EditVisualStoreProfile";
 import {VisualStoreProfile} from "./pages/driverScreens/storesScreens/VisualStoreProfile";
 import AccidentInformation from "./pages/driverScreens/vehicleScreens/AccidentInformation";
+import {NotificationProvider} from "./components/notification/NotificationProvider";
+import AppNotification from "./components/notification/AppNotification";
 
 
 const Stack = createNativeStackNavigator(); //used to configure the screens
@@ -76,83 +78,86 @@ function AppNavigation() {
     }
 
     return (
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <PaperProvider>
-                <NavigationContainer>
-                    <Stack.Navigator initialRouteName={isAuthenticated ? "UnlockedScreenDriver" : "Home"}>
-                        {isAuthenticated ? (
-                            <>
-                                <Stack.Screen name="Home" component={Home}/>
-                                <Stack.Screen name="Login" component={Login}/>
-                                <Stack.Screen name="Register" component={Register}/>
-                                <Stack.Screen name="UnlockedScreenDriver" component={UnlockedScreenDriver} initialParams={{ email: userEmail }} />
-                                <Stack.Screen name="AlertsScreen" component={AlertScreen}/>
-                                <Stack.Screen name="ConfigurationScreen" component={ConfigurationScreen}/>
-                                <Stack.Screen name="FamilyProfile" component={FamilyProfile}/>
-                                <Stack.Screen name="VehiclesScreen" component={VehiclesScreen}/>
-                                <Stack.Screen name="AddNewVehicle" component={AddNewVehicle}/>
-                                <Stack.Screen name="FamilyVehiclesScreen" component={FamilyVehiclesScreen}/>
-                                <Stack.Screen name="EditProfile" component={EditProfile}/>
-                                <Stack.Screen name="FamilyDetailsScreen" component={FamilyDetailsScreen}/>
-                                <Stack.Screen name="AddFamilyScreen" component={AddFamilyScreen}/>
-                                <Stack.Screen name="JoinFamilyScreen" component={JoinFamilyScreen}/>
-                                <Stack.Screen name="AddAlertScreen" component={AddAlertScreen}/>
-                                <Stack.Screen name="AlertsFromFamilyScreen" component={AlertsFromFamilyScreen}/>
-                                <Stack.Screen name="VehicleProfile" component={VehicleProfile}/>
-                                <Stack.Screen name="EditCarProfile" component={EditCarProfile}/>
-                                <Stack.Screen name="ViewProfile" component={ViewProfile}/>
-                                <Stack.Screen name="UnlockedScreenService" component={UnlockedScreenService}/>
-                                <Stack.Screen name="AddNewStore" component={AddNewStore}/>
-                                <Stack.Screen name="StoreProfile" component={StoreProfile}/>
-                                <Stack.Screen name="EditStoreProfile" component={EditStoreProfile}/>
-                                <Stack.Screen name="EditVisualStoreProfile" component={EditVisualStoreProfile}/>
-                                <Stack.Screen name="StoreUnlockedScreen" component={StoreUnlockedScreen}/>
-                                <Stack.Screen name="VisualStoreProfile" component={VisualStoreProfile}/>
-                                <Stack.Screen name="VehicleRoutes" component={VehicleRoutes}/>
-                                <Stack.Screen name="AddNewRoute" component={AddNewRoute}/>
-                                <Stack.Screen name="ViewRoutes" component={ViewRoutes}/>
-                                <Stack.Screen name="EditRoute" component={EditRoute}/>
-                                <Stack.Screen name="AccidentInformation" component={AccidentInformation}/>
-                            </>
-                        ) : (
-                            <>
-                                <Stack.Screen name="Home" component={Home}/>
-                                <Stack.Screen name="Login" component={Login}/>
-                                <Stack.Screen name="Register" component={Register}/>
-                                <Stack.Screen name="UnlockedScreenDriver" component={UnlockedScreenDriver} initialParams={{ email: userEmail }} />
-                                <Stack.Screen name="AlertsScreen" component={AlertScreen}/>
-                                <Stack.Screen name="ConfigurationScreen" component={ConfigurationScreen}/>
-                                <Stack.Screen name="FamilyProfile" component={FamilyProfile}/>
-                                <Stack.Screen name="VehiclesScreen" component={VehiclesScreen}/>
-                                <Stack.Screen name="AddNewVehicle" component={AddNewVehicle}/>
-                                <Stack.Screen name="FamilyVehiclesScreen" component={FamilyVehiclesScreen}/>
-                                <Stack.Screen name="EditProfile" component={EditProfile}/>
-                                <Stack.Screen name="FamilyDetailsScreen" component={FamilyDetailsScreen}/>
-                                <Stack.Screen name="AddFamilyScreen" component={AddFamilyScreen}/>
-                                <Stack.Screen name="JoinFamilyScreen" component={JoinFamilyScreen}/>
-                                <Stack.Screen name="AddAlertScreen" component={AddAlertScreen}/>
-                                <Stack.Screen name="AlertsFromFamilyScreen" component={AlertsFromFamilyScreen}/>
-                                <Stack.Screen name="VehicleProfile" component={VehicleProfile}/>
-                                <Stack.Screen name="EditCarProfile" component={EditCarProfile}/>
-                                <Stack.Screen name="ViewProfile" component={ViewProfile}/>
-                                <Stack.Screen name="UnlockedScreenService" component={UnlockedScreenService}/>
-                                <Stack.Screen name="AddNewStore" component={AddNewStore}/>
-                                <Stack.Screen name="StoreProfile" component={StoreProfile}/>
-                                <Stack.Screen name="EditStoreProfile" component={EditStoreProfile}/>
-                                <Stack.Screen name="EditVisualStoreProfile" component={EditVisualStoreProfile}/>
-                                <Stack.Screen name="StoreUnlockedScreen" component={StoreUnlockedScreen}/>
-                                <Stack.Screen name="VisualStoreProfile" component={VisualStoreProfile}/>
-                                <Stack.Screen name="VehicleRoutes" component={VehicleRoutes}/>
-                                <Stack.Screen name="AddNewRoute" component={AddNewRoute}/>
-                                <Stack.Screen name="ViewRoutes" component={ViewRoutes}/>
-                                <Stack.Screen name="EditRoute" component={EditRoute}/>
-                                <Stack.Screen name="AccidentInformation" component={AccidentInformation}/>
-                            </>
-                        )}
-                    </Stack.Navigator>
-                </NavigationContainer>
-            </PaperProvider>
-        </LocalizationProvider>
+        <NotificationProvider>
+            <AppNotification />
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <PaperProvider>
+                    <NavigationContainer>
+                        <Stack.Navigator initialRouteName={isAuthenticated ? "UnlockedScreenDriver" : "Home"}>
+                            {isAuthenticated ? (
+                                <>
+                                    <Stack.Screen name="Home" component={Home}/>
+                                    <Stack.Screen name="Login" component={Login}/>
+                                    <Stack.Screen name="Register" component={Register}/>
+                                    <Stack.Screen name="UnlockedScreenDriver" component={UnlockedScreenDriver} initialParams={{ email: userEmail }} />
+                                    <Stack.Screen name="AlertsScreen" component={AlertScreen}/>
+                                    <Stack.Screen name="ConfigurationScreen" component={ConfigurationScreen}/>
+                                    <Stack.Screen name="FamilyProfile" component={FamilyProfile}/>
+                                    <Stack.Screen name="VehiclesScreen" component={VehiclesScreen}/>
+                                    <Stack.Screen name="AddNewVehicle" component={AddNewVehicle}/>
+                                    <Stack.Screen name="FamilyVehiclesScreen" component={FamilyVehiclesScreen}/>
+                                    <Stack.Screen name="EditProfile" component={EditProfile}/>
+                                    <Stack.Screen name="FamilyDetailsScreen" component={FamilyDetailsScreen}/>
+                                    <Stack.Screen name="AddFamilyScreen" component={AddFamilyScreen}/>
+                                    <Stack.Screen name="JoinFamilyScreen" component={JoinFamilyScreen}/>
+                                    <Stack.Screen name="AddAlertScreen" component={AddAlertScreen}/>
+                                    <Stack.Screen name="AlertsFromFamilyScreen" component={AlertsFromFamilyScreen}/>
+                                    <Stack.Screen name="VehicleProfile" component={VehicleProfile}/>
+                                    <Stack.Screen name="EditCarProfile" component={EditCarProfile}/>
+                                    <Stack.Screen name="ViewProfile" component={ViewProfile}/>
+                                    <Stack.Screen name="UnlockedScreenService" component={UnlockedScreenService}/>
+                                    <Stack.Screen name="AddNewStore" component={AddNewStore}/>
+                                    <Stack.Screen name="StoreProfile" component={StoreProfile}/>
+                                    <Stack.Screen name="EditStoreProfile" component={EditStoreProfile}/>
+                                    <Stack.Screen name="EditVisualStoreProfile" component={EditVisualStoreProfile}/>
+                                    <Stack.Screen name="StoreUnlockedScreen" component={StoreUnlockedScreen}/>
+                                    <Stack.Screen name="VisualStoreProfile" component={VisualStoreProfile}/>
+                                    <Stack.Screen name="VehicleRoutes" component={VehicleRoutes}/>
+                                    <Stack.Screen name="AddNewRoute" component={AddNewRoute}/>
+                                    <Stack.Screen name="ViewRoutes" component={ViewRoutes}/>
+                                    <Stack.Screen name="EditRoute" component={EditRoute}/>
+                                    <Stack.Screen name="AccidentInformation" component={AccidentInformation}/>
+                                </>
+                            ) : (
+                                <>
+                                    <Stack.Screen name="Home" component={Home}/>
+                                    <Stack.Screen name="Login" component={Login}/>
+                                    <Stack.Screen name="Register" component={Register}/>
+                                    <Stack.Screen name="UnlockedScreenDriver" component={UnlockedScreenDriver} initialParams={{ email: userEmail }} />
+                                    <Stack.Screen name="AlertsScreen" component={AlertScreen}/>
+                                    <Stack.Screen name="ConfigurationScreen" component={ConfigurationScreen}/>
+                                    <Stack.Screen name="FamilyProfile" component={FamilyProfile}/>
+                                    <Stack.Screen name="VehiclesScreen" component={VehiclesScreen}/>
+                                    <Stack.Screen name="AddNewVehicle" component={AddNewVehicle}/>
+                                    <Stack.Screen name="FamilyVehiclesScreen" component={FamilyVehiclesScreen}/>
+                                    <Stack.Screen name="EditProfile" component={EditProfile}/>
+                                    <Stack.Screen name="FamilyDetailsScreen" component={FamilyDetailsScreen}/>
+                                    <Stack.Screen name="AddFamilyScreen" component={AddFamilyScreen}/>
+                                    <Stack.Screen name="JoinFamilyScreen" component={JoinFamilyScreen}/>
+                                    <Stack.Screen name="AddAlertScreen" component={AddAlertScreen}/>
+                                    <Stack.Screen name="AlertsFromFamilyScreen" component={AlertsFromFamilyScreen}/>
+                                    <Stack.Screen name="VehicleProfile" component={VehicleProfile}/>
+                                    <Stack.Screen name="EditCarProfile" component={EditCarProfile}/>
+                                    <Stack.Screen name="ViewProfile" component={ViewProfile}/>
+                                    <Stack.Screen name="UnlockedScreenService" component={UnlockedScreenService}/>
+                                    <Stack.Screen name="AddNewStore" component={AddNewStore}/>
+                                    <Stack.Screen name="StoreProfile" component={StoreProfile}/>
+                                    <Stack.Screen name="EditStoreProfile" component={EditStoreProfile}/>
+                                    <Stack.Screen name="EditVisualStoreProfile" component={EditVisualStoreProfile}/>
+                                    <Stack.Screen name="StoreUnlockedScreen" component={StoreUnlockedScreen}/>
+                                    <Stack.Screen name="VisualStoreProfile" component={VisualStoreProfile}/>
+                                    <Stack.Screen name="VehicleRoutes" component={VehicleRoutes}/>
+                                    <Stack.Screen name="AddNewRoute" component={AddNewRoute}/>
+                                    <Stack.Screen name="ViewRoutes" component={ViewRoutes}/>
+                                    <Stack.Screen name="EditRoute" component={EditRoute}/>
+                                    <Stack.Screen name="AccidentInformation" component={AccidentInformation}/>
+                                </>
+                            )}
+                        </Stack.Navigator>
+                    </NavigationContainer>
+                </PaperProvider>
+            </LocalizationProvider>
+        </NotificationProvider>
     );
 
 }

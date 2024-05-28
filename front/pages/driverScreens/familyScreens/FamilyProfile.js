@@ -1,6 +1,7 @@
 import React, {useEffect} from 'react';
 import {ImageBackground, Pressable, ScrollView, StyleSheet, Text, View} from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
+import CustomScrollBar from "../../../components/CustomScrollBar";
 
 export function FamilyProfile({ navigation, route }) {
     const [familiesData, setFamilies] = React.useState([]);
@@ -49,7 +50,7 @@ export function FamilyProfile({ navigation, route }) {
                 <Text style={styles.title}>My Families</Text>
             </View>
 
-            <ScrollView style={styles.familiesScrollView} contentContainerStyle={styles.familiesContentContainer}>
+            <CustomScrollBar style={styles.familiesScrollView} contentContainerStyle={styles.familiesContentContainer}>
                 {validFamiliesData.length > 0 ? (
                     validFamiliesData.sort((a, b) => b.familyId - a.familyId).map((family, index) => (
                         family && ( // Check if family is not null
@@ -68,7 +69,7 @@ export function FamilyProfile({ navigation, route }) {
                 ) : (
                     <Text style={styles.noFamiliesText}>No families available</Text>
                 )}
-            </ScrollView>
+            </CustomScrollBar>
 
             <View style={styles.buttonsContainer}>
                 <Pressable style={styles.addFamilyButton} onPress={() => navigation.navigate('AddFamilyScreen', { username, email, validFamiliesData })}>
@@ -96,14 +97,18 @@ const styles = StyleSheet.create({
         marginBottom: 20,
     },
     familiesScrollView: {
-        width: '50%',
-        flex: 1,
+        width: '80%',
+        maxWidth: 400,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     familiesContentContainer: {
         alignItems: 'center',
+        width: '80%',
+        justifyContent: 'center',
     },
     familyContainer: {
-        width: '80%',
+        width: '100%',
         padding: 15,
         marginVertical: 8,
         marginHorizontal: 12,
@@ -115,6 +120,7 @@ const styles = StyleSheet.create({
         shadowRadius: 5,
         elevation: 5,
         alignItems: 'center',
+        alignSelf: 'center',
     },
     title: {
         fontSize: 60,
@@ -152,6 +158,12 @@ const styles = StyleSheet.create({
         fontWeight: '500',
     },
     addFamilyText: {
+        fontSize: 18,
+        color: 'white',
+        fontWeight: '500',
+        textAlign: 'center',
+    },
+    noFamiliesText: {
         fontSize: 18,
         color: 'white',
         fontWeight: '500',
