@@ -1,10 +1,12 @@
 import React, {useEffect} from 'react';
 import {Image, View, Text, StyleSheet, ImageBackground, TouchableOpacity} from 'react-native';
+import {useIsFocused} from "@react-navigation/native";
 
 export function VehicleProfile({ navigation, route }) {
     const { vehicle, familySurname, familyId } = route.params;
     const carName = vehicle.marca + ' ' + vehicle.modelo;
     const [vehicleFetched, setVehicle] = React.useState([]);
+    const isFocused = useIsFocused();
 
     const fetchVehicle = async () => {
         try {
@@ -39,7 +41,7 @@ export function VehicleProfile({ navigation, route }) {
 
     useEffect(() => {
         fetchVehicle().then();
-    }, []);
+    }, [isFocused]);
 
     return (
         <ImageBackground source={require('../../../assets/BackgroundUnlocked.jpg')} style={styles.container}>

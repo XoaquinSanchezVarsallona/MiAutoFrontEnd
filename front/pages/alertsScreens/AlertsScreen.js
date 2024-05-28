@@ -58,10 +58,6 @@ export function AlertScreen({ navigation, route }) {
     }, [familiesData]);
 
     useEffect(() => {
-        console.log('Context:', contextValue)
-    }, []);
-
-    useEffect(() => {
         const fetchUnreadAlertsCount = async () => {
             const counts = await Promise.all(familiesData.map(family => countUnreadAlerts(family.surname)));
             setUnreadAlertsCount(counts);
