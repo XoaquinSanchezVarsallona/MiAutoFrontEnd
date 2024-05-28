@@ -4,16 +4,21 @@ import {View, Text, StyleSheet, ImageBackground, TouchableOpacity, ScrollView} f
 export function AlertsFromFamilyScreen({ navigation, route }) {
     const { family, email } = route.params;
     const [alerts, setAlerts] = useState([]);
+    const [event, setEvent] = useState('');
 
     const fetchAlerts = async () => {
         try {
-            const response = await fetch(`http://localhost:9002/alertas/family/${family.surname}`);
+            const response = await fetch(`http://localhost:9002/alertas/family/${family.surname}`, {
+                method: 'POST',
+            });
+
             if (response.ok) {
                 console.log("Fetching alerts for family: ", family.surname);
+                setEvent("fetch")
                 const alerts = await response.json();
                 setAlerts(alerts);
             } else {
-                console.log(`Failed to fetch alerts for family: ${family.surname}`); } }
+                console.error(`Failed to fetch alerts for family: ${family.surname}`); } }
         catch (error) {
             console.error("Error fetching alerts: ", error);
         }
@@ -25,6 +30,7 @@ export function AlertsFromFamilyScreen({ navigation, route }) {
         });
         if (response.ok) {
             console.log('Alert deleted successfully');
+            setEvent(alertId)
             navigation.reset({
                 index: 0,
                 routes: [{ name: 'UnlockedScreenDriver', params: { email: email }}],
@@ -36,18 +42,31 @@ export function AlertsFromFamilyScreen({ navigation, route }) {
 
     useEffect(() => {
         fetchAlerts().then();
-    }, []);
+    }, [event]);
 
     const readAlert = async (idAlert) => {
         const response = await fetch(`http://localhost:9002/alerts/setAsRead/${idAlert}`, {
             method: 'POST',
         });
         if (response.ok) {
+            setEvent("true")
             console.log('Alert read successfully');
         } else {
             console.log(`Failed to read alert with ID: ${idAlert}`);
         }
     };
+
+    const unreadAlert = async (idAlert) => {
+        const response = await fetch(`http://localhost:9002/alerts/setAsUnread/${idAlert}`, {
+            method: 'POST',
+        });
+        if (response.ok) {
+            setEvent("false")
+            console.log('Alert unread successfully');
+        } else {
+            console.log(`Failed to unread alert with ID: ${idAlert}`);
+        }
+    }
 
     return (
         <ImageBackground source={require('../../assets/BackgroundUnlocked.jpg')} style={styles.container}>
@@ -55,25 +74,30 @@ export function AlertsFromFamilyScreen({ navigation, route }) {
                 <Text style={styles.title}>Alerts of {family.surname}'s</Text>
                 <ScrollView style={styles.alertsList} contentContainerStyle={styles.contentContainerStyle}>
                     {alerts.length > 0 ? (
-                        alerts.map((alert, index) => (
-                            <View key={index} style={styles.alertContainer}>
-                                <View>
-                                    <Text>{alert.message}</Text>
+                        alerts
+                            .sort((a, b) => a.isRead - b.isRead) // Sort alerts: unread first, then read
+                            .map((alert, index) => (
+                                <View key={index} style={alert.isRead ? styles.alertContainerRead : styles.alertContainer}>
+                                    <View>
+                                        <Text style={alert.isRead ? styles.textRead : styles.textUnread}>{alert.message}</Text>
+                                    </View>
+                                    <View style={styles.buttonRow}>
+                                        <TouchableOpacity style={styles.readButton} >
+                                            <Text style={styles.buttonText} onPress={() => alert.isRead ? unreadAlert(alert.idAlert) : readAlert(alert.idAlert)}>
+                                                {alert.isRead ? 'Unread' : 'Read'}
+                                            </Text>
+                                        </TouchableOpacity>
+                                        <TouchableOpacity style={styles.doneButton} >
+                                            <Text style={styles.buttonText} onPress={() => deleteAlert(alert.idAlert)}>Done</Text>
+                                        </TouchableOpacity>
+                                    </View>
                                 </View>
-                                <View style={styles.buttonRow}>
-                                    <TouchableOpacity style={styles.readButton} >
-                                        <Text style={styles.buttonText} onPress={() => readAlert(alert.idAlert)}>Read</Text>
-                                    </TouchableOpacity>
-                                    <TouchableOpacity style={styles.doneButton} >
-                                        <Text style={styles.buttonText} onPress={() => deleteAlert(alert.idAlert)}>Done</Text>
-                                    </TouchableOpacity>
-                                </View>
-                            </View>
-                        ))
+                            ))
                     ) : (
                         <Text style={styles.noAlertsText}>No alerts available</Text>
                     )}
                 </ScrollView>
+
             </View>
         </ImageBackground>
     );
@@ -100,6 +124,21 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         padding: 16,
         backgroundColor: '#f8f8f8',
+        marginBottom: 8,
+        borderRadius: 8,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.25,
+        shadowRadius: 5,
+        elevation: 5,
+    },
+    alertContainerRead: {
+        width: '100%',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        padding: 16,
+        backgroundColor: '#d3d3d3',
         marginBottom: 8,
         borderRadius: 8,
         shadowColor: '#000',
@@ -159,4 +198,15 @@ const styles = StyleSheet.create({
         width: '60%',
         marginBottom: 20,
     },
+    textUnread: {
+        fontSize: 18,
+        color: 'black',
+        fontWeight: '500',
+    },
+    textRead: {
+        fontSize: 18,
+        color: 'black',
+        fontWeight: '500',
+        textDecorationLine: 'line-through',
+    }
 })
