@@ -61,7 +61,7 @@ export function StoreProfile({ navigation, route }) {
                 throw new Error('Network response was not ok');
             }
 
-            const data = await response.json();
+            //const data = await response.json();
             setNotificationDescription('');
             await fetchNotifications();
 
@@ -70,61 +70,93 @@ export function StoreProfile({ navigation, route }) {
         }
     };
 
+    const handleDeleteNotification = async (description) => {
+        try {
+            const response = await fetch(`http://localhost:9002/deleteNotificationFromDescription`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ storeEmail: store.storeEmail, description: description }),
+            });
+            if (response.ok) {
+                //setNotifications(notifications.filter(notification => notification.description !== description));
+                await fetchNotifications();
+            } else {
+                console.error('Failed to delete notification');
+            }
+        } catch (error) {
+            console.error('Error deleting notification:', error);
+        }
+    };
+
     useEffect(() => {
         fetchNotifications();
     }, []);
 
     return (
-        <ImageBackground source={require('../../assets/BackgroundUnlocked.jpg')} style={styles.container}>
-            <View style={styles.content}>
-                <Text style={styles.title}>{store.storeName}</Text>
-                <Text style={styles.detail}>Store Email: {store.storeEmail}</Text>
-                <Text style={styles.detail}>Store Address: {store.domicilio}</Text>
-                <Text style={styles.detail}>Store Service type: {store.tipoDeServicio}</Text>
-                <View style={styles.buttonContainer}>
-                    <TouchableOpacity style={styles.deleteButton} onPress={deleteStore}>
-                        <Text style={styles.buttonText}>Delete Store</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.modifyButton} onPress={() => { navigation.navigate("EditVisualStoreProfile", {email : store.storeEmail} ) }}>
-                        <Text style={styles.buttonText}>Modify Store Details</Text>
+        <ScrollView contentContainerStyle={styles.scrollContainer}>
+            <ImageBackground source={require('../../assets/BackgroundUnlocked.jpg')} style={styles.container}>
+                <View style={styles.content}>
+                    <Text style={styles.title}>{store.storeName}</Text>
+                    <Text style={styles.detail}>Store Email: {store.storeEmail}</Text>
+                    <Text style={styles.detail}>Store Address: {store.domicilio}</Text>
+                    <Text style={styles.detail}>Store Service type: {store.tipoDeServicio}</Text>
+                    <View style={styles.buttonContainer}>
+                        <TouchableOpacity style={styles.deleteButton} onPress={deleteStore}>
+                            <Text style={styles.buttonText}>Delete Store</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.modifyButton} onPress={() => { navigation.navigate("EditVisualStoreProfile", {email : store.storeEmail} ) }}>
+                            <Text style={styles.buttonText}>Modify Store Details</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+
+                <View style={styles.notificationSection}>
+                    <Text style={styles.sectionTitle}>Publish Notification</Text>
+                    <TextInput
+                        style={styles.textArea}
+                        placeholder="Enter your notification"
+                        value={notificationDescription}
+                        onChangeText={setNotificationDescription}
+                        multiline={true}
+                        numberOfLines={4}
+                    />
+                    <TouchableOpacity style={styles.submitButton} onPress={handleSubmitNotification}>
+                        <Text style={styles.submitButtonText}>Submit</Text>
                     </TouchableOpacity>
                 </View>
-            </View>
 
-            <View style={styles.notificationSection}>
-                <Text style={styles.sectionTitle}>Publish Notification</Text>
-                <TextInput
-                    style={styles.textArea}
-                    placeholder="Enter your notification"
-                    value={notificationDescription}
-                    onChangeText={setNotificationDescription}
-                    multiline={true}
-                    numberOfLines={4}
-                />
-                <TouchableOpacity style={styles.submitButton} onPress={handleSubmitNotification}>
-                    <Text style={styles.submitButtonText}>Submit</Text>
-                </TouchableOpacity>
-            </View>
-
-            <ScrollView style={styles.commentsSection}>
-                <Text style={styles.commentsTitle}>Notifications</Text>
-                {notifications.reduce((unique, notification) => {
-                    if (!unique.some(item => item.description === notification.description)) {
-                        unique.push(notification);
-                    }
-                    return unique;
-                }, []).map((notification, index) => (
-                    <View key={index} style={styles.commentContainer}>
-                        <Text style={styles.comment}>{notification.description}</Text>
-                        <Text style={styles.creationDate}>{new Date(notification.creationDate).toLocaleDateString()}</Text>
-                    </View>
-                ))}
-            </ScrollView>
-        </ImageBackground>
+                <ScrollView style={styles.commentsSection}>
+                    <Text style={styles.commentsTitle}>Notifications</Text>
+                    {notifications.reduce((unique, notification) => {
+                        if (!unique.some(item => item.description === notification.description)) {
+                            unique.push(notification);
+                        }
+                        return unique;
+                    }, []).sort((a, b) => new Date(b.creationDate) - new Date(a.creationDate)).map((notification, index) => (
+                        <View key={index} style={styles.commentContainer}>
+                            <View style={styles.commentTextContainer}>
+                                <Text style={styles.comment}>{notification.description}</Text>
+                                <Text style={styles.creationDate}>{new Date(notification.creationDate).toLocaleDateString()}</Text>
+                            </View>
+                            <TouchableOpacity style={styles.deleteNotificationButton} onPress={() => handleDeleteNotification(notification.description)}>
+                                <Text style={styles.deleteButtonText}>X</Text>
+                            </TouchableOpacity>
+                        </View>
+                    ))}
+                </ScrollView>
+            </ImageBackground>
+        </ScrollView>
     );
 }
 
 const styles = StyleSheet.create({
+    scrollContainer: {
+        flexGrow: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
     content: {
         padding: 20,
         margin: 10,
@@ -160,6 +192,7 @@ const styles = StyleSheet.create({
         color: 'white',
         fontWeight: 'bold',
     },
+
     container: {
         flex: 1,
         width: '100%',
@@ -225,6 +258,9 @@ const styles = StyleSheet.create({
         padding: 10,
         borderRadius: 5,
         marginBottom: 10,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
     },
     comment: {
         fontSize: 14,
@@ -234,7 +270,17 @@ const styles = StyleSheet.create({
         fontSize: 12,
         color: 'white',
         textAlign: 'right',
+        marginTop: 5,
     },
+    deleteNotificationButton: {
+        backgroundColor: '#ff6347',
+        paddingVertical: 2, // Reduced padding
+        paddingHorizontal: 5, // Reduced padding
+        borderRadius: 5,
+        position: 'absolute', // Absolute positioning
+        right: 5, // Positioned to the right
+        top: 5, // Positioned above the date
+    }
 });
 
 export default StoreProfile;

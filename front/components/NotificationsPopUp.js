@@ -9,6 +9,43 @@ const NotificationsPopUp = ({ isVisible, onClose, email }) => {
         username: '',
     });
 
+    const fetchNotifications = async () => {
+        try {
+            const response = await fetch(`http://localhost:9002/fetchNotificationsByUserId`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ userID: inputs.userID }),
+            });
+            console.log('respuesta del fetch:', response)
+            const notifications = await response.json();
+            setNotifications(notifications);
+        } catch (error) {
+            console.error('Error fetching notifications:', error);
+        }
+    };
+
+    const handleDeleteNotification = async (notificationId) => {
+        try {
+            const response = await fetch(`http://localhost:9002/deleteNotification`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ notificationId }),
+            });
+            if (response.ok) {
+                setNotifications(notifications.filter(notification => notification.id !== notificationId));
+                await fetchNotifications();
+            } else {
+                console.error('Failed to delete notification');
+            }
+        } catch (error) {
+            console.error('Error deleting notification:', error);
+        }
+    };
+
     useEffect(() => {
         const loadUserProfile = async () => {
             const token = await AsyncStorage.getItem('userToken');
@@ -39,23 +76,6 @@ const NotificationsPopUp = ({ isVisible, onClose, email }) => {
 
     useEffect(() => {
         if (isVisible) {
-            const fetchNotifications = async () => {
-                try {
-                    const response = await fetch(`http://localhost:9002/fetchNotificationsByUserId`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({ userID: inputs.userID }),
-                    });
-                    console.log('respuesta del fetch:', response)
-                    const notifications = await response.json();
-                    setNotifications(notifications);
-                } catch (error) {
-                    console.error('Error fetching notifications:', error);
-                }
-            };
-
             fetchNotifications();
         }
     }, [isVisible, email]);
@@ -66,15 +86,20 @@ const NotificationsPopUp = ({ isVisible, onClose, email }) => {
                 <View style={styles.popupContainer}>
                     <Text style={styles.title}>Notifications</Text>
                     <ScrollView>
-                        {notifications.map((notification, index) => (
+                        {notifications.sort((a, b) => new Date(b.creationDate) - new Date(a.creationDate)).map((notification, index) => (
                             <View key={index} style={styles.notificationItem}>
                                 <Text style={styles.notificationText}>{notification.description}</Text>
                                 <Text style={styles.notificationTime}>{notification.creationDate}</Text>
+                                <TouchableOpacity
+                                    style={styles.doneButton}
+                                    onPress={() => handleDeleteNotification(notification.notificationId)}>
+                                    <Text style={styles.closeButtonText}>Done</Text>
+                                </TouchableOpacity>
                             </View>
                         ))}
                     </ScrollView>
                     <TouchableOpacity onPress={onClose} style={styles.closeButton}>
-                        <Text style={styles.closeButtonText}>Close</Text>
+                        <Text style={styles.closeButtonText}>Read</Text>
                     </TouchableOpacity>
                 </View>
             </View>
@@ -90,11 +115,15 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(0, 0, 0, 0.5)',
     },
     popupContainer: {
-        width: '80%',
+        width: '45%',
+        maxHeight: '80%',
         backgroundColor: 'white',
         borderRadius: 10,
-        padding: 20,
+        padding: 10,
         alignItems: 'center',
+    },
+    scrollView: {
+        width: '100%', // Ensure scroll view takes full width
     },
     title: {
         fontSize: 24,
@@ -102,10 +131,21 @@ const styles = StyleSheet.create({
         marginBottom: 10,
     },
     notificationItem: {
+        width: '100%',
         borderBottomWidth: 1,
         borderBottomColor: '#ccc',
         paddingVertical: 10,
-        paddingHorizontal: 5,
+        paddingHorizontal: 10,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+    },
+    doneButton: {
+        backgroundColor: '#ff6347',
+        padding: 5,
+        borderRadius: 5,
+        paddingHorizontal: 10, // Reduced width
+        marginLeft: 10,
     },
     notificationText: {
         fontSize: 16,
@@ -113,6 +153,7 @@ const styles = StyleSheet.create({
     notificationTime: {
         fontSize: 12,
         color: '#777',
+        marginLeft: 10,
     },
     closeButton: {
         marginTop: 20,
