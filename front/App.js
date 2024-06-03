@@ -42,6 +42,9 @@ import {EditPapers} from "./pages/driverScreens/editProfile/EditPapers"
 import AccidentInformation from "./pages/driverScreens/vehicleScreens/AccidentInformation";
 import {NotificationProvider} from "./components/notification/NotificationProvider";
 import AppNotification from "./components/notification/AppNotification";
+import {ServiceConfigurationScreen} from "./pages/serviceScreens/serviceConfiguration/ServiceConfigurationScreen";
+import {ServiceEditProfile} from "./pages/serviceScreens/serviceConfiguration/ServiceEditProfile";
+import {ServiceViewProfile} from "./pages/serviceScreens/serviceConfiguration/ServiceViewProfile";
 
 
 const Stack = createNativeStackNavigator(); //used to configure the screens
@@ -119,6 +122,10 @@ function AppNavigation() {
                                     <Stack.Screen name="EditRoute" component={EditRoute}/>
                                     <Stack.Screen name="AccidentInformation" component={AccidentInformation}/>
                                     <Stack.Screen name="EditPapers" component={EditPapers}/>
+
+                                    <Stack.Screen name="ServiceConfigurationScreen" component={ServiceConfigurationScreen}/>
+                                    <Stack.Screen name="ServiceViewProfile" component={ServiceViewProfile}/>
+                                    <Stack.Screen name="ServiceEditProfile" component={ServiceEditProfile}/>
                                 </>
                             ) : (
                                 <>
@@ -154,6 +161,10 @@ function AppNavigation() {
                                     <Stack.Screen name="EditRoute" component={EditRoute}/>
                                     <Stack.Screen name="AccidentInformation" component={AccidentInformation}/>
                                     <Stack.Screen name="EditPapers" component={EditPapers}/>
+
+                                    <Stack.Screen name="ServiceConfigurationScreen" component={ServiceConfigurationScreen}/>
+                                    <Stack.Screen name="ServiceViewProfile" component={ServiceViewProfile}/>
+                                    <Stack.Screen name="ServiceEditProfile" component={ServiceEditProfile}/>
                                 </>
                             )}
                         </Stack.Navigator>
