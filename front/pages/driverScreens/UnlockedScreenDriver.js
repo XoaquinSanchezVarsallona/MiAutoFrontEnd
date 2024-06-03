@@ -25,6 +25,7 @@ export function UnlockedScreenDriver({ navigation, route, children }) {
     const [isLoading, setLoading] = useState(true);
     const [AllUnreadAlertsCount, setAllUnreadAlertsCount] = useState(0);
     const isFocused = useIsFocused();
+
     // UseEffect tiene el objetivo de obtener el username en base al email
     useFocusEffect(
         React.useCallback(() => {

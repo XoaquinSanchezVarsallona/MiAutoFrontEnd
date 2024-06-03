@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, {useContext, useState} from 'react';
 import { Button, ImageBackground, StyleSheet, Text, TextInput, View } from 'react-native';
+import {NotificationContext} from "../../../components/notification/NotificationContext";
 
 export function AddAlertScreen({ navigation, route }) {
     const [message, setMessage] = useState('');
     const [apellido, setApellido] = useState('');
     const { email, username } = route.params;
+    const { showNotification, setColor } = useContext(NotificationContext);
 
     const addAlert = async () => {
         try {
@@ -21,13 +23,15 @@ export function AddAlertScreen({ navigation, route }) {
             });
 
             if (response.ok) {
-                console.log('Alert added successfully');
+                setColor('#32cd32')
+                showNotification('Alert added successfully');
                 navigation.reset({
                     index: 0,
                     routes: [{ name: 'UnlockedScreenDriver', params: { email: email }}],
                 });
             } else {
-                console.log('Failed to add alert');
+                setColor('red')
+                showNotification('Failed to add alert');
             }
         } catch (error) {
             console.error('Error:', error);
@@ -35,7 +39,7 @@ export function AddAlertScreen({ navigation, route }) {
     };
 
     return (
-        <ImageBackground source={require('../../assets/BackgroundUnlocked.jpg')} style={styles.container}>
+        <ImageBackground source={require('../../../assets/BackgroundUnlocked.jpg')} style={styles.container}>
             <View style={styles.headerContainer}>
                 <Text style={styles.title}>Add Alert</Text>
 

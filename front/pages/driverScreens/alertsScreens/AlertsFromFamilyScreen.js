@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {View, Text, StyleSheet, ImageBackground, TouchableOpacity, ScrollView} from 'react-native';
+import {NotificationContext} from "../../../components/notification/NotificationContext";
 
 export function AlertsFromFamilyScreen({ navigation, route }) {
     const { family, email } = route.params;
     const [alerts, setAlerts] = useState([]);
     const [event, setEvent] = useState('');
+    const { showNotification, setColor } = useContext(NotificationContext);
 
     const fetchAlerts = async () => {
         try {
@@ -29,14 +31,16 @@ export function AlertsFromFamilyScreen({ navigation, route }) {
             method: 'DELETE',
         });
         if (response.ok) {
-            console.log('Alert deleted successfully');
+            setColor('#32cd32');
+            showNotification('Alert deleted successfully');
             setEvent(alertId)
             navigation.reset({
                 index: 0,
                 routes: [{ name: 'UnlockedScreenDriver', params: { email: email }}],
             });
         } else {
-            console.log(`Failed to delete alert with ID: ${alertId}`);
+            setColor('red');
+            showNotification(`Failed to delete alert with ID: ${alertId}`);
         }
     };
 
@@ -69,7 +73,7 @@ export function AlertsFromFamilyScreen({ navigation, route }) {
     }
 
     return (
-        <ImageBackground source={require('../../assets/BackgroundUnlocked.jpg')} style={styles.container}>
+        <ImageBackground source={require('../../../assets/BackgroundUnlocked.jpg')} style={styles.container}>
             <View style={styles.container}>
                 <Text style={styles.title}>Alerts of {family.surname}'s</Text>
                 <ScrollView style={styles.alertsList} contentContainerStyle={styles.contentContainerStyle}>

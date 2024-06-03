@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react';
 import {ImageBackground, Pressable, StyleSheet, Text, View} from 'react-native';
-import CustomScrollBar from "../../components/CustomScrollBar";
+import CustomScrollBar from "../../../components/CustomScrollBar";
 import { useIsFocused } from '@react-navigation/native';
 
 export function AlertScreen({ navigation, route }) {
@@ -66,7 +66,7 @@ export function AlertScreen({ navigation, route }) {
     }, [familiesData, isFocused]);
 
     return (
-        <ImageBackground source={require('../../assets/BackgroundUnlocked.jpg')} style={styles.container}>
+        <ImageBackground source={require('../../../assets/BackgroundUnlocked.jpg')} style={styles.container}>
             <View style={styles.headerContainer}>
                 <Text style={styles.title}>My Alerts</Text>
                 <View style={styles.scrollBarStyle}>

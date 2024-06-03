@@ -1,7 +1,8 @@
-import React, { useState} from 'react';
+import React, {useContext, useState} from 'react';
 import { StyleSheet, View, Text, ImageBackground, ScrollView, TextInput } from 'react-native';
 import StyledButton from "../../../components/StyledButton";
 import StyledButton3 from "../../../components/StyleButton3";
+import {NotificationContext} from "../../../components/notification/NotificationContext";
 
 const icons = {
     'Edit username': require('../../../assets/pencil.png'),
@@ -28,8 +29,7 @@ export function EditCarProfile({ navigation , route}) {
         kilometraje: '',
         patente: '',
     });
-
-
+    const { showNotification, setColor } = useContext(NotificationContext);
 
     //función que se encarga de cambiar el valor de los inputs en tiempo real
     const handleInputChange = (field, value) => {
@@ -70,10 +70,12 @@ export function EditCarProfile({ navigation , route}) {
             console.log(`Server response: `, data);
 
             // Update UI or notify user based on success
-            alert(`Updated ${field} successfully!`);
+            setColor('#32cd32')
+            showNotification(`Updated ${field} successfully!`);
         } catch (error) {
             console.error('Error updating profile:', error);
-            alert('Failed to update profile. Please try again.');
+            setColor('red')
+            showNotification('Failed to update profile. Please try again.');
         }
     };
 

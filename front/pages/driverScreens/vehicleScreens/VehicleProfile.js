@@ -1,12 +1,14 @@
-import React, {useEffect} from 'react';
+import React, {useContext, useEffect} from 'react';
 import {Image, View, Text, StyleSheet, ImageBackground, TouchableOpacity} from 'react-native';
 import {useIsFocused} from "@react-navigation/native";
+import {NotificationContext} from "../../../components/notification/NotificationContext";
 
 export function VehicleProfile({ navigation, route }) {
     const { vehicle, familySurname, familyId } = route.params;
     const carName = vehicle.marca + ' ' + vehicle.modelo;
     const [vehicleFetched, setVehicle] = React.useState([]);
     const isFocused = useIsFocused();
+    const { showNotification, setColor } = useContext(NotificationContext);
 
     const fetchVehicle = async () => {
         try {
@@ -28,7 +30,8 @@ export function VehicleProfile({ navigation, route }) {
                 method: 'DELETE',
             });
             if (response.ok) {
-                alert('Vehicle deleted successfully');
+                setColor('red')
+                showNotification('Vehicle deleted successfully');
                 let isUpdated = null;
                 navigation.navigate('VehiclesScreen', { familySurname, familyId, isUpdated });
             } else {
