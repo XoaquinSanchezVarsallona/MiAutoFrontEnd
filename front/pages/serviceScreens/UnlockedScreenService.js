@@ -52,7 +52,7 @@ export function UnlockedScreenService({ navigation, route }) {
                 <StyledButton2
                     style={styles.configurationButton}
                     icon={require('../../assets/configuration.png')}
-                    onPress={() => navigation.navigate('ConfigurationScreen')}
+                    onPress={() => navigation.navigate('ServiceConfigurationScreen')}
                 />
             </View>
             <ScrollView style={styles.vehiclesList}>
