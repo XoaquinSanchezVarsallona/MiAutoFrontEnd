@@ -1,9 +1,10 @@
-import {StyleSheet, View, Text, ImageBackground, TextInput, Button, Pressable} from 'react-native';
-import React, {useState} from "react";
+import {StyleSheet, View, Text, ImageBackground, TextInput, Pressable} from 'react-native';
+import React, {useContext, useState} from "react";
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs';
+import {NotificationContext} from "../../../components/notification/NotificationContext";
 
 export function AddNewVehicle({ navigation, route }) {
     const { familySurname, familyId } = route.params;
@@ -14,6 +15,7 @@ export function AddNewVehicle({ navigation, route }) {
     const [kilometraje, setKilometraje] = useState('');
     const [marca, setMarca] = useState('');
     const [modelo, setModelo] = useState('');
+    const { showNotification } = useContext(NotificationContext);
 
     const addVehicle = async () => {
         try {
@@ -25,7 +27,7 @@ export function AddNewVehicle({ navigation, route }) {
                 body: JSON.stringify({ patente, ano, fechaVencimientoSeguro, fechaVencimientoVTV, kilometraje, marca, modelo }),
             });
             if (response.ok) {
-                alert('Vehicle added successfully');
+                showNotification("Vehicle added successfully")
                 let isUpdated = true
                 navigation.navigate('VehiclesScreen', { familySurname: familySurname, familyId: familyId, isUpdated : isUpdated });
             } else if (response.status === 400) {

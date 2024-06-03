@@ -43,6 +43,12 @@ export function VehicleProfile({ navigation, route }) {
         fetchVehicle().then();
     }, [isFocused]);
 
+    let colors = {
+        'Verde': '#32cd32',
+        'Amarillo': '#ffd700',
+        'Rojo': '#ff0000',
+    }
+
     return (
         <ImageBackground source={require('../../../assets/BackgroundUnlocked.jpg')} style={styles.container}>
             <View style={styles.content}>
@@ -62,7 +68,7 @@ export function VehicleProfile({ navigation, route }) {
                                 <Text style={styles.detail}><Text style={styles.bold}>VTV Expiry:</Text> {vehicle.fechaVencimientoVTV}</Text>
                                 <View style={styles.stateStyle}>
                                     <Text style={styles.detail}><Text style={styles.bold}>State:</Text></Text>
-                                    <View style={[styles.stateIndicator, {backgroundColor: '#32cd32', borderRadius: 4, padding: 3,}]}/>
+                                    <View style={[styles.stateIndicator, {backgroundColor: colors[vehicleFetched.estadoActual], borderRadius: 4, padding: 3,}]}/>
                                 </View>
                             </View>
                         </View>

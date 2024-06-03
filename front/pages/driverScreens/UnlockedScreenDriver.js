@@ -138,7 +138,7 @@ export function UnlockedScreenDriver({ navigation, route, children }) {
 }
 
 const styles = StyleSheet.create({
-    container: {
+    cdcontainer: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',

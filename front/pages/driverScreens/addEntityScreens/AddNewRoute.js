@@ -1,10 +1,11 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {View, Text, TextInput, StyleSheet, ImageBackground, Pressable} from 'react-native';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {LocalizationProvider} from "@mui/x-date-pickers/LocalizationProvider";
 import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
 import {DatePicker} from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
+import {NotificationContext} from "../../../components/notification/NotificationContext";
 
 function AddNewRoute({ navigation, route }) {
     const { vehicle, familyId } = route.params;
@@ -14,6 +15,7 @@ function AddNewRoute({ navigation, route }) {
     const [errorMessage, setErrorMessage] = useState('');
     const [userID, setUserID] = useState('');
     const [date, setDate] = useState('');
+    const { showNotification } = useContext(NotificationContext);
 
     // Primero para saber a quién agregarle la route, hago un fetch del usuario
     useEffect(() => {
@@ -48,7 +50,7 @@ function AddNewRoute({ navigation, route }) {
                 body: JSON.stringify({ patente, kilometraje, duration, date }),
             });
             if (response.ok) {
-                alert('Route added successfully');
+                showNotification("Route added successfully")
                 const route = await response.json();
                 console.log('Route Created:', route)
                 navigation.navigate('VehicleRoutes', { vehicle : vehicle, familyId : familyId, routesPassed : route});

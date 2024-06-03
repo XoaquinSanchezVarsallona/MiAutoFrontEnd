@@ -1,6 +1,7 @@
 import {ImageBackground, Pressable, ScrollView, StyleSheet, Text, View} from "react-native";
-import React, {useEffect, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import RouteCard from "../../../components/RouteCard";
+import {NotificationContext} from "../../../components/notification/NotificationContext";
 
 export function VehicleRoutes({ navigation, route }) {
     const { vehicle, familyId, routesPassed, distance } = route.params;
@@ -8,6 +9,7 @@ export function VehicleRoutes({ navigation, route }) {
     const patente = vehicle.patente;
     const [users, setUsers] = useState([]);
     const [routesUpdated, setRoutesUpdated] = useState(false);
+    const { showNotification } = useContext(NotificationContext);
 
     // Fetch de todas las rutas de un vehículo
     const fetchRoutes = async (users) => {
@@ -75,7 +77,7 @@ export function VehicleRoutes({ navigation, route }) {
                 method: 'DELETE',
             });
             if (response.ok) {
-                alert('Route deleted successfully');
+                showNotification('Route deleted successfully');
                 setRoutesUpdated(true);
             } else if (response.status === 400) {
                 const errorMessage = await response.text();

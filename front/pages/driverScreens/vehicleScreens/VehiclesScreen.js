@@ -56,6 +56,11 @@ export function VehiclesScreen({ navigation, route }) {
         }, [familySurname, isUpdated]
     );
 
+    let colors = {
+        'Verde': '#32cd32',
+        'Amarillo': '#ffd700',
+        'Rojo': '#ff0000',
+    }
 
     return (
         <ImageBackground source={require('../../../assets/BackgroundUnlocked.jpg')} style={styles.container}>
@@ -74,7 +79,7 @@ export function VehiclesScreen({ navigation, route }) {
                                 <View style={styles.rowContainer}>
                                     <Text style={styles.vehicleText}>{vehicle.marca} {vehicle.modelo} - {vehicle.patente}</Text>
                                     <View style={styles.stateStyle}>
-                                        <View style={[styles.stateIndicator, {backgroundColor: '#32cd32', borderRadius: 4}]}/>
+                                        <View style={[styles.stateIndicator, {backgroundColor: colors[vehicle.estadoActual], borderRadius: 4}]}/>
                                     </View>
                                 </View>
                             </Pressable>
