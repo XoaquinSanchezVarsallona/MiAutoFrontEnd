@@ -194,8 +194,8 @@ export function EditProfile({  }) {
 
     return (
         <ImageBackground source={require('../../../assets/BackgroundUnlocked.jpg')} style={styles.container}>
+            <Text style={styles.title}>Edit Profile</Text>
             <ScrollView contentContainerStyle={styles.scrollContainer}>
-                <Text style={styles.title}>Edit Profile</Text>
                 <View style={styles.columnsContainer}>
                     <View style={styles.column}>
                         {fields.slice(0, 4).map((field, index) => (

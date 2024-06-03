@@ -1,13 +1,14 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {View, Text, TextInput, Button, StyleSheet, ImageBackground, Pressable} from 'react-native';
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import {NotificationContext} from "../../../components/notification/NotificationContext";
 
 function FamilyDetailsScreen({ route, navigation }) {
     const { family: initialFamily, email } = route.params;
     const [family, setFamily] = useState(initialFamily); // Add this line
     const [surname, setSurname] = useState(family.surname);
     const [userID, setUserID] = useState(null);
-
+    const { showNotification, setColor } = useContext(NotificationContext);
 
 
     const updateSurname = async () => {
@@ -22,6 +23,8 @@ function FamilyDetailsScreen({ route, navigation }) {
                 body: JSON.stringify({ surname: surname }), // Send the new surname in the request body
             });
             if (response.ok) {
+                setColor('orange')
+                showNotification('Surname updated successfully')
                 console.log('Surname updated successfully');
                 setFamily(prev => ({ ...prev, surname: surname }));
                 navigation.reset({
@@ -48,7 +51,8 @@ function FamilyDetailsScreen({ route, navigation }) {
             });
             if (response.ok) {
                 navigation.goBack()
-                console.log('Family deleted successfully');
+                setColor('#ff0000')
+                showNotification('Family deleted successfully')
             } else {
                 console.error('Failed to delete family');
             }

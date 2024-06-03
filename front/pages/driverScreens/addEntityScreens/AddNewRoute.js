@@ -15,7 +15,7 @@ function AddNewRoute({ navigation, route }) {
     const [errorMessage, setErrorMessage] = useState('');
     const [userID, setUserID] = useState('');
     const [date, setDate] = useState('');
-    const { showNotification } = useContext(NotificationContext);
+    const { showNotification, setColor } = useContext(NotificationContext);
 
     // Primero para saber a quién agregarle la route, hago un fetch del usuario
     useEffect(() => {
@@ -50,6 +50,7 @@ function AddNewRoute({ navigation, route }) {
                 body: JSON.stringify({ patente, kilometraje, duration, date }),
             });
             if (response.ok) {
+                setColor('#32cd32')
                 showNotification("Route added successfully")
                 const route = await response.json();
                 console.log('Route Created:', route)

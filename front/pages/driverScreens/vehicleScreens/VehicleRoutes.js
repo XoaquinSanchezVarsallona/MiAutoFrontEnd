@@ -9,7 +9,7 @@ export function VehicleRoutes({ navigation, route }) {
     const patente = vehicle.patente;
     const [users, setUsers] = useState([]);
     const [routesUpdated, setRoutesUpdated] = useState(false);
-    const { showNotification } = useContext(NotificationContext);
+    const { showNotification, setColor } = useContext(NotificationContext);
 
     // Fetch de todas las rutas de un vehículo
     const fetchRoutes = async (users) => {
@@ -77,6 +77,7 @@ export function VehicleRoutes({ navigation, route }) {
                 method: 'DELETE',
             });
             if (response.ok) {
+                setColor('#ff0000')
                 showNotification('Route deleted successfully');
                 setRoutesUpdated(true);
             } else if (response.status === 400) {

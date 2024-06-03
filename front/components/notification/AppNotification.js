@@ -3,7 +3,7 @@ import { View, Text, Animated, StyleSheet } from 'react-native';
 import { NotificationContext } from './NotificationContext';
 
 function AppNotification() {
-    const { notification } = useContext(NotificationContext);
+    const { notification, color } = useContext(NotificationContext);
     const [isVisible, setIsVisible] = useState(false);
     const slideAnim = useRef(new Animated.Value(1000)).current; // Initial value for right: 1000 (off screen)
     const fadeAnim = useRef(new Animated.Value(0)).current; // Initial value for opacity: 0 (transparent)
@@ -51,6 +51,7 @@ function AppNotification() {
     return (
         <Animated.View style={[
             styles.notificationContainer,
+            { backgroundColor: color },
             { transform: [{ translateX: slideAnim }] },
             { opacity: fadeAnim }
         ]}>

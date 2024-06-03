@@ -9,7 +9,7 @@ function AddFamilyScreen({ navigation, route }) {
     const [errorMessage, setErrorMessage] = useState('');
     const inputStyleSurname = surname.length > 0 ? styles.inputNormal : styles.inputItalic;
     const inputStylePassword = password.length > 0 ? styles.inputNormal : styles.inputItalic;
-    const { showNotification } = useContext(NotificationContext);
+    const { showNotification, setColor } = useContext(NotificationContext);
 
     const addFamily = async () => {
         try {
@@ -23,6 +23,7 @@ function AddFamilyScreen({ navigation, route }) {
             if (response.ok) {
                 const familias = await response.json(); // Parse the JSON response from the server
                 navigation.navigate('FamilyProfile', { email: email, families: familias, username: username });
+                setColor('#32cd32')
                 showNotification("Family added successfully")
             } else if (response.status === 400) {
                 setErrorMessage('Family already exists')

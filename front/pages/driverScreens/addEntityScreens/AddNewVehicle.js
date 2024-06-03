@@ -15,7 +15,8 @@ export function AddNewVehicle({ navigation, route }) {
     const [kilometraje, setKilometraje] = useState('');
     const [marca, setMarca] = useState('');
     const [modelo, setModelo] = useState('');
-    const { showNotification } = useContext(NotificationContext);
+    const { showNotification, setColor } = useContext(NotificationContext);
+
 
     const addVehicle = async () => {
         try {
@@ -27,6 +28,7 @@ export function AddNewVehicle({ navigation, route }) {
                 body: JSON.stringify({ patente, ano, fechaVencimientoSeguro, fechaVencimientoVTV, kilometraje, marca, modelo }),
             });
             if (response.ok) {
+                setColor('#32cd32')
                 showNotification("Vehicle added successfully")
                 let isUpdated = true
                 navigation.navigate('VehiclesScreen', { familySurname: familySurname, familyId: familyId, isUpdated : isUpdated });

@@ -3,6 +3,7 @@ import { NotificationContext } from './NotificationContext';
 
 export const NotificationProvider = ({ children }) => {
     const [notification, setNotification] = useState('');
+    const [color, setColor] = useState('#32cd32'); // default color
 
     const showNotification = (message) => {
         setNotification(message);
@@ -12,7 +13,7 @@ export const NotificationProvider = ({ children }) => {
     };
 
     return (
-        <NotificationContext.Provider value={{ notification, showNotification }}>
+        <NotificationContext.Provider value={{ notification, color, showNotification, setColor }}>
             {children}
         </NotificationContext.Provider>
     );

@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import {StyleSheet, View, Text, ImageBackground, ScrollView, TextInput, Pressable} from 'react-native';
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
+import {NotificationContext} from "../../../components/notification/NotificationContext";
 
 export function EditRoute({ route, navigation }) {
     const { vehicle, familyId, distance } = route.params;
@@ -12,7 +13,7 @@ export function EditRoute({ route, navigation }) {
         Duration: '',
         Date: dayjs().format('YYYY-MM-DD'), // Initialize with today's date
     });
-
+    const { showNotification, setColor } = useContext(NotificationContext);
     const routeId = route.params.routeId;
 
     useEffect(() => {
@@ -65,14 +66,17 @@ export function EditRoute({ route, navigation }) {
             });
 
             if (!response.ok) {
-                throw new Error('Failed to update route');
+                setColor('red');
+                showNotification('Failed to update route. Please try again.');
             }
 
             navigation.navigate('VehicleRoutes', { vehicle, familyId, routesPassed : routeId, distance : distance });
-            alert('Updated successfully!');
+            setColor('orange');
+            showNotification('Route updated successfully');
         } catch (error) {
             console.error('Error updating route:', error);
-            alert('Failed to update route. Please try again.');
+            setColor('red');
+            showNotification('Failed to update route. Please try again.');
         }
     };
 
@@ -86,13 +90,13 @@ export function EditRoute({ route, navigation }) {
                             style={styles.input}
                             onChangeText={(text) => handleInputChange('Distance', text)}
                             value={inputs.Distance}
-                            placeholder={inputs.Distance}
+                            placeholder="Distance"
                         />
                         <TextInput
                             style={styles.input}
                             onChangeText={(text) => handleInputChange('Duration', text)}
                             value={inputs.Duration}
-                            placeholder={inputs.Duration}
+                            placeholder="Duration"
                         />
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
                             <DatePicker
@@ -118,14 +122,17 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: 'transparent',
     },
-    items: {
-    },
     scrollContainer: {
+        width: '100%',
+        alignItems: 'center',
+    },
+    items: {
         width: '100%',
         alignItems: 'center',
     },
     inputContainer: {
         width: '90%',
+        marginBottom: 20,
     },
     input: {
         width: '100%',
@@ -135,23 +142,22 @@ const styles = StyleSheet.create({
         borderColor: 'gray',
         padding: 10,
         color: 'white',
+        backgroundColor: 'rgba(255, 255, 255, 0.1)',
     },
     title: {
         fontSize: 60,
         color: 'white',
         fontWeight: 'bold',
-        marginBottom: 10,
+        marginBottom: 20,
     },
     updateRouteButton: {
-        width: '100%',
+        width: '90%',
         paddingVertical: 12,
         paddingHorizontal: 20,
-        marginVertical: 10,
         backgroundColor: '#1e90ff',
-        borderRadius: 20,
-        position: 'absolute',
-        bottom: 10,
-        alignSelf: 'center',
+        borderRadius: 10,
+        marginVertical: 10,
+        alignItems: 'center',
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 4 },
         shadowOpacity: 0.25,
