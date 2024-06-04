@@ -48,11 +48,17 @@ export function AccidentInformation({navigation, route}) {
         }
     };
 
+
+
     return (
         <ImageBackground source={require('../../../assets/BackgroundUnlocked.jpg')} style={styles.container}>
             <View style={styles.container}>
                 <Text style={styles.title}>Accident Information</Text>
-                <Pressable style={styles.confirmButton} onPress={() => { sendAlert().then() }}>
+                <Pressable style={styles.confirmButton} onPress={() => {
+                    sendAlert().then()
+                    //hacer esta pagina para hacer el display de las fotos.
+                    navigation.navigate("DisplayPapers", {username, patente})
+                }}>
                     <Text style={styles.confirmText}>Confirm Accident</Text>
                 </Pressable>
             </View>

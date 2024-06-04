@@ -45,6 +45,7 @@ import AppNotification from "./components/notification/AppNotification";
 import {ServiceConfigurationScreen} from "./pages/serviceScreens/serviceConfiguration/ServiceConfigurationScreen";
 import {ServiceEditProfile} from "./pages/serviceScreens/serviceConfiguration/ServiceEditProfile";
 import {ServiceViewProfile} from "./pages/serviceScreens/serviceConfiguration/ServiceViewProfile";
+import {DisplayPapers} from "./pages/driverScreens/vehicleScreens/DisplayPapers";
 
 
 const Stack = createNativeStackNavigator(); //used to configure the screens
@@ -126,6 +127,7 @@ function AppNavigation() {
                                     <Stack.Screen name="ServiceConfigurationScreen" component={ServiceConfigurationScreen}/>
                                     <Stack.Screen name="ServiceViewProfile" component={ServiceViewProfile}/>
                                     <Stack.Screen name="ServiceEditProfile" component={ServiceEditProfile}/>
+                                    <Stack.Screen name="DisplayPapers" component={DisplayPapers}/>
                                 </>
                             ) : (
                                 <>
@@ -165,6 +167,7 @@ function AppNavigation() {
                                     <Stack.Screen name="ServiceConfigurationScreen" component={ServiceConfigurationScreen}/>
                                     <Stack.Screen name="ServiceViewProfile" component={ServiceViewProfile}/>
                                     <Stack.Screen name="ServiceEditProfile" component={ServiceEditProfile}/>
+                                    <Stack.Screen name="DisplayPapers" component={DisplayPapers}/>
                                 </>
                             )}
                         </Stack.Navigator>
