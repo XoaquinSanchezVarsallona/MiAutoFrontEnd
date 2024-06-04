@@ -1,9 +1,9 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {View, Text, StyleSheet, ImageBackground, TouchableOpacity, ScrollView} from 'react-native';
+import {View, Text, StyleSheet, ImageBackground, TouchableOpacity, ScrollView, Pressable} from 'react-native';
 import {NotificationContext} from "../../../components/notification/NotificationContext";
 
 export function AlertsFromFamilyScreen({ navigation, route }) {
-    const { family, email } = route.params;
+    const { family, email, username } = route.params;
     const [alerts, setAlerts] = useState([]);
     const [event, setEvent] = useState('');
     const { showNotification, setColor } = useContext(NotificationContext);
@@ -101,6 +101,9 @@ export function AlertsFromFamilyScreen({ navigation, route }) {
                         <Text style={styles.noAlertsText}>No alerts available</Text>
                     )}
                 </ScrollView>
+                <Pressable style={styles.addAlertButton} onPress={() => navigation.navigate('AddAlertScreen', { family, username, email })}>
+                    <Text style={styles.addAlertText}>Add a new alert</Text>
+                </Pressable>
 
             </View>
         </ImageBackground>
@@ -212,5 +215,24 @@ const styles = StyleSheet.create({
         color: 'black',
         fontWeight: '500',
         textDecorationLine: 'line-through',
-    }
+    },
+    addAlertButton: {
+        width: '40%',
+        paddingVertical: 12,
+        paddingHorizontal: 20,
+        marginVertical: 8,
+        backgroundColor: '#32cd32',
+        borderRadius: 20,
+        elevation: 4,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+    },
+    addAlertText: {
+        fontSize: 18,
+        color: 'white',
+        fontWeight: '500',
+        textAlign: 'center',
+    },
 })

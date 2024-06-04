@@ -88,7 +88,7 @@ function AppNavigation() {
     return (
         <NotificationProvider>
             <AppNotification />
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <LocalizationProvider datxeAdapter={AdapterDayjs}>
                 <PaperProvider>
                     <NavigationContainer>
                         <Stack.Navigator initialRouteName={isAuthenticated ? (userType === 'driver' ? "UnlockedScreenDriver" : "UnlockedScreenService") : "Home"}>

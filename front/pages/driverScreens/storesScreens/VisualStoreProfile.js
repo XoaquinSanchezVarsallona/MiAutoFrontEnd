@@ -11,6 +11,7 @@ import {
     Button, Modal
 } from 'react-native';
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 function StarRating({ rating }) {
     const stars = [1, 2, 3, 4, 5].map((value) => {
@@ -260,18 +261,25 @@ export function VisualStoreProfile({ route }) {
                 <Text style={styles.title}>Store Profile</Text>
             </View>
             <ScrollView style={styles.vehiclesList}>
-                <Text style={styles.field}>Description: {storeData.description}</Text>
-                <Text style={styles.field}>Phone Number: {storeData.phoneNumber}</Text>
-                <TouchableOpacity onPress={() => handleOpenURL(storeData.webPageLink)}>
-                    <Text style={styles.field}>Web Page: {storeData.webPageLink}</Text>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => handleOpenURL(storeData.instagramLink)}>
-                    <Text style={styles.field}>Instagram: {storeData.instagramLink}</Text>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => handleOpenURL(storeData.googleMapsLink)}>
-                    <Text style={styles.field}>Google Maps: {storeData.googleMapsLink}</Text>
-                </TouchableOpacity>
-
+                <View style={styles.infoContainer}>
+                    <Text style={styles.infoTitle}>Description</Text>
+                    <Text style={styles.infoContent}>{storeData.description}</Text>
+                </View>
+                <View style={styles.infoContainer}>
+                    <Text style={styles.infoTitle}>Phone Number</Text>
+                    <Text style={styles.infoContent}>{storeData.phoneNumber}</Text>
+                </View><View style={styles.iconRow}>
+                    <TouchableOpacity onPress={() => handleOpenURL(storeData.webPageLink)}>
+                        <Icon name="globe" size={30} color="#fff" />
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => handleOpenURL(storeData.instagramLink)}>
+                        <Icon name="instagram" size={30} color="#fff" />
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => handleOpenURL(storeData.googleMapsLink)}>
+                        <Icon name="map-marker" size={30} color="#fff" />
+                    </TouchableOpacity>
+                </View>
+                
                 {userReview ? (
                     <View style={styles.userReviewContainer}>
                         <Text style={styles.commentsTitle}>Your Review</Text>
@@ -490,6 +498,33 @@ const styles = StyleSheet.create({
         fontSize: 14,
         color: 'white',
     },
+    infoContainer: {
+        backgroundColor: '#00ACC1',
+        padding: 10,
+        borderRadius: 10,
+        marginVertical: 8,
+    },
+    infoTitle: {
+        fontSize: 14,
+        color: 'white',
+        fontWeight: 'bold',
+    },
+    infoContent: {
+        fontSize: 16,
+        color: 'white',
+        marginTop: 4,
+    },
+    iconRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        marginTop: 20,
+    },
+    iconContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 15,
+    },
     starContainer: {
         flexDirection: 'row',
     },
@@ -564,4 +599,13 @@ const styles = StyleSheet.create({
         color: 'white',
         fontWeight: 'bold',
     },
-});
+    linkContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: '#00ACC1',
+        padding: 15,
+        marginVertical: 8,
+        borderRadius: 10,
+    },
+
+})
