@@ -48,7 +48,7 @@ export function VehicleProfile({ navigation, route }) {
     }, [isFocused]);
 
     const checkVehicleState = (vehicle) => {
-
+        //todo if bad state send notification
     }
 
     let colors = {
