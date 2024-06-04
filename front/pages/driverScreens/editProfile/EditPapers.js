@@ -8,7 +8,6 @@ const fields = [
 ];
 
 export function EditPapers(patente) {
-    //const userToken  = AsyncStorage.getItem("userToken"); // agarro el token del authContext (si esta loggineado, lo va a tener)
 
     const [inputs, setInputs] = useState({
         userID: '',
@@ -47,6 +46,7 @@ export function EditPapers(patente) {
         }
         loadUserProfile().then(r => console.log(r));
     }, []);
+
     // This effect runs only when canFetchProfile is set to true
     useEffect(() => {
         if (canFetchProfile) {
@@ -75,7 +75,7 @@ export function EditPapers(patente) {
                     console.error('Error:', error);
                 }
             }
-            fetchGetImages()
+            fetchGetImages().then()
         }
     }, [canFetchProfile, inputs.userID]); // Depend on canFetchProfile
 
@@ -88,19 +88,17 @@ export function EditPapers(patente) {
 
     return (
         <ImageBackground source={require('../../../assets/BackgroundUnlocked.jpg')} style={styles.container}>
-            <ScrollView contentContainerStyle={styles.scrollContainer}>
                 <Text style={styles.title}>Edit Car Papers</Text>
-                    <View style={styles.column}>
-                        {fields.map((field, index) => (
-                            <View key={index} style={styles.inputContainer}>
-                                <Text style={styles.label}>{field.charAt(0).toUpperCase() + field.slice(1)}</Text>
-                                <View style={styles.inputRow}>
-                                    <ImageInput patente={patente.route.params.patente} userId={inputs.userID} field={field} onChange={(image) => handleInputChange(field, image) }/>
-                                </View>
+                <View style={styles.column}>
+                    {fields.map((field, index) => (
+                        <View key={index} style={styles.inputContainer}>
+                            <Text style={styles.label}>{field.charAt(0).toUpperCase() + field.slice(1)}</Text>
+                            <View style={styles.row}>
+                                <ImageInput patente={patente.route.params.patente} userId={inputs.userID} field={field} onChange={(image) => handleInputChange(field, image) }/>
                             </View>
-                        ))}
-                    </View>
-            </ScrollView>
+                        </View>
+                    ))}
+                </View>
         </ImageBackground>
     );
 }
@@ -108,63 +106,38 @@ export function EditPapers(patente) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        padding: 16,
         alignItems: 'center',
-    },
-    columnsContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-around',
-        width: '100%',
     },
     column: {
         flexDirection: 'column',
-        width: '50%',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        width: '100%',
         padding: 25,
     },
-    scrollContainer: {
-        alignItems: 'center',
-    },
     label: {
-        alignSelf: 'flex-start',
+        alignSelf: 'center',
         color: 'white',
-        fontSize: 16,
+        padding: 8,
+        fontSize: 22,
         fontWeight: 'bold',
-        marginLeft: 2,
     },
     inputContainer: {
         flexDirection: 'column',
-        width: '25%',
+        width: '45%',
         alignItems: 'center',
+        marginBottom: 20,
     },
-    inputRow: {
+    row: {
         flexDirection: 'row',
         width: '100%',
-        alignItems: 'center',
-    },
-    input: {
-        flex: 1,
-        height: 40,
-        color: '#FFFFFF80',
-        borderColor: 'gray',
-        borderWidth: 1,
-        marginRight: 10,
-        paddingHorizontal: 10,
+        justifyContent: 'center',
+        alignSelf: 'center',
     },
     title: {
         fontSize: 60,
         color: 'white',
         fontWeight: 'bold',
-        marginBottom: 10,
+        paddingTop: 10,
     },
-    inputImage: {
-        flex: 1,
-        height: 40,
-        borderColor: 'gray',
-        borderWidth: 1,
-        marginRight: 10,
-        paddingHorizontal: 10,
-        width: 50,
-    }
 });
-
-
