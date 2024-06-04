@@ -93,13 +93,13 @@ const NotificationsPopUp = ({ isVisible, onClose, email }) => {
                                 <TouchableOpacity
                                     style={styles.doneButton}
                                     onPress={() => handleDeleteNotification(notification.notificationId)}>
-                                    <Text style={styles.closeButtonText}>Done</Text>
+                                    <Text style={styles.closeButtonText}>Read</Text>
                                 </TouchableOpacity>
                             </View>
                         ))}
                     </ScrollView>
                     <TouchableOpacity onPress={onClose} style={styles.closeButton}>
-                        <Text style={styles.closeButtonText}>Read</Text>
+                        <Text style={styles.closeButtonText}>Close</Text>
                     </TouchableOpacity>
                 </View>
             </View>
@@ -117,7 +117,7 @@ const styles = StyleSheet.create({
     popupContainer: {
         width: '45%',
         maxHeight: '80%',
-        backgroundColor: 'white',
+        backgroundColor: '#1E90FF',
         borderRadius: 10,
         padding: 10,
         alignItems: 'center',
@@ -129,6 +129,7 @@ const styles = StyleSheet.create({
         fontSize: 24,
         fontWeight: 'bold',
         marginBottom: 10,
+        color: 'white',
     },
     notificationItem: {
         width: '100%',
@@ -148,16 +149,17 @@ const styles = StyleSheet.create({
         marginLeft: 10,
     },
     notificationText: {
+        color: 'white',
         fontSize: 16,
     },
     notificationTime: {
         fontSize: 12,
-        color: '#777',
+        color: 'white',
         marginLeft: 10,
     },
     closeButton: {
         marginTop: 20,
-        backgroundColor: '#1e90ff',
+        backgroundColor: '#1C86EE',
         padding: 10,
         borderRadius: 5,
     },
