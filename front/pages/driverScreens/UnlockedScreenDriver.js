@@ -17,7 +17,7 @@ StyledButtonWithAddOn.propTypes = {
 };
 
 export function UnlockedScreenDriver({ navigation, route, children }) {
-    const { email } = route.params; //
+    const { email } = route.params;
     const [username, setUsername] = useState('');
     const [familias, setFamilies] = useState([]);
     const [isNotificationVisible, setIsNotificationVisible] = useState(false);

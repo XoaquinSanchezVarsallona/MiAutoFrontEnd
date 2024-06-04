@@ -1,5 +1,6 @@
 import {ImageBackground, Pressable, StyleSheet, Text, TextInput, View} from "react-native";
-import {useState} from "react";
+import {useContext, useState} from "react";
+import {NotificationContext} from "../components/notification/NotificationContext";
 
 export function Register( {navigation, route}) {
     // Declaro las variables que voy a pedir luego para registrar al usuario.
@@ -11,6 +12,8 @@ export function Register( {navigation, route}) {
     const [password, setPassword] = useState('');
     const [username, setUsername] = useState('');
     const [domicilio, setDomicilio] = useState('');
+    const { showNotification, setColor } = useContext(NotificationContext);
+
     const handleRegister = () => {
         if (!email.includes('@')) {
             alert('Please enter a valid email address.');
@@ -60,7 +63,8 @@ export function Register( {navigation, route}) {
             .then(response => {
                 if (response.ok) { // Si se guarda bien en la base de datos, se desbloquea la pantalla
                     console.log('Registration successful');
-                    alert('Registration succesful');
+                    setColor('#32cd32');
+                    showNotification('Registration successful');
 
                     if (userType === 'driver') {
                         navigation.navigate('Login', { userType });
@@ -69,12 +73,15 @@ export function Register( {navigation, route}) {
                     }
 
                 } else { // Si falla, se muestra un mensaje de error
-                    return response.text().then(text => { throw new Error(text); });
+                    console.log(response.text().then(text => { throw new Error(text); }));
+                    setColor('red');
+                    showNotification('Registration failed')
                 }
             })
             .catch((error) => {
                 console.error('Caught error:', error);
-                alert(error.message);
+                setColor('red');
+                showNotification('Registration failed');
             });
     };
 

@@ -1,5 +1,6 @@
 import {StyleSheet, View, Text, ImageBackground, TextInput, Button, Pressable} from 'react-native';
-import React, {useState} from "react";
+import React, {useContext, useState} from "react";
+import {NotificationContext} from "../../components/notification/NotificationContext";
 
 export function AddNewStore({ navigation, route }) {
     const { email } = route.params;
@@ -7,6 +8,7 @@ export function AddNewStore({ navigation, route }) {
     const [storeName, setStoreName] = useState('');
     const [domicilio, setDomicilio] = useState('');
     const [tipoDeServicio, setTipoDeServicio] = useState('');
+    const { showNotification, setColor } = useContext(NotificationContext);
 
     const addStore = async () => {
         try {
@@ -19,13 +21,15 @@ export function AddNewStore({ navigation, route }) {
                 body: JSON.stringify({ email, storeEmail, storeName, domicilio, tipoDeServicio }),
             });
             if (response.ok) {
-                alert('Store added successfully');
+                setColor('#32cd32');
+                showNotification('Store added successfully');
                 navigation.navigate('UnlockedScreenService', { email: email });
             } else if (response.status === 400) {
                 const errorMessage = await response.text();
                 alert(errorMessage);
             } else {
-                console.error('Failed to add store');
+                setColor('red');
+                showNotification('Failed to add store');
             }
         } catch (error) {
             console.error('Error:', error);
@@ -61,7 +65,7 @@ export function AddNewStore({ navigation, route }) {
                 onChangeText={setTipoDeServicio}
                 placeholder="Type of Service"
             />
-            <Pressable style={styles.addVehicleButton} onPress={ addStore} >
+            <Pressable style={styles.addVehicleButton} onPress={addStore} >
                 <Text style={styles.addVehicleText}>Add store</Text>
             </Pressable>
         </ImageBackground>

@@ -1,10 +1,12 @@
-import React, { useEffect } from 'react';
+import React, {useContext, useEffect} from 'react';
 import {View, Text, StyleSheet, ImageBackground, Button, Pressable} from 'react-native';
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import {NotificationContext} from "../../../components/notification/NotificationContext";
 
 export function AccidentInformation({navigation, route}) {
     const { patente } = route.params;
     const [username, setUsername] = React.useState('');
+    const { showNotification, setColor } = useContext(NotificationContext);
 
     useEffect(() => {
         async function loadUserProfile() {
@@ -25,7 +27,7 @@ export function AccidentInformation({navigation, route}) {
                 }
             }
         }
-        loadUserProfile().then(r => console.log(r));
+        loadUserProfile().then();
     }, []);
 
     const sendAlert = async () => {
@@ -37,12 +39,14 @@ export function AccidentInformation({navigation, route}) {
                 },
             });
 
-            if (!response.ok) {
-                console.error('Error sending alert');
+            if (response.ok) {
+                setColor('#32cd32')
+                showNotification('Alert send successfully');
+            } else {
+                setColor('red')
+                showNotification('Failed to send alert');
             }
 
-            const data = await response.json();
-            console.log(data);
         } catch (error) {
             console.error('Error:', error);
         }

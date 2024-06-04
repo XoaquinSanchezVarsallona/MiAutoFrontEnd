@@ -28,7 +28,6 @@ export function Login({navigation, route}) {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                //'token': localStorage.getItem('userToken'),
             },
             body: JSON.stringify(requestBody),
         })
@@ -50,6 +49,7 @@ export function Login({navigation, route}) {
                     await AsyncStorage.setItem('userToken', data.token);
                     await AsyncStorage.setItem('expirationTime', expirationTime.toString());
                     await AsyncStorage.setItem('userEmail', email);
+                    await AsyncStorage.setItem('userType', userType);
                     //crea una nueva ruta que comienza en la página unlockedScreen, para que no pueda volver al login.
                     if (userType === 'driver') {
                         navigation.reset({
