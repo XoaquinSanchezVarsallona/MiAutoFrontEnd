@@ -4,11 +4,11 @@ import { useFocusEffect } from '@react-navigation/native';
 import StyledButton2 from "../../components/StyledButton2";
 
 export function UnlockedScreenService({ navigation, route }) {
-    //me llega el email del usuario
+    // Me llega el email del usuario
     const { email } = route.params;
     const [stores, setStores] = useState([]);
 
-    //LA GLORIA PARA REFETCHEAR - usefocuseffect y callback sin pasar parametro 
+    // LA GLORIA PARA REFETCH - usefocuseffect y callback sin pasar parámetro
     useFocusEffect(
         React.useCallback(() => {
             const fetchStores = async () => {
@@ -27,7 +27,7 @@ export function UnlockedScreenService({ navigation, route }) {
                 }
             };
 
-            fetchStores();
+            fetchStores().then();
         }, [])
     );
 
@@ -48,7 +48,7 @@ export function UnlockedScreenService({ navigation, route }) {
     return (
         <ImageBackground source={require('../../assets/BackgroundUnlocked.jpg')} style={styles.container}>
             <View style={styles.headerContainer}>
-                <Text style={styles.title}>Sitios del servicio </Text>
+                <Text style={styles.title}>Stores</Text>
                 <StyledButton2
                     style={styles.configurationButton}
                     icon={require('../../assets/configuration.png')}
@@ -66,7 +66,7 @@ export function UnlockedScreenService({ navigation, route }) {
                                     navigation.navigate('StoreProfile', { store: store });
                                 }}
                             >
-                                <Text style={styles.vehicleText}>Store Name: {store.storeName}</Text>
+                                <Text style={styles.vehicleText}>{store.storeName}</Text>
                             </Pressable>
                         )
                     ))

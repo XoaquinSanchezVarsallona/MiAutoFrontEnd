@@ -28,7 +28,6 @@ export function Login({navigation, route}) {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                //'token': localStorage.getItem('userToken'),
             },
             body: JSON.stringify(requestBody),
         })
