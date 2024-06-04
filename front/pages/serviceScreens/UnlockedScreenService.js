@@ -2,53 +2,87 @@ import React, {useEffect, useState} from 'react';
 import {StyleSheet, View, Text, ImageBackground, Pressable, ScrollView} from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import StyledButton2 from "../../components/StyledButton2";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import LoadingScreen from "../LoadingScreen";
 
 export function UnlockedScreenService({ navigation, route }) {
     // Me llega el email del usuario
-    const { email } = route.params;
+    const [email, setEmail] = useState('');
     const [stores, setStores] = useState([]);
+    const [serviceName, setServiceName] = useState('');
+    const [isLoading, setLoading] = useState(true);
 
-    // LA GLORIA PARA REFETCH - usefocuseffect y callback sin pasar parámetro
-    useFocusEffect(
-        React.useCallback(() => {
-            const fetchStores = async () => {
-                try {
-                    const response = await fetch('http://localhost:9002/stores/fetchStores', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({ email }),
-                    });
-                    const data = await response.json();
-                    setStores(data);
-                } catch (error) {
-                    console.error('Error:', error);
-                }
-            };
+    // Get the service id from the token
+    const loadServiceId = async () => {
+        const token = await AsyncStorage.getItem('userToken');
+        if (token) {
+            // Send token to your backend to validate and get user details
+            const response = await fetch('http://localhost:9002/validateToken', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                },
+            });
+            const data = await response.json();
+            if (response.ok) {
+                return data.userId;
+            } else {
+                console.error('Token validation failed:', data.message);
+            }
+        }
+    };
 
-            fetchStores().then();
-        }, [])
-    );
+    // Get the email of the service
+    const loadServiceEmail = async () => {
+        const userId = await loadServiceId();
+        if (userId) {
+            const response = await fetch(`http://localhost:9002/user/${userId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+            const data = await response.json();
+            if (response.ok) {
+                setEmail(data.email);
+                setServiceName(data.username)
+                return data.email;
+            } else {
+                console.error('Error fetching service email:', data.message);
+            }
+        }
+    }
 
+
+    const fetchStores = async (email_fetched) => {
+        try {
+            const response = await fetch('http://localhost:9002/stores/fetchStores', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email: email_fetched }),
+            });
+            const data = await response.json();
+            setStores(data);
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    };
 
     useEffect(() => {
-        fetch('http://localhost:9002/stores/fetchStores', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ email }),
-        })
-            .then(response => response.json())
-            .then(data => setStores(data))
-            .catch(error => console.error('Error:', error));
+        loadServiceEmail().then(r => fetchStores(r).then(r => setLoading(false)));
     }, []);
+
+    if (isLoading) {
+        return <LoadingScreen />;
+    }
 
     return (
         <ImageBackground source={require('../../assets/BackgroundUnlocked.jpg')} style={styles.container}>
             <View style={styles.headerContainer}>
-                <Text style={styles.title}>Stores</Text>
+                <Text style={styles.title}>{serviceName}'s Stores</Text>
                 <StyledButton2
                     style={styles.configurationButton}
                     icon={require('../../assets/configuration.png')}

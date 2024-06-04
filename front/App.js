@@ -58,12 +58,14 @@ function AppNavigation() {
     const [isLoading, setIsLoading] = useState(true);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [userEmail, setUserEmail] = useState('');
+    const [userType, setUserType] = useState('');
 
     useEffect(() => {
         async function checkToken() {
             const userToken = await AsyncStorage.getItem('userToken');
             const expirationTime = await AsyncStorage.getItem('expirationTime');
             const email = await AsyncStorage.getItem('userEmail');
+            setUserType(await AsyncStorage.getItem('userType'));
 
             if (!userToken || !expirationTime || new Date().getTime() > Number(expirationTime)) {
                 setIsAuthenticated(false);
@@ -81,13 +83,14 @@ function AppNavigation() {
         return <LoadingScreen />
     }
 
+
     return (
         <NotificationProvider>
             <AppNotification />
             <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <PaperProvider>
                     <NavigationContainer>
-                        <Stack.Navigator initialRouteName={isAuthenticated ? "UnlockedScreenDriver" : "Home"}>
+                        <Stack.Navigator initialRouteName={isAuthenticated ? (userType === 'driver' ? "UnlockedScreenDriver" : "UnlockedScreenService") : "Home"}>
                             {isAuthenticated ? (
                                 <>
                                     <Stack.Screen name="Home" component={Home}/>
@@ -122,7 +125,6 @@ function AppNavigation() {
                                     <Stack.Screen name="EditRoute" component={EditRoute}/>
                                     <Stack.Screen name="AccidentInformation" component={AccidentInformation}/>
                                     <Stack.Screen name="EditPapers" component={EditPapers}/>
-
                                     <Stack.Screen name="ServiceConfigurationScreen" component={ServiceConfigurationScreen}/>
                                     <Stack.Screen name="ServiceViewProfile" component={ServiceViewProfile}/>
                                     <Stack.Screen name="ServiceEditProfile" component={ServiceEditProfile}/>
@@ -161,7 +163,6 @@ function AppNavigation() {
                                     <Stack.Screen name="EditRoute" component={EditRoute}/>
                                     <Stack.Screen name="AccidentInformation" component={AccidentInformation}/>
                                     <Stack.Screen name="EditPapers" component={EditPapers}/>
-
                                     <Stack.Screen name="ServiceConfigurationScreen" component={ServiceConfigurationScreen}/>
                                     <Stack.Screen name="ServiceViewProfile" component={ServiceViewProfile}/>
                                     <Stack.Screen name="ServiceEditProfile" component={ServiceEditProfile}/>
@@ -173,7 +174,6 @@ function AppNavigation() {
             </LocalizationProvider>
         </NotificationProvider>
     );
-
 }
 
 export default function App() {
