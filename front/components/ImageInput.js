@@ -39,9 +39,6 @@ const ImageInput = (requiered) => {
         try {
             const response = await fetch('http://localhost:9002/saveImage', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
                 body: JSON.stringify({
                     userId: requiered.userId,
                     field: requiered.field,
@@ -50,17 +47,14 @@ const ImageInput = (requiered) => {
 
                 }),
             });
-            console.log('Server response:', response);
-
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
 
-            const data = await response.json(); // Assuming the server responds with JSON
-            console.log(`Server response: `, data);
+            console.log(`Server status: `, response.status);
 
             // Update UI or notify user based on success
-            alert(`Updated ${field} successfully!`);
+            alert(`Updated ${requiered.field} successfully!`);
         }
         catch (e) {
             console.log("Error message: "+ e.message)
