@@ -16,6 +16,7 @@ export function VehicleProfile({ navigation, route }) {
             if (response.ok) {
                 const data = await response.json();
                 setVehicle(data);
+                return data;
             } else {
                 console.log(`Failed to fetch vehicle with patente: ${vehicle.patente}`);
             }
@@ -43,8 +44,12 @@ export function VehicleProfile({ navigation, route }) {
     };
 
     useEffect(() => {
-        fetchVehicle().then();
+        fetchVehicle().then(r => checkVehicleState(r));
     }, [isFocused]);
+
+    const checkVehicleState = (vehicle) => {
+
+    }
 
     let colors = {
         'Verde': '#32cd32',

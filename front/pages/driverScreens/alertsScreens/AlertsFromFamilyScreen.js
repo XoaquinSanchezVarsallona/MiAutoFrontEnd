@@ -34,10 +34,6 @@ export function AlertsFromFamilyScreen({ navigation, route }) {
             setColor('#32cd32');
             showNotification('Alert deleted successfully');
             setEvent(alertId)
-            navigation.reset({
-                index: 0,
-                routes: [{ name: 'UnlockedScreenDriver', params: { email: email }}],
-            });
         } else {
             setColor('red');
             showNotification(`Failed to delete alert with ID: ${alertId}`);

@@ -91,6 +91,11 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         margin: 10,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.25,
+        shadowRadius: 5,
+        elevation: 5,
     },
     buttonText: {
         color: 'white',

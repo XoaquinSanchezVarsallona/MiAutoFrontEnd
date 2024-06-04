@@ -93,6 +93,11 @@ const styles = StyleSheet.create({
         position: 'absolute',
         bottom: 10,
         alignSelf: 'center',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.25,
+        shadowRadius: 5,
+        elevation: 5,
     },
     confirmText: {
         fontSize: 18,
