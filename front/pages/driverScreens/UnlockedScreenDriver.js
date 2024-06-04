@@ -76,13 +76,14 @@ export function UnlockedScreenDriver({ navigation, route, children }) {
 
     useEffect(() => {
         fetchUnreadAlertsCount().then();
-    }, [isFocused, familias]);
+    }, [isFocused, familias])
+
+    if (isLoading) {
+        return <LoadingScreen />;
+    }
 
     return (
         <ImageBackground source={require('../../assets/BackgroundUnlocked.jpg')} style={styles.container}>
-            {isLoading ? (
-                <LoadingScreen />
-            ) : (
             <View style={styles.header}>
                 <StyledButton2 style={styles.configurationButton}
                                icon={require('../../assets/configuration.png')}
@@ -127,7 +128,6 @@ export function UnlockedScreenDriver({ navigation, route, children }) {
                     />
                 </View>
             </View>
-                )}
                 {children}
             <NotificationsPopUp
                 isVisible={isNotificationVisible}

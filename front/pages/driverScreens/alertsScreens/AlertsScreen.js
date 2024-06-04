@@ -69,39 +69,36 @@ export function AlertScreen({ navigation, route }) {
         <ImageBackground source={require('../../../assets/BackgroundUnlocked.jpg')} style={styles.container}>
             <View style={styles.headerContainer}>
                 <Text style={styles.title}>My Alerts</Text>
-                <View style={styles.scrollBarStyle}>
-                    <CustomScrollBar>
-                        {familiesData.length > 0 ? (
-                            familiesData
-                                .map((family, index) => ({ family, unreadAlertsCount: unreadAlertsCount[index] }))
-                                .sort((a, b) => b.unreadAlertsCount - a.unreadAlertsCount)
-                                .map(({ family, unreadAlertsCount }, index) => (
-                                    family && (
-                                        <Pressable
-                                            key={index}
-                                            style={styles.familyButton}
-                                            onPress={() => {
-                                                console.log(`Pressed: ${family.surname}`);
-                                                navigation.navigate('AlertsFromFamilyScreen', { family: family, email: email  });
-                                            }}
-                                        >
-                                            <Text style={styles.familyName}>{family.surname}</Text>
-                                            {unreadAlertsCount !== 0 && (
-                                                <View style={styles.alertCountContainer}>
-                                                    <Text style={styles.alertCountText}>{unreadAlertsCount}</Text>
-                                                </View>
-                                            )}
-                                        </Pressable>
-                                    )
-                                ))
-                        ) : (
-                            <Text style={styles.noFamiliesText}>No families available</Text>
-                        )}
-                    </CustomScrollBar>
-                </View>
-                <Pressable style={styles.addAlertButton} onPress={() => navigation.navigate('AddAlertScreen', { username, email })}>
-                    <Text style={styles.addAlertText}>Add a new alert</Text>
-                </Pressable>
+            </View>
+            <View style={styles.scrollBarStyle}>
+                <CustomScrollBar>
+                    {familiesData.length > 0 ? (
+                        familiesData
+                            .map((family, index) => ({ family, unreadAlertsCount: unreadAlertsCount[index] }))
+                            .sort((a, b) => b.unreadAlertsCount - a.unreadAlertsCount)
+                            .map(({ family, unreadAlertsCount }, index) => (
+                                family && (
+                                    <Pressable
+                                        key={index}
+                                        style={styles.familyButton}
+                                        onPress={() => {
+                                            console.log(`Pressed: ${family.surname}`);
+                                            navigation.navigate('AlertsFromFamilyScreen', { family: family, email: email, username: username  });
+                                        }}
+                                    >
+                                        <Text style={styles.familyName}>{family.surname}</Text>
+                                        {unreadAlertsCount !== 0 && (
+                                            <View style={styles.alertCountContainer}>
+                                                <Text style={styles.alertCountText}>{unreadAlertsCount}</Text>
+                                            </View>
+                                        )}
+                                    </Pressable>
+                                )
+                            ))
+                    ) : (
+                        <Text style={styles.noFamiliesText}>No families available</Text>
+                    )}
+                </CustomScrollBar>
             </View>
         </ImageBackground>
     );
@@ -182,7 +179,7 @@ const styles = StyleSheet.create({
     },
     scrollBarStyle: {
         alignItems: 'center',
-        height: '60%',
+        height: '75%',
         width: '100%',
         padding: 16,
     },

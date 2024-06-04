@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Image, Button, StyleSheet } from 'react-native';
+import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import StyledButton2 from "./StyledButton2";
 
@@ -63,18 +63,45 @@ const ImageInput = (requiered) => {
 
     return (
         <View style={styles.container}>
-            <Button title="Upload an image" onPress={pickImage} style={styles.boton} />
+            <TouchableOpacity onPress={pickImage} style={styles.button}>
+                <Text style={styles.buttonText}>Upload image</Text>
+            </TouchableOpacity>
             <StyledButton2
-            icon={require('../assets/pencil.png')}
-            onPress={() => handleImageSave()}/>
+                icon={require('../assets/pencil.png')}
+                onPress={handleImageSave}
+                style={styles.pencilButton}
+            />
         </View>
     );
 };
 
 const styles = StyleSheet.create({
-    imagen: { width: 100, height: 100, marginRight: 20},
-    container: { flex: 1, alignItems: 'center', flexDirection: 'row', },
-    boton: { color: 'white', fontSize: 20, fontWeight: 'bold', marginLeft: 20},
+    container: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    pencilButton: {
+        marginLeft: 10,
+    },
+    button: {
+        backgroundColor: '#2196F3',
+        padding: 15,
+        borderRadius: 10,
+        justifyContent: 'center',
+        alignItems: 'center',
+        margin: 10,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.25,
+        shadowRadius: 5,
+        elevation: 5,
+    },
+    buttonText: {
+        color: 'white',
+        fontSize: 15,
+        fontWeight: 'bold',
+    },
 });
 
 export default ImageInput;
