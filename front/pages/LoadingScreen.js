@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, ImageBackground } from 'react-native';
+import { ImageBackground } from 'react-native';
 import { waveform } from 'ldrs';
 
 const LoadingScreen = () => {

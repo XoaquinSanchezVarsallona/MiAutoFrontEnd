@@ -143,8 +143,7 @@ export function VehicleProfile({ navigation, route }) {
                         <TouchableOpacity style={styles.notifyButton} >
                             <Text style={styles.buttonText} onPress={() => navigation.navigate('AccidentInformation', {patente : vehicleFetched.patente})}>Notify Accident</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.modifyInfoButton} onPress={() => {navigation.navigate('EditPapers', {patente: vehicle.patente})}}
-                        >
+                        <TouchableOpacity style={styles.modifyInfoButton} onPress={() => {navigation.navigate('EditPapers', {patente: vehicle.patente})}}>
                             <Text style={styles.buttonText}>Modify Info</Text>
                         </TouchableOpacity>
                     </View>
@@ -157,9 +156,14 @@ export function VehicleProfile({ navigation, route }) {
                 <View>
                     <Text style={styles.title}>Usage of car</Text>
                     <Text style={styles.detail}>Add / Modify / Delete / View routes from {carName}</Text>
-                    <TouchableOpacity style={styles.routesButton} onPress={() => navigation.navigate('VehicleRoutes', { vehicle, familySurname, familyId, distance : 0 })}>
-                        <Text style={styles.buttonText}>View routes</Text>
-                    </TouchableOpacity>
+                    <View style={{ flexDirection: 'row' }}>
+                        <TouchableOpacity style={styles.routesButton} onPress={() => navigation.navigate('VehicleRoutes', { vehicle, familySurname, familyId, distance : 0 })}>
+                            <Text style={styles.buttonText}>View routes</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.routesButton} onPress={() => navigation.navigate('VehicleCharts', { vehicle, familySurname, familyId})}>
+                            <Text style={styles.buttonText}>View charts</Text>
+                        </TouchableOpacity>
+                    </View>
                 </View>
                 <View>
                     <Image source={require('../../../assets/statistics.png')} style={styles.statIcon} />
