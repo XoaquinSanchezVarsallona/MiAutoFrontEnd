@@ -59,14 +59,14 @@ export function VehicleCharts({ navigation, route }) {
     return (
         <ImageBackground source={require('../../../assets/BackgroundUnlocked.jpg')} style={styles.container}>
             <Text style={styles.title}>Charts</Text>
-            <Text style={styles.subtitle}>Here you can see the charts of your vehicle</Text>
             <View style={styles.content}>
                 <View style={styles.chartContainer}>
                     <View style={{ width: '100%', height: 300 }}>
+                        <Text style={styles.chartTitle}>Mileage</Text>
                         <ResponsiveContainer>
                             <LineChart
                                 data={chartData.length ? chartData : [{ date: 'No Data', Mileage: 0 }]}
-                                margin={{ top: 5, right: 20, left: 10, bottom: 5 }}
+                                margin={{ top: 0, right: 20, left: 10, bottom: 5 }}
                             >
                                 <XAxis dataKey="date" />
                                 <YAxis />
@@ -104,18 +104,14 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         marginBottom: 10,
     },
-    subtitle: {
-        fontSize: 20,
-        color: 'white',
-    },
     chartContainer: {
-        marginTop: 20,
+        marginTop: 10,
         width: '100%',
         height: 300,
     },
     content: {
-        marginTop: 15,
-        padding: 15,
+        marginTop: 10,
+        padding: 10,
         margin: 2,
         backgroundColor: '#f8f8f8',
         borderRadius: 10,
@@ -128,5 +124,11 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.25,
         shadowRadius: 5,
         elevation: 5,
+    },
+    chartTitle: {
+        fontSize: 30,
+        textAlign: 'center',
+        marginBottom: 12,
+        marginTop: -8,
     },
 });
