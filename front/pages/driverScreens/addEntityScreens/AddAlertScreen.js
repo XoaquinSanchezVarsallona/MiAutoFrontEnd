@@ -1,5 +1,5 @@
 import React, {useContext, useState} from 'react';
-import {Button, ImageBackground, Pressable, StyleSheet, Text, TextInput, View} from 'react-native';
+import {ImageBackground, Pressable, StyleSheet, Text, TextInput, View} from 'react-native';
 import {NotificationContext} from "../../../components/notification/NotificationContext";
 
 export function AddAlertScreen({ navigation, route }) {
@@ -40,7 +40,7 @@ export function AddAlertScreen({ navigation, route }) {
     return (
         <ImageBackground source={require('../../../assets/BackgroundUnlocked.jpg')} style={styles.container}>
             <View style={styles.headerContainer}>
-                <Text style={styles.title}>Add Alert</Text>
+                <Text style={styles.title}>New Alert Description</Text>
             </View>
             <View style={styles.inputContainer}>
                 <Text style={styles.label}>Message</Text>
@@ -53,7 +53,7 @@ export function AddAlertScreen({ navigation, route }) {
                 />
             </View>
             <Pressable style={styles.addAlertButton} onPress={addAlert}>
-                <Text style={styles.addAlertText}>Add a new alert</Text>
+                <Text style={styles.addAlertText}>Add alert</Text>
             </Pressable>
         </ImageBackground>
     );
@@ -62,17 +62,18 @@ export function AddAlertScreen({ navigation, route }) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'center',
+        justifyContent: 'space-between',
         alignItems: 'center',
         padding: 16,
     },
     addAlertButton: {
-        width: '15%',
-        paddingVertical: 5,
-        paddingHorizontal: 10,
-        marginVertical: 8,
+        width: '30%',
+        paddingVertical: 12,
+        paddingHorizontal: 20,
+        marginVertical: 10,
         backgroundColor: '#32cd32',
-        borderRadius: 10,
+        borderRadius: 20,
+        alignSelf: 'center',
         elevation: 4,
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
@@ -80,7 +81,7 @@ const styles = StyleSheet.create({
         shadowRadius: 3.84,
     },
     addAlertText: {
-        fontSize: 14,
+        fontSize: 18,
         color: 'white',
         fontWeight: '500',
         textAlign: 'center',

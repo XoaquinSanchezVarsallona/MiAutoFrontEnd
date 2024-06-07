@@ -17,7 +17,7 @@ import FamilyDetailsScreen from "./pages/driverScreens/familyScreens/FamilyDetai
 import AddFamilyScreen from "./pages/driverScreens/addEntityScreens/AddFamilyScreen";
 import JoinFamilyScreen from "./pages/driverScreens/familyScreens/JoinFamilyScreen";
 import {AlertScreen} from "./pages/driverScreens/alertsScreens/AlertsScreen";
-import {AddAlertScreen} from "./pages/driverScreens/alertsScreens/AddAlertScreen";
+import {AddAlertScreen} from "./pages/driverScreens/addEntityScreens/AddAlertScreen";
 import {AlertsFromFamilyScreen} from "./pages/driverScreens/alertsScreens/AlertsFromFamilyScreen";
 import VehicleProfile from "./pages/driverScreens/vehicleScreens/VehicleProfile";
 import {EditCarProfile} from "./pages/driverScreens/editProfile/EditCarProfile";

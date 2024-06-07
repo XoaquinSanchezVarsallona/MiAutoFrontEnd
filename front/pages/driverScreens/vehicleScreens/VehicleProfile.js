@@ -2,6 +2,7 @@ import React, {useContext, useEffect} from 'react';
 import {Image, View, Text, StyleSheet, ImageBackground, TouchableOpacity} from 'react-native';
 import {useIsFocused} from "@react-navigation/native";
 import {NotificationContext} from "../../../components/notification/NotificationContext";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export function VehicleProfile({ navigation, route }) {
     const { vehicle, familySurname, familyId } = route.params;
@@ -44,12 +45,60 @@ export function VehicleProfile({ navigation, route }) {
     };
 
     useEffect(() => {
-        fetchVehicle().then(r => checkVehicleState(r));
+        loadUserProfile().then(username => fetchVehicle().then(r => checkVehicleState(r, username)));
     }, [isFocused]);
 
-    const checkVehicleState = (vehicle) => {
-        //todo if bad state send notification
+    const checkVehicleState = (vehicle, username) => {
+        if (vehicle.estadoActual === 'Rojo') {
+            addAlert("The car with patente: " + vehicle.patente + "has a critic state", username).then()
+        }
     }
+
+    const addAlert = async (message, username) => {
+        try {
+            const response = await fetch(`http://localhost:9002/alertas/add`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    message: message,
+                    apellido: familySurname,
+                    username: username,
+                }),
+            });
+
+            if (response.ok) {
+                console.log("The car with patente: " + vehicle.patente + " has a critic state")
+            } else {
+                console.error('Failed to add alert');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    };
+
+    // Get the user's username from the token
+    const loadUserProfile = async () => {
+        const token = await AsyncStorage.getItem('userToken');
+        if (token) {
+            // Send token to your backend to validate and get user details
+            const response = await fetch('http://localhost:9002/validateToken', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                },
+            });
+            const data = await response.json();
+            if (response.ok) {
+                return data.username;
+            } else {
+                console.error('Token validation failed:', data.message);
+            }
+        }
+    }
+
 
     let colors = {
         'Verde': '#32cd32',
