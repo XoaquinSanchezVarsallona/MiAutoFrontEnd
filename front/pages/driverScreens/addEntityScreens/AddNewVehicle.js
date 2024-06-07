@@ -27,6 +27,7 @@ export function AddNewVehicle({ navigation, route }) {
                 },
                 body: JSON.stringify({ patente, ano, fechaVencimientoSeguro, fechaVencimientoVTV, kilometraje, marca, modelo }),
             });
+            console.log(response)
             if (response.ok) {
                 setColor('#32cd32')
                 showNotification("Vehicle added successfully")
