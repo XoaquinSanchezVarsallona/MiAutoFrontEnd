@@ -1,10 +1,14 @@
-import React, { useState } from 'react';
-import {View, Text, TextInput, Button, StyleSheet, ImageBackground} from 'react-native';
+import React, {useContext, useState} from 'react';
+import {View, Text, TextInput, Button, StyleSheet, ImageBackground, Pressable} from 'react-native';
+import {NotificationContext} from "../../../components/notification/NotificationContext";
+import InputText from "../../../components/InputText";
+import AddButton from "../../../components/AddButton";
 
 function JoinFamilyScreen({ navigation, route }) {
     const [surname, setSurname] = useState('');
     const [password, setPassword] = useState('');
     const { username, email } = route.params;
+    const { showNotification, setColor } = useContext(NotificationContext);
 
     const joinToFamily = async () => {
         try {
@@ -16,28 +20,24 @@ function JoinFamilyScreen({ navigation, route }) {
                 body: JSON.stringify({ surname, password }),
             });
             if (response.ok) {
-                /*alert('Join to family successfully');
-                navigation.reset({
-                    index: 0,
-                    routes: [{ name: 'UnlockedScreenDriver', params: { email: email }}],
-                });*/
 
                 const familias = await response.json(); // Parse the JSON response from the server
 
-                alert('Joined to added successfully');
+                setColor('#32cd32')
+                showNotification('Joined to added successfully');
 
                 navigation.navigate('FamilyProfile', { email: email, families: familias, username: username });
 
-
             } else if (response.status === 404) {
-                alert("Family doesn't exist");
+                showNotification("Family doesn't exist");
             } else if (response.status === 400) {
-                alert("You are already in that family");
+                showNotification("You are already in that family");
             } else if (response.status === 401) {
-                alert("Incorrect password");
+                showNotification("Incorrect password");
             } else {
-                alert('Failed to join to family. Please try again.');
+                showNotification('Failed to join to family. Please try again.');
             }
+            setColor('red')
         } catch (error) {
             console.error('Error:', error);
         }
@@ -46,21 +46,23 @@ function JoinFamilyScreen({ navigation, route }) {
     return (
         <ImageBackground source={require('../../../assets/BackgroundUnlocked.jpg')} style={styles.container}>
             <View style={styles.container}>
-                <Text>Join to Family</Text>
-                <TextInput
-                    style={styles.input}
-                    value={surname}
-                    onChangeText={setSurname}
-                    placeholder="Surname"
-                />
-                <TextInput // Add this block
-                    style={styles.input}
-                    value={password}
-                    onChangeText={setPassword}
-                    placeholder="Password"
-                    //secureTextEntry
-                />
-                <Button title="Join to Family" onPress={joinToFamily} />
+                <Text style={styles.title}>Join to Family</Text>
+                <View style={styles.inputContainer}>
+                    <InputText
+                        label="Surname"
+                        value={surname}
+                        onChangeText={setSurname}
+                        placeholder="Surname"
+                    />
+                    <InputText
+                        label="Password"
+                        value={password}
+                        onChangeText={setPassword}
+                        placeholder="Password"
+                        secureTextEntry
+                    />
+                </View>
+                <AddButton onPress={joinToFamily} text={"Join to Family"} />
             </View>
         </ImageBackground>
     );
@@ -69,8 +71,16 @@ function JoinFamilyScreen({ navigation, route }) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'center',
-        padding: 20,
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        padding: 16,
+        width: '100%',
+    },
+    title: {
+        fontSize: 60,
+        color: 'white',
+        fontWeight: 'bold',
+        marginBottom: 10,
     },
     input: {
         height: 40,
@@ -78,6 +88,29 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         marginBottom: 20,
         paddingLeft: 10,
+    },
+    joinFamilyButton: {
+        width: '20%',
+        paddingVertical: 12, // Increase padding for a larger touch area
+        paddingHorizontal: 20,
+        marginVertical: 8,
+        backgroundColor: '#32cd32', // A vibrant green color
+        borderRadius: 20,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.25,
+        shadowRadius: 5,
+        elevation: 5,
+    },
+    joinFamilyText: {
+        fontSize: 18,
+        color: 'white',
+        fontWeight: '500',
+        textAlign: 'center',
+    },
+    inputContainer: {
+        width: '100%',
+        marginBottom: 10,
     },
 });
 

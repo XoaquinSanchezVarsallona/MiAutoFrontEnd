@@ -1,10 +1,13 @@
-import React, {useEffect} from 'react';
-import {ImageBackground, Pressable, StyleSheet, Text, View, ScrollView} from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { ImageBackground, Pressable, StyleSheet, Text, View, ScrollView } from 'react-native';
+import LoadingScreen from "../../LoadingScreen";
+import FamilyButtonToCar from "../../../components/FamilyButtonToCar";
+import CustomScrollBar from "../../../components/CustomScrollBar";
 
 export function FamilyVehiclesScreen({ navigation, route }) {
-    const [familiesData, setFamilies] = React.useState([]);
+    const [familiesData, setFamilies] = useState([]);
     const { families, email } = route.params;
-
+    const [loading, setLoading] = useState(true);
 
     // FetchFamilias busca en base a unos ID una familia
     const fetchFamilias = async (familias) => {
@@ -18,52 +21,53 @@ export function FamilyVehiclesScreen({ navigation, route }) {
                     console.log(`Failed to fetch family with ID: ${familyId}`);
                     return null;
                 }
-            }))
+            }));
         } catch (error) {
             console.error('Error:', error);
         }
     };
 
     useEffect(() => {
-        // Create a new array with duplicate family IDs removed
-        const uniqueFamilies = [...new Set(families)];
-
-        fetchFamilias(uniqueFamilies)
+        fetchFamilias(families)
             .then(fetchedFamilies => {
                 console.log('Fetched families:', fetchedFamilies);
-                setFamilies(fetchedFamilies);
+                setFamilies(fetchedFamilies.filter(family => family !== null));
+                setLoading(false);
             })
-            .catch(error => console.error('Error:', error));
+            .catch(error => {
+                console.error('Error:', error);
+                setLoading(false);
+            });
     }, [families]);
 
-    useEffect(() => { }, [familiesData, families]);
+    if (loading) {
+        return <LoadingScreen />;
+    }
 
     return (
         <ImageBackground source={require('../../../assets/BackgroundUnlocked.jpg')} style={styles.container}>
             <View style={styles.headerContainer}>
-                <Text style={styles.title}>Familias con Autos</Text>
+                <Text style={styles.title}>Families with Vehicles</Text>
             </View>
-
-            <ScrollView style={styles.familiesList} contentContainerStyle={styles.contentContainerStyle}>
-                {familiesData.length > 0 ? (
-                    familiesData.sort((a, b) => b.familyId - a.familyId).map((family, index) => (
-                        family && (
-                            <Pressable
-                                key={index}
-                                style={styles.familyButton}
-                                onPress={() => {
-                                    console.log(`Pressed: ${family.surname}`);
-                                    navigation.navigate('VehiclesScreen', { familySurname: family.surname, familyId: families[index] });
-                                }}
-                            >
-                                <Text style={styles.familyName}>{family.surname}</Text>
-                            </Pressable>
-                        )
-                    ))
-                ) : (
-                    <Text style={styles.noFamiliesText}>No families available</Text>
-                )}
-            </ScrollView>
+            <View style={styles.scrollBarContainer}>
+                <CustomScrollBar>
+                    {familiesData.length > 0 ? (
+                        familiesData.sort((a, b) => b.familyId - a.familyId).map((family, index) => (
+                            family && (
+                                <FamilyButtonToCar
+                                    key={index}
+                                    family={family}
+                                    navigation={navigation}
+                                    familyId={families[index]}
+                                    index={index}
+                                />
+                            )
+                        ))
+                    ) : (
+                        <Text style={styles.noFamiliesText}>No families available</Text>
+                    )}
+                </CustomScrollBar>
+            </View>
         </ImageBackground>
     );
 }
@@ -76,6 +80,10 @@ const styles = StyleSheet.create({
     },
     contentContainerStyle: {
         alignItems: 'center',
+    },
+    scrollBarContainer: {
+        flex: 1,
+        width: '60%',
     },
     headerContainer: {
         justifyContent: 'center',
@@ -95,29 +103,10 @@ const styles = StyleSheet.create({
         width: '100%',
         marginBottom: 20,
     },
-    familyButton: {
-        padding: 15,
-        marginVertical: 8,
-        backgroundColor: '#1e90ff',
-        borderRadius: 10,
-        alignItems: 'center',
-        width: '50%',
-        alignSelf: 'center',
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.25,
-        shadowRadius: 5,
-        elevation: 5,
-    },
-    familyName: {
-        fontSize: 18,
-        color: 'white',
-        fontWeight: '500',
-    },
     noFamiliesText: {
         fontSize: 18,
         color: 'white',
         textAlign: 'center',
         marginTop: 20,
     },
-})
+});

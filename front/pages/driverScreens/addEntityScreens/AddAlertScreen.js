@@ -1,6 +1,7 @@
 import React, {useContext, useState} from 'react';
 import {ImageBackground, Pressable, StyleSheet, Text, TextInput, View} from 'react-native';
 import {NotificationContext} from "../../../components/notification/NotificationContext";
+import InputText from "../../../components/InputText";
 
 export function AddAlertScreen({ navigation, route }) {
     const [message, setMessage] = useState('');
@@ -42,16 +43,12 @@ export function AddAlertScreen({ navigation, route }) {
             <View style={styles.headerContainer}>
                 <Text style={styles.title}>New Alert Description</Text>
             </View>
-            <View style={styles.inputContainer}>
-                <Text style={styles.label}>Message</Text>
-                <TextInput
-                    style={styles.inputTextholder}
-                    onChangeText={setMessage}
-                    value={message}
-                    placeholder="Enter message"
-                    placeholderTextColor="#FFFFFF80"
-                />
-            </View>
+            <InputText
+                label="Message"
+                value={message}
+                onChangeText={setMessage}
+                placeholder="Enter message"
+            />
             <Pressable style={styles.addAlertButton} onPress={addAlert}>
                 <Text style={styles.addAlertText}>Add alert</Text>
             </Pressable>

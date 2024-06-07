@@ -52,17 +52,19 @@ const CustomScrollBar = ({ children }) => {
             >
                 {children}
             </ScrollView>
-            <View style={styles.customScrollBarBackground}>
-                <Animated.View
-                    style={[
-                        styles.customScrollBar,
-                        {
-                            height: scrollIndicatorSize,
-                            transform: [{ translateY: scrollIndicatorPosition }],
-                        },
-                    ]}
-                />
-            </View>
+            {completeScrollBarHeight > visibleScrollBarHeight && (
+                <View style={styles.customScrollBarBackground}>
+                    <Animated.View
+                        style={[
+                            styles.customScrollBar,
+                            {
+                                height: scrollIndicatorSize,
+                                transform: [{ translateY: scrollIndicatorPosition }],
+                            },
+                        ]}
+                    />
+                </View>
+            )}
         </View>
     );
 };
@@ -71,7 +73,7 @@ const styles = StyleSheet.create({
     scrollContainer: {
         flexDirection: 'row',
         flex: 1,
-        width: '50%',
+        width: '100%',
     },
     scrollViewContainer: {
         paddingHorizontal: 10,

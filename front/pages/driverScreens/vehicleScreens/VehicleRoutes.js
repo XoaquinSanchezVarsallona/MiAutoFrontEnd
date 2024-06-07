@@ -2,6 +2,7 @@ import {ImageBackground, Pressable, ScrollView, StyleSheet, Text, View} from "re
 import React, {useContext, useEffect, useState} from "react";
 import RouteCard from "../../../components/RouteCard";
 import {NotificationContext} from "../../../components/notification/NotificationContext";
+import CustomScrollBar from "../../../components/CustomScrollBar";
 
 export function VehicleRoutes({ navigation, route }) {
     const { vehicle, familyId, routesPassed, distance } = route.params;
@@ -96,28 +97,39 @@ export function VehicleRoutes({ navigation, route }) {
             <View>
                 <Text style={styles.title}>Routes of {vehicle.marca} {vehicle.modelo}</Text>
             </View>
-            <ScrollView style={styles.routesList} contentContainerStyle={styles.contentContainerStyle}>
-                {routes && routes.length === 0 ? (
-                    <Text style={styles.noRoutesText}>No routes yet</Text>
-                ) : (
-                    routes.map((route, index) => (
-                        <RouteCard key={index} route={route} deleteRoute={deleteRoute} navigation={navigation} vehicle={vehicle} familyId={familyId}  />
-                    ))
-                )}
-            </ScrollView>
-            <Pressable style={styles.addVehicleButton} onPress={() => navigation.navigate('AddNewRoute', { vehicle, familyId })}>
-                <Text style={styles.addVehicleText}>Add a new route</Text>
+            <View style={styles.scrollContainer}>
+                <CustomScrollBar>
+                    {routes.length === 0 ? (
+                        <Text style={styles.noRoutesText}>No routes yet</Text>
+                    ) : (
+                        <View style={styles.routesContainer}>
+                            {routes.map((route, index) => (
+                                <RouteCard key={index} route={route} deleteRoute={deleteRoute} navigation={navigation} vehicle={vehicle} familyId={familyId} />
+                            ))}
+                        </View>
+                    )}
+                </CustomScrollBar>
+            </View>
+            <Pressable style={styles.addRouteButton} onPress={() => navigation.navigate('AddNewRoute', { vehicle, familyId })}>
+                <Text style={styles.addRouteText}>Add a new route</Text>
             </Pressable>
         </ImageBackground>
     );
 }
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'flex-start',
+        justifyContent: 'center',
         alignItems: 'center',
         padding: 16,
         paddingTop: 30,
+    },
+    scrollContainer: {
+        flex: 1,
+        width: '30%',
+        alignSelf: 'center',
+        paddingHorizontal: 16,
     },
     noRoutesText: {
         fontSize: 20,
@@ -130,17 +142,15 @@ const styles = StyleSheet.create({
         color: 'white',
         fontWeight: 'bold',
         marginBottom: 10,
-        alignContent: 'center',
+        textAlign: 'center',
     },
-    addVehicleButton: {
+    addRouteButton: {
         width: '20%',
         paddingVertical: 12,
         paddingHorizontal: 20,
         marginVertical: 10,
         backgroundColor: '#32cd32',
         borderRadius: 20,
-        position: 'absolute',
-        bottom: 10,
         alignSelf: 'center',
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 4 },
@@ -148,7 +158,7 @@ const styles = StyleSheet.create({
         shadowRadius: 5,
         elevation: 5,
     },
-    addVehicleText: {
+    addRouteText: {
         fontSize: 18,
         color: 'white',
         fontWeight: '500',
@@ -157,6 +167,10 @@ const styles = StyleSheet.create({
     contentContainerStyle: {
         alignItems: 'center',
         paddingBottom: 20,
+    },
+    routesContainer: {
+        alignItems: 'center',
+        width: '100%',
     },
     routesList: {
         flex: 1,

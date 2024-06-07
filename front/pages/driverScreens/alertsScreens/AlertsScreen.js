@@ -2,12 +2,14 @@ import React, {useEffect} from 'react';
 import {ImageBackground, Pressable, StyleSheet, Text, View} from 'react-native';
 import CustomScrollBar from "../../../components/CustomScrollBar";
 import { useIsFocused } from '@react-navigation/native';
+import LoadingScreen from "../../LoadingScreen";
 
 export function AlertScreen({ navigation, route }) {
     const [familiesData, setFamilies] = React.useState([]);
     const { families, email, username } = route.params;
     const [unreadAlertsCount, setUnreadAlertsCount] = React.useState([]);
     const isFocused = useIsFocused();
+    const [loading, setLoading] = React.useState(true);
 
     // FetchFamilias busca en base a unos ID una familia
     const fetchFamilias = async (familias) => {
@@ -65,6 +67,15 @@ export function AlertScreen({ navigation, route }) {
         fetchUnreadAlertsCount().then();
     }, [familiesData, isFocused]);
 
+    useEffect(() => {
+        if (familiesData.length > 0 && unreadAlertsCount.length > 0) {
+            setLoading(false);
+        }
+    })
+
+    if (loading) {
+        return <LoadingScreen />;
+    }
     return (
         <ImageBackground source={require('../../../assets/BackgroundUnlocked.jpg')} style={styles.container}>
             <View style={styles.headerContainer}>
@@ -83,7 +94,7 @@ export function AlertScreen({ navigation, route }) {
                                         style={styles.familyButton}
                                         onPress={() => {
                                             console.log(`Pressed: ${family.surname}`);
-                                            navigation.navigate('AlertsFromFamilyScreen', { family: family, email: email, username: username  });
+                                            navigation.navigate('AlertsFromFamilyScreen', { family: family, email: email, username: username });
                                         }}
                                     >
                                         <Text style={styles.familyName}>{family.surname}</Text>
@@ -141,29 +152,10 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         marginBottom: 10,
     },
-    addAlertButton: {
-        width: '40%',
-        paddingVertical: 12,
-        paddingHorizontal: 20,
-        marginVertical: 8,
-        backgroundColor: '#32cd32',
-        borderRadius: 20,
-        elevation: 4,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.25,
-        shadowRadius: 3.84,
-    },
     alertMessage: {
         fontSize: 18,
         color: 'white',
         fontWeight: '500',
-    },
-    addAlertText: {
-        fontSize: 18,
-        color: 'white',
-        fontWeight: '500',
-        textAlign: 'center',
     },
     noAlertsText: {
         fontSize: 18,
@@ -180,7 +172,7 @@ const styles = StyleSheet.create({
     scrollBarStyle: {
         alignItems: 'center',
         height: '75%',
-        width: '100%',
+        width: '60%',
         padding: 16,
     },
     alertCountContainer: {
@@ -189,8 +181,8 @@ const styles = StyleSheet.create({
         right: -8,
         backgroundColor: '#0470bd',
         borderRadius: 50,
-        width: 30, // Adjust as needed
-        height: 30, // Adjust as needed
+        width: 30,
+        height: 30,
         justifyContent: 'center',
         alignItems: 'center',
         padding: 5,
@@ -200,4 +192,4 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         fontSize: 12,
     },
-})
+});

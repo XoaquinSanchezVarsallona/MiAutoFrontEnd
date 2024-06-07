@@ -58,7 +58,7 @@ function AddFamilyScreen({ navigation, route }) {
                         secureTextEntry={true}
                     />
                     {errorMessage ? <Text style={styles.errorText}>{errorMessage}</Text> : <Text style={styles.errorText}></Text>}
-                    <Pressable style={styles.addFamilyButton} onPress={() => { addFamily() }}>
+                    <Pressable style={styles.addFamilyButton} onPress={() => { addFamily().then() }}>
                         <Text style={styles.addFamilyText}>Add new Family</Text>
                     </Pressable>
                 </View>

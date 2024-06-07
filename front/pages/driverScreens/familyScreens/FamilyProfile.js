@@ -2,10 +2,14 @@ import React, {useEffect} from 'react';
 import {ImageBackground, Pressable, ScrollView, StyleSheet, Text, View} from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import CustomScrollBar from "../../../components/CustomScrollBar";
+import LoadingScreen from "../../LoadingScreen";
+import AddButton from "../../../components/AddButton";
+import FamilyButton from "../../../components/FamilyButton";
 
 export function FamilyProfile({ navigation, route }) {
     const [familiesData, setFamilies] = React.useState([]);
     const { families, email, username } = route.params;
+    const [loading, setLoading] = React.useState(true);
 
     // FetchFamilias busca en base a unos ID una familia
     const fetchFamilias = async (familias) => {
@@ -34,6 +38,7 @@ export function FamilyProfile({ navigation, route }) {
                 .then(fetchedFamilies => {
                     console.log('Fetched families:', fetchedFamilies);
                     setFamilies(fetchedFamilies);
+                    setLoading(false);
                 })
                 .catch(error => console.error('Error:', error));
         }, [families])
@@ -44,40 +49,39 @@ export function FamilyProfile({ navigation, route }) {
     }, [familiesData]);
     const validFamiliesData = familiesData.filter(family => family !== null);
 
+    if (loading) {
+        return <LoadingScreen />;
+    }
+
     return (
         <ImageBackground source={require('../../../assets/BackgroundUnlocked.jpg')} style={styles.container}>
             <View style={styles.headerContainer}>
                 <Text style={styles.title}>My Families</Text>
             </View>
 
-            <CustomScrollBar style={styles.familiesScrollView} contentContainerStyle={styles.familiesContentContainer}>
-                {validFamiliesData.length > 0 ? (
-                    validFamiliesData.sort((a, b) => b.familyId - a.familyId).map((family, index) => (
-                        family && ( // Check if family is not null
-                            <Pressable
-                                key={index}
-                                style={styles.familyContainer}
-                                onPress={() => {
-                                    console.log(`Pressed: ${family.surname}`);
-                                    navigation.navigate('FamilyDetailsScreen', { family: family, email: email });
-                                }}
-                            >
-                                <Text style={styles.familyName}>{family.surname}</Text>
-                            </Pressable>
-                        )
-                    ))
-                ) : (
-                    <Text style={styles.noFamiliesText}>No families available</Text>
-                )}
-            </CustomScrollBar>
+            <View style={styles.scrollBarStyle}>
+                <CustomScrollBar>
+                    {validFamiliesData.length > 0 ? (
+                        validFamiliesData.sort((a, b) => b.familyId - a.familyId).map((family, index) => (
+                            family && (
+                                <FamilyButton
+                                    key={index}
+                                    family={family}
+                                    email={email}
+                                    navigation={navigation}
+                                    index={index}
+                                />
+                            )
+                        ))
+                    ) : (
+                        <Text style={styles.noFamiliesText}>No families available</Text>
+                    )}
+                </CustomScrollBar>
+            </View>
 
             <View style={styles.buttonsContainer}>
-                <Pressable style={styles.addFamilyButton} onPress={() => navigation.navigate('AddFamilyScreen', { username, email, validFamiliesData })}>
-                    <Text style={styles.addFamilyText}>Add a new family</Text>
-                </Pressable>
-                <Pressable style={styles.addFamilyButton} onPress={() => navigation.navigate('JoinFamilyScreen', { username, email })}>
-                    <Text style={styles.addFamilyText}>Join a family</Text>
-                </Pressable>
+                <AddButton onPress={() => navigation.navigate('AddFamilyScreen', { username, email, validFamiliesData })} text={"Add a new family"} />
+                <AddButton onPress={() => navigation.navigate('JoinFamilyScreen', { username, email })} text={"Join a family"} />
             </View>
         </ImageBackground>
     );
@@ -87,7 +91,7 @@ export function FamilyProfile({ navigation, route }) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'space-between', // Distribute space between elements
+        justifyContent: 'space-between',
         alignItems: 'center',
         padding: 16,
     },
@@ -168,5 +172,11 @@ const styles = StyleSheet.create({
         color: 'white',
         fontWeight: '500',
         textAlign: 'center',
+    },
+    scrollBarStyle: {
+        alignItems: 'center',
+        height: '75%',
+        width: '60%',
+        padding: 16,
     },
 })

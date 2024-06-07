@@ -50,7 +50,7 @@ export function VehicleProfile({ navigation, route }) {
 
     const checkVehicleState = (vehicle, username) => {
         if (vehicle.estadoActual === 'Rojo') {
-            addAlert("The car with patente: " + vehicle.patente + "has a critic state", username).then()
+            addAlert("The car with patente: " + vehicle.patente + " has a critic state", username).then()
         }
     }
 

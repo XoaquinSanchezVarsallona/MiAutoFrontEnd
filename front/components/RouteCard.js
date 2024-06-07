@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.25,
         shadowRadius: 5,
         elevation: 5,
-        width: '25%',
+        width: '100%',
     },
     text: {
         fontSize: 14,
