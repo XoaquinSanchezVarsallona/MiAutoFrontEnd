@@ -1,11 +1,14 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, StyleSheet, ImageBackground, TouchableOpacity, ScrollView, TextInput} from 'react-native';
+import {View, Text, StyleSheet, ImageBackground, TouchableOpacity, ScrollView, TextInput, Modal} from 'react-native';
 
 export function StoreProfile({ navigation, route }) {
     const { store } = route.params;
 
     const [notificationDescription, setNotificationDescription] = useState(''); //notificación actual recien agregada
     const [notifications, setNotifications] = useState([]); //lista de notificaciones q se muestran
+    const [experiences, setExperiences] = useState([]);
+    const [isExperienceModalVisible, setIsExperienceModalVisible] = useState(false);
+    const [storeId, setStoreId] = useState(null);
 
     const deleteStore = async () => {
         try {
@@ -37,6 +40,27 @@ export function StoreProfile({ navigation, route }) {
             setNotifications(notifications);
         } catch (error) {
             console.error('Error fetching notifications:', error);
+        }
+    };
+
+    const fetchExperiences = async () => {
+        try {
+            const response = await fetch('http://localhost:9002/getExperiences', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            if (response.ok) {
+                console.log('response is ok:', response);
+                const experiences = await response.json();
+                setExperiences(experiences);
+            } else {
+                console.error('Failed to fetch experiences');
+            }
+        } catch (error) {
+            console.error('Error fetching experiences:', error);
         }
     };
 
@@ -90,8 +114,39 @@ export function StoreProfile({ navigation, route }) {
         }
     };
 
+    const fetchStoreDetails = async () => {
+        try {
+            const response = await fetch(`http://localhost:9002/getStoreByEmail`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ storeEmail: store.storeEmail }),
+            });
+            if (response.ok) {
+                const storeId = await response.json();
+                setStoreId(storeId);
+            } else {
+                console.error('Failed to fetch store details');
+            }
+        } catch (error) {
+            console.error('Error fetching store details:', error);
+        }
+    };
+
+    const openExperienceModal = async () => {
+        await fetchExperiences();
+        setIsExperienceModalVisible(true);
+    };
+
+    const closeExperienceModal = () => {
+        setIsExperienceModalVisible(false);
+    };
+
     useEffect(() => {
+        fetchStoreDetails();
         fetchNotifications();
+        fetchExperiences();
     }, []);
 
     return (
@@ -108,6 +163,9 @@ export function StoreProfile({ navigation, route }) {
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.modifyButton} onPress={() => { navigation.navigate("EditVisualStoreProfile", {email : store.storeEmail} ) }}>
                             <Text style={styles.buttonText}>Modify Store Details</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.viewExperiencesButton} onPress={openExperienceModal}>
+                            <Text style={styles.buttonText}>View Experiences</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -147,6 +205,37 @@ export function StoreProfile({ navigation, route }) {
                     ))}
                 </ScrollView>
             </ImageBackground>
+
+            <Modal
+                visible={isExperienceModalVisible}
+                animationType="slide"
+                transparent={true}
+                onRequestClose={closeExperienceModal}
+            >
+                <View style={styles.modalContainer}>
+                    <View style={styles.modalContent}>
+                        <Text style={styles.sectionTitle}>Experiences</Text>
+                        {experiences.filter(experience => {
+                            console.log('Experience storeId:', experience.storeId, 'Current store idStore:', storeId);
+                            return experience.storeId === storeId;
+                        }).length === 0 ? (
+                            <Text style={styles.noExperiencesText}>No experiences yet</Text>
+                        ) : (
+                            experiences.filter(experience => experience.storeId === storeId).map((experience) => (
+                                <View key={experience.experienceId} style={styles.experienceCard}>
+                                    <Text style={styles.experienceText}>Date: {new Date(experience.creationDate).toLocaleDateString()}</Text>
+                                    <Text style={styles.experienceText}>Car License Plate: {experience.patente}</Text>
+                                    <Text style={styles.experienceText}>Description: {experience.description}</Text>
+                                    <Text style={styles.experienceText}>Username: {experience.userId}</Text>
+                                </View>
+                            ))
+                        )}
+                        <TouchableOpacity style={styles.closeButton} onPress={closeExperienceModal}>
+                            <Text style={styles.closeButtonText}>Close</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            </Modal>
         </ScrollView>
     );
 }
@@ -172,21 +261,30 @@ const styles = StyleSheet.create({
     },
     deleteButton: {
         backgroundColor: 'red',
-        padding: 10,
-        margin: 10,
+        padding: 5,
+        margin: 5,
         alignItems: 'center',
         justifyContent: 'center',
         borderRadius: 5,
-        width: '45%',
+        width: '30%',
     },
     modifyButton: {
         backgroundColor: 'orange',
-        padding: 10,
-        margin: 10,
+        padding: 5,
+        margin: 5,
         alignItems: 'center',
         justifyContent: 'center',
         borderRadius: 5,
-        width: '45%',
+        width: '30%',
+    },
+    viewExperiencesButton: {
+        backgroundColor: 'blue',
+        padding: 5,
+        margin: 5,
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderRadius: 5,
+        width: '30%',
     },
     buttonText: {
         color: 'white',
@@ -280,7 +378,42 @@ const styles = StyleSheet.create({
         position: 'absolute', // Absolute positioning
         right: 5, // Positioned to the right
         top: 5, // Positioned above the date
-    }
+    },
+    modalContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    },
+    modalContent: {
+        width: '80%',
+        backgroundColor: 'rgba(30, 144, 255, 0.9)',
+        borderRadius: 10,
+        padding: 20,
+        alignItems: 'center',
+    },
+    experienceCard: {
+        backgroundColor: 'white',
+        padding: 10,
+        borderRadius: 5,
+        marginBottom: 10,
+        width: '100%',
+    },
+    experienceText: {
+        fontSize: 16,
+        color: 'black',
+    },
+    closeButton: {
+        backgroundColor: '#007BFF',
+        padding: 10,
+        borderRadius: 5,
+        alignItems: 'center',
+        marginTop: 20,
+    },
+    closeButtonText: {
+        color: 'white',
+        fontWeight: 'bold',
+    },
 });
 
 export default StoreProfile;
