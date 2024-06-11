@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Pressable, Text, StyleSheet, View } from 'react-native';
 
-const AddButton = ({ onPress, text }) => {
+const AddButton = ({ onPress, text, color = '#32cd32' }) => {
     const [hovered, setHovered] = useState(false);
 
     return (
@@ -10,7 +10,7 @@ const AddButton = ({ onPress, text }) => {
             onMouseLeave={() => setHovered(false)}
             style={[styles.button, hovered && styles.buttonHovered]}
         >
-            <Pressable style={styles.buttonInner} onPress={onPress}>
+            <Pressable style={[styles.buttonInner, { backgroundColor: color }]} onPress={onPress}>
                 <Text style={styles.text}>{text}</Text>
             </Pressable>
         </View>
@@ -30,7 +30,6 @@ const styles = StyleSheet.create({
     buttonInner: {
         paddingVertical: 12,
         paddingHorizontal: 20,
-        backgroundColor: '#32cd32',
         borderRadius: 20,
         alignItems: 'center',
         justifyContent: 'center',

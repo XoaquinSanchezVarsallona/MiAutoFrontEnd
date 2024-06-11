@@ -164,7 +164,7 @@ export function VehicleProfile({ navigation, route }) {
                             <Text style={styles.buttonText}>View charts</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.routesButton} onPress={() => navigation.navigate('VehicleExperiences', { vehicle, familySurname, familyId})}>
-                            <Text style={styles.buttonText}>View experiences</Text>
+                            <Text style={styles.buttonText}>Experiences</Text>
                         </TouchableOpacity>
                     </View>
                 </View>

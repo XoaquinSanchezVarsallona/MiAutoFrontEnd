@@ -77,7 +77,13 @@ export function AlertsFromFamilyScreen({ navigation, route }) {
                 <CustomScrollBar>
                     {alerts.length > 0 ? (
                         alerts
-                            .sort((a, b) => a.isRead - b.isRead) // Sort alerts: unread first, then read
+                            .sort((a, b) => {
+                                // Se sortea por grupos, primero los no leídos y luego los leídos, además en DESC order.
+                                if (a.isRead === b.isRead) {
+                                    return b.idAlert - a.idAlert;
+                                }
+                                return a.isRead - b.isRead;
+                            })
                             .map((alert, index) => (
                                 <View key={index} style={alert.isRead ? styles.alertContainerRead : styles.alertContainer}>
                                     <View>

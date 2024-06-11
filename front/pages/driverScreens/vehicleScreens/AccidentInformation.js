@@ -2,12 +2,13 @@ import React, {useContext, useEffect, useState} from 'react';
 import {View, Text, StyleSheet, ImageBackground, Button, Pressable, Image} from 'react-native';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {NotificationContext} from "../../../components/notification/NotificationContext";
+import AddButton from "../../../components/AddButton";
 
 export function AccidentInformation({navigation, route}) {
-    const { patente } = route.params;
+    const {patente} = route.params;
     const [userId, setUserId] = React.useState('');
     const [username, setUsername] = React.useState('');
-    const { showNotification, setColor } = useContext(NotificationContext);
+    const {showNotification, setColor} = useContext(NotificationContext);
     const [canFetchProfile, setCanFetchProfile] = useState(false);
     const [frontDNI, setFront] = React.useState('');
     const [backDNI, setBack] = React.useState('');
@@ -31,8 +32,8 @@ export function AccidentInformation({navigation, route}) {
                     setUserId(data.userId)
                     setUsername(data.username)
 
-                    console.log("UserID: "+ data.userId)
-                    console.log("Username: "+ data.username)
+                    console.log("UserID: " + data.userId)
+                    console.log("Username: " + data.username)
                     setCanFetchProfile(true); // Enable fetching more details
                 } else {
                     console.error('Token validation failed:', data.message);
@@ -40,6 +41,7 @@ export function AccidentInformation({navigation, route}) {
                 }
             }
         }
+
         loadUserProfile().then(r => console.log(r));
     }, []);
 
@@ -63,15 +65,14 @@ export function AccidentInformation({navigation, route}) {
                     setBack(data.dniBack)
                     setCedula(data.registration)
                     console.log('Registration was delivered successfully!')
-                }
-                else {
+                } else {
                     console.log('There was a problem in display of papers, but no error.')
                 }
             } catch (e) {
-                console.log("An error occurred displaying papers: "+ e.message)
+                console.log("An error occurred displaying papers: " + e.message)
             }
         }
-        getPapers()
+        getPapers().then()
         setCanFetchProfile(false)
     }, [canFetchProfile, userId]);
 
@@ -84,7 +85,7 @@ export function AccidentInformation({navigation, route}) {
             downloadLink.download = fileName;
             downloadLink.click();
         } catch (e) {
-            console.log("The handleDownload: "+ e.message)
+            console.log("The handleDownload: " + e.message)
         }
     };
 
@@ -112,62 +113,75 @@ export function AccidentInformation({navigation, route}) {
 
     return (
         <ImageBackground source={require('../../../assets/BackgroundUnlocked.jpg')} style={styles.container}>
-            <View style={styles.container}>
-                <Text style={styles.title}>Accident Information</Text>
-                <View>
-                    {frontDNI? (
+            <Text style={styles.title}>Accident Information</Text>
+            <View style={styles.imagesDisplay}>
+                <View style={styles.imageSection}>
+                    <Text style={styles.subTitle}>Front DNI</Text>
+                    {frontDNI ? (
                         <>
-                            <Text style={styles.confirmText}>This is the image that was made for </Text>
                             <Image source={{uri: `data:image/jpeg;base64,${frontDNI}`}} style={styles.imageContainer}/>
-                            <Button onPress={() => handleDownloadImage(frontDNI)}
-                                    title={'Click here to download the image'}></Button>
+                            <AddButton color={'#1e90ff'} onPress={() => handleDownloadImage(frontDNI)}
+                                       text={'Download'}/>
                         </>
                     ) : (
-                        <Text style={styles.confirmText}>No esta disponible la imagen de la cara del dni.</Text>
+                        <Text style={styles.notProvidedText}>No esta disponible la imagen de la cara del dni.</Text>
                     )}
                 </View>
-                <View>
-                    {backDNI? (
+                <View style={styles.imageSection}>
+                    <Text style={styles.subTitle}>Back DNI</Text>
+                    {backDNI ? (
                         <>
-                            <Text style={styles.confirmText}> Esta es la imagen que proporcionaste para la contracara del dni.</Text>
                             <Image source={{uri: `data:image/jpeg;base64,${backDNI}`}} style={styles.imageContainer}/>
-                            <Button onPress={() => handleDownloadImage(backDNI)}
-                                    title={'Click here to download the image'}></Button>
+                            <AddButton color={'#1e90ff'} onPress={() => handleDownloadImage(backDNI)}
+                                       text={'Download'}/>
                         </>
                     ) : (
-                        <Text style={styles.confirmText}>No esta disponible la imagen de la contracara del dni.</Text>
+                        <Text style={styles.notProvidedText}>No esta disponible la imagen de la contracara del
+                            dni.</Text>
                     )}
                 </View>
-                <View>
-                    {cedula? (
+                <View style={styles.imageSection}>
+                    <Text style={styles.subTitle}>Registration</Text>
+                    {cedula ? (
                         <>
-                            <Text style={styles.confirmText}> Esta es la imagen que proporcionaste para la cedula azul.</Text>
                             <Image source={{uri: `data:image/jpeg;base64,${cedula}`}} style={styles.imageContainer}/>
-                            <Button onPress={() => handleDownloadImage(cedula)}
-                                    title={'Click here to download the image'}></Button>
+                            <AddButton color={'#1e90ff'} onPress={() => handleDownloadImage(cedula)} text={'Download'}/>
                         </>
                     ) : (
-                        <Text style={styles.confirmText}>No esta disponible la imagen de la cedula azul.</Text>
+                        <Text style={styles.notProvidedText}>No esta disponible la imagen de la cedula azul.</Text>
                     )}
                 </View>
-                <Button onPress={() => {navigation.navigate('EditPapers', {patente: patente})}} title={"Click here if you want to change images"}></Button>
-                <Pressable style={styles.confirmButton} onPress={() => {
+            </View>
+            <View style={styles.row}>
+                <AddButton onPress={() => {
+                    navigation.navigate('EditPapers', {patente: patente})
+                }} text={'Change Images'}/>
+                <AddButton color={'red'} onPress={() => {
                     sendAlert().then()
-                    //hacer esta pagina para hacer el display de las fotos.
-                }}>
-                    <Text style={styles.confirmText}>Confirm Accident</Text>
-                </Pressable>
+                }} text={'Confirm Accident'}/>
             </View>
         </ImageBackground>
     );
 }
-
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'flex-start',
+        justifyContent: 'center',
         alignItems: 'center',
         padding: 16,
+        width: '100%',
+    },
+    imagesDisplay: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        width: '100%',
+        flex: 2,
+        paddingHorizontal: 20,
+    },
+    imageSection: {
+        flex: 1,
+        alignItems: 'center',
+        marginHorizontal: 10,
     },
     title: {
         fontSize: 60,
@@ -175,29 +189,29 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         paddingBottom: 20,
     },
-    confirmButton: {
-        width: '80%',
-        paddingVertical: 12,
-        paddingHorizontal: 20,
-        marginVertical: 10,
-        backgroundColor: '#32cd32',
-        borderRadius: 20,
-        position: 'absolute',
-        bottom: 10,
-        alignSelf: 'center',
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.25,
-        shadowRadius: 5,
-        elevation: 5,
-    },
-    confirmText: {
-        fontSize: 18,
+    subTitle: {
+        fontSize: 25,
         color: 'white',
-        fontWeight: '500',
-        textAlign: 'center',
+        fontWeight: 'bold',
+        alignSelf: 'center',
     },
-    imageContainer: { width: 200, height: 200, marginTop: 20 }
+    notProvidedText: {
+        fontSize: 11,
+        color: 'white',
+        alignSelf: 'center',
+    },
+    row: {
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        alignItems: 'center',
+        width: '100%',
+        paddingVertical: 20,
+    },
+    imageContainer: {
+        width: 300,
+        height: 200,
+        marginTop: 20,
+    },
 });
 
 export default AccidentInformation;
