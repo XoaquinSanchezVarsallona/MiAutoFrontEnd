@@ -47,6 +47,8 @@ export function VehicleExperiences({ navigation, route }) {
         username: '',
     });
 
+    const [storeNames, setStoreNames] = useState({});
+
     useEffect(() => {
         const loadUserProfile = async () => {
             const token = await AsyncStorage.getItem('userToken');
@@ -125,6 +127,10 @@ export function VehicleExperiences({ navigation, route }) {
         fetchStores();
     }, [routesPassed, experiencesUpdated, distance]);
 
+    useEffect(() => {
+        fetchStoreNames();
+    }, [experiences]);
+
     const deleteExperience = async (experienceId) => {
         try {
             const response = await fetch(`http://localhost:9002/deleteExperience/${experienceId}`, {
@@ -186,9 +192,38 @@ export function VehicleExperiences({ navigation, route }) {
         setIsModalVisible(false);
     };
 
-    const getStoreName = (storeId) => {
-        const store = stores.find((store) => store.idStore === storeId);
-        return store ? store.storeName : 'Unknown Store';
+    const getStoreName = async (storeId) => {
+        console.log('getStoreName called with storeId:', storeId);
+        try {
+            const response = await fetch(`http://localhost:9002/getStoreById`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ storeId: storeId }),
+            });
+            if (response.ok) {
+                const storeName = await response.json();
+                console.log('Matching store found:', storeName);
+                return storeName;
+            } else {
+                console.log('Store not found');
+                return 'Unknown Store';
+            }
+        } catch (error) {
+            console.error('Error fetching store:', error);
+            return 'Unknown Store';
+        }
+    };
+
+    const fetchStoreNames = async () => {
+        const storeNameMap = {};
+        for (const experience of experiences) {
+            if (!storeNames[experience.storeId]) {
+                storeNameMap[experience.storeId] = await getStoreName(experience.storeId);
+            }
+        }
+        setStoreNames(storeNameMap);
     };
 
     return (
@@ -209,7 +244,7 @@ export function VehicleExperiences({ navigation, route }) {
                                     <View key={experience.experienceId} style={styles.experienceCard}>
                                         <Text style={styles.experienceText}>Date: {new Date(experience.creationDate).toLocaleDateString()}</Text>
                                         <Text style={styles.experienceText}>Description: {experience.description}</Text>
-                                        <Text style={styles.experienceText}>Store: {getStoreName(experience.storeId)}</Text>
+                                        <Text style={styles.experienceText}>Store: {storeNames[experience.storeId] || 'Loading...'}</Text>
                                         <TouchableOpacity style={styles.deleteButton} onPress={() => deleteExperience(experience.experienceId)}>
                                             <Text style={styles.deleteButtonText}>Delete</Text>
                                         </TouchableOpacity>
