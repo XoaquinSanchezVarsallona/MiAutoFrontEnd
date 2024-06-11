@@ -1,11 +1,30 @@
 import React, {useEffect, useState} from 'react';
-import {ImageBackground, Pressable, Image, StyleSheet, Text, View, ScrollView, TextInput, Button} from 'react-native';
+import {ImageBackground, Pressable, Image, StyleSheet, Text, View, ScrollView, Button} from 'react-native';
 import InputText from "../../../components/InputText";
-import {useLocation} from "react-router-dom";
+import {Picker} from "react-native-web";
 
 export function StoreUnlockedScreen({ navigation, route }) {
     const [stores, setStores] = useState([]);
     const [search, setSearch] = useState('');
+    const [tipoDeServicio, setServicios] = useState('Type of Service');
+
+    const sortByService = async (service, stores) => {
+        if (service !== 'any') {
+            const list = [];
+            stores.filter(store => store.tipoDeServicio !== service)
+            setStores(list);
+            setServicios(service);
+        }
+    }
+
+    const handleInputChange = (field, value) => {
+        fetchRating().then(r => sortByService(field, r))
+        setServicios(prevState => ({
+            ...prevState,
+            [field]: value
+        }));
+        sortByService(field).then()
+    };
 
     const fetchRating = async () => {
         try {
@@ -19,6 +38,7 @@ export function StoreUnlockedScreen({ navigation, route }) {
             if (response.ok) {
                 const data = await response.json()
                 setStores(data)
+                return data
             }
             else console.log("There is a problem in fetchRating!")
 
@@ -56,8 +76,6 @@ export function StoreUnlockedScreen({ navigation, route }) {
             .catch(error => console.error('Error:', error));
     }, []);
 
-    useEffect(() => { }, [stores]);
-
     return (
         <ImageBackground source={require('../../../assets/BackgroundUnlocked.jpg')} style={styles.container}>
             <View style={styles.headerContainer}>
@@ -74,7 +92,20 @@ export function StoreUnlockedScreen({ navigation, route }) {
                     source={require('../../../assets/lupa.png')}
                 />
             </View>
-            <Button style={styles.storeButton} onPress={fetchRating} title={"Sort stores by rating"}/>
+            <View>
+                <Text style={styles.noStoresText}> Sort Stores by </Text>
+                <Button style={styles.storeButton} onPress={fetchRating} title={"rating"}/>
+                <Picker
+                    selectedValue={tipoDeServicio}
+                    onValueChange={(itemValue) => handleInputChange(itemValue)}
+                    style={styles.picker}
+                >
+                    <Picker.Item label="any" value="any" />
+                    <Picker.Item label="mecanico" value="mecanico" />
+                    <Picker.Item label="estacion de servicio" value="estacion de servicio" />
+                    <Picker.Item label="lavadero" value="lavadero" />
+                </Picker>
+            </View>
             <ScrollView style={styles.storesList}>
                 {stores != null && stores.length > 0 ? (
                     stores.filter(store => store.storeName.startsWith(search)).map((store, index) => (
@@ -164,4 +195,14 @@ const styles = StyleSheet.create({
         width: 50,
         height: 50,
     },
+    picker: {
+        flex: 1,
+        height: 40,
+        marginRight: 10,
+        paddingHorizontal: 10,
+        backgroundColor: 'transparent', // Add this line
+        borderColor: 'gray',
+        borderWidth: 1,
+
+    }
 });
