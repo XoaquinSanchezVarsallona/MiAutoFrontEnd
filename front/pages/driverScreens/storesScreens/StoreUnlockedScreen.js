@@ -6,13 +6,15 @@ import {Picker} from "react-native-web";
 export function StoreUnlockedScreen({ navigation, route }) {
     const [stores, setStores] = useState([]);
     const [search, setSearch] = useState('');
-    const [tipoDeServicio, setServicios] = useState('service');
+    const [tipoDeServicio, setServicios] = useState('Type of Service');
 
     const sortByService = async (service, stores) => {
-        const list = [];
-        stores.filter(store => store.tipoDeServicio !== service)
-        setStores(list);
-        setServicios(service);
+        if (service !== 'any') {
+            const list = [];
+            stores.filter(store => store.tipoDeServicio !== service)
+            setStores(list);
+            setServicios(service);
+        }
     }
 
     const handleInputChange = (field, value) => {
@@ -98,6 +100,7 @@ export function StoreUnlockedScreen({ navigation, route }) {
                     onValueChange={(itemValue) => handleInputChange(itemValue)}
                     style={styles.picker}
                 >
+                    <Picker.Item label="any" value="any" />
                     <Picker.Item label="mecanico" value="mecanico" />
                     <Picker.Item label="estacion de servicio" value="estacion de servicio" />
                     <Picker.Item label="lavadero" value="lavadero" />
