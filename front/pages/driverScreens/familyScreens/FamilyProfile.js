@@ -85,7 +85,6 @@ export function FamilyProfile({ navigation, route }) {
             </View>
         </ImageBackground>
     );
-
 }
 
 const styles = StyleSheet.create({
@@ -95,77 +94,17 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         padding: 16,
     },
-    headerContainer: {
-        width: '100%',
-        alignItems: 'center',
-        marginBottom: 20,
-    },
-    familiesScrollView: {
-        width: '80%',
-        maxWidth: 400,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    familiesContentContainer: {
-        alignItems: 'center',
-        width: '80%',
-        justifyContent: 'center',
-    },
-    familyContainer: {
-        width: '100%',
-        padding: 15,
-        marginVertical: 8,
-        marginHorizontal: 12,
-        backgroundColor: '#1e90ff',
-        borderRadius: 10,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.25,
-        shadowRadius: 5,
-        elevation: 5,
-        alignItems: 'center',
-        alignSelf: 'center',
-    },
     title: {
         fontSize: 60,
         color: 'white',
         fontWeight: 'bold',
-        marginBottom: 10,
-    },
-    buttonRow: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        width: '100%',
+        marginBottom: 20,
     },
     buttonsContainer: {
         flexDirection: 'row',
         justifyContent: 'space-around',
         width: '100%',
         padding: 10,
-    },
-    addFamilyButton: {
-        width: '40%',
-        paddingVertical: 12, // Increase padding for a larger touch area
-        paddingHorizontal: 20,
-        marginVertical: 8,
-        backgroundColor: '#32cd32', // A vibrant green color
-        borderRadius: 20,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.25,
-        shadowRadius: 5,
-        elevation: 5,
-    },
-    familyName: {
-        fontSize: 18,
-        color: 'white',
-        fontWeight: '500',
-    },
-    addFamilyText: {
-        fontSize: 18,
-        color: 'white',
-        fontWeight: '500',
-        textAlign: 'center',
     },
     noFamiliesText: {
         fontSize: 18,
@@ -176,6 +115,6 @@ const styles = StyleSheet.create({
     scrollBarStyle: {
         alignItems: 'center',
         width: '60%',
-        padding: 16,
+        flex: 1,
     },
-})
+});

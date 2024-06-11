@@ -46,9 +46,7 @@ export function FamilyVehiclesScreen({ navigation, route }) {
 
     return (
         <ImageBackground source={require('../../../assets/BackgroundUnlocked.jpg')} style={styles.container}>
-            <View style={styles.headerContainer}>
-                <Text style={styles.title}>Families with Vehicles</Text>
-            </View>
+            <Text style={styles.title}>Families with Vehicles</Text>
             <View style={styles.scrollBarContainer}>
                 <CustomScrollBar>
                     {familiesData.length > 0 ? (
@@ -75,8 +73,9 @@ export function FamilyVehiclesScreen({ navigation, route }) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'center',
+        justifyContent: 'space-between',
         alignItems: 'center',
+        padding: 16,
     },
     contentContainerStyle: {
         alignItems: 'center',
@@ -84,24 +83,14 @@ const styles = StyleSheet.create({
     scrollBarContainer: {
         flex: 1,
         width: '60%',
-    },
-    headerContainer: {
-        justifyContent: 'center',
-        alignItems: 'center',
-        padding: 16,
-        paddingTop: 40,
-        width: '100%',
+        paddingBottom: 20,
     },
     title: {
         fontSize: 60,
         color: 'white',
         fontWeight: 'bold',
         textAlign: 'center',
-    },
-    familiesList: {
-        flex: 1,
-        width: '100%',
-        marginBottom: 20,
+        paddingBottom: 10,
     },
     noFamiliesText: {
         fontSize: 18,

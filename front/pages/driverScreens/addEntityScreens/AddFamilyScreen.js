@@ -1,6 +1,8 @@
 import React, { useState, useContext } from 'react';
 import {View, Text, TextInput, StyleSheet, ImageBackground, Pressable,} from 'react-native';
 import {NotificationContext} from "../../../components/notification/NotificationContext";
+import InputText from "../../../components/InputText";
+import AddButton from "../../../components/AddButton";
 
 function AddFamilyScreen({ navigation, route }) {
     const [surname, setSurname] = useState('');
@@ -41,27 +43,25 @@ function AddFamilyScreen({ navigation, route }) {
     return (
         <ImageBackground source={require('../../../assets/BackgroundUnlocked.jpg')} style={styles.container}>
             <View style={styles.container}>
-                    <Text style={styles.title}>Add New Family</Text>
-                    <Text style={styles.label}>Surname</Text>
-                    <TextInput
-                            style={inputStyleSurname}
-                            value={surname}
-                            onChangeText={setSurname}
-                            placeholder="Surname"
-                        />
-                    <Text style={styles.label}>Password</Text>
-                    <TextInput
-                        style={inputStylePassword}
+                <Text style={styles.title}>Add New Family</Text>
+                <View style={styles.inputContainer}>
+                    <InputText
+                        value={surname}
+                        onChangeText={setSurname}
+                        placeholder="Surname"
+                        label={"Surname"}
+                    />
+                    <InputText
                         value={password}
                         onChangeText={setPassword}
                         placeholder="Password"
+                        label={"Password"}
                         secureTextEntry={true}
                     />
-                    {errorMessage ? <Text style={styles.errorText}>{errorMessage}</Text> : <Text style={styles.errorText}></Text>}
-                    <Pressable style={styles.addFamilyButton} onPress={() => { addFamily().then() }}>
-                        <Text style={styles.addFamilyText}>Add new Family</Text>
-                    </Pressable>
                 </View>
+                {errorMessage ? <Text style={styles.errorText}>{errorMessage}</Text> : <Text style={styles.errorText}></Text>}
+                <AddButton onPress={addFamily} text={"Add new Family"}/>
+            </View>
         </ImageBackground>
     );
 }
@@ -69,34 +69,10 @@ function AddFamilyScreen({ navigation, route }) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'flex-start',
+        justifyContent: 'space-between',
         alignItems: 'center',
+        width: '100%',
         padding: 16,
-    },
-    label: {
-        alignSelf: 'flex-start',
-        color: 'white',
-        fontSize: 16,
-        fontWeight: 'bold',
-        marginLeft: 2,
-        marginBottom: 3,
-    },
-    inputNormal: {
-        width: '100%',
-        color: 'white',
-        borderColor: 'gray',
-        padding: 10,
-        borderRadius: 2,
-        borderWidth: 1,
-    },
-    inputItalic: {
-        width: '100%',
-        color: '#FFFFFF80',
-        borderColor: 'gray',
-        padding: 10,
-        marginBottom: 5,
-        fontStyle: 'italic',
-        borderWidth: 1,
     },
     title: {
         fontSize: 60,
@@ -108,28 +84,10 @@ const styles = StyleSheet.create({
         fontSize: 16,
         color: 'red',
     },
-    addFamilyButton: {
-        width: '80%',
-        paddingVertical: 12,
-        paddingHorizontal: 20,
-        marginVertical: 10,
-        backgroundColor: '#32cd32',
-        borderRadius: 20,
-        position: 'absolute',
-        bottom: 10,
-        alignSelf: 'center',
-        elevation: 4,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.25,
-        shadowRadius: 3.84,
-    },
-    addFamilyText: {
-        fontSize: 18,
-        color: 'white',
-        fontWeight: '500',
-        textAlign: 'center',
-    },
+    inputContainer: {
+        width: '100%',
+        marginBottom: 10,
+    }
 });
 
 export default AddFamilyScreen;

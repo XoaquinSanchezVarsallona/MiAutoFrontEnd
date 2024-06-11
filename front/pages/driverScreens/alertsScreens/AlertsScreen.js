@@ -78,9 +78,7 @@ export function AlertScreen({ navigation, route }) {
     }
     return (
         <ImageBackground source={require('../../../assets/BackgroundUnlocked.jpg')} style={styles.container}>
-            <View style={styles.headerContainer}>
-                <Text style={styles.title}>My Alerts</Text>
-            </View>
+            <Text style={styles.title}>My Alerts</Text>
             <View style={styles.scrollBarStyle}>
                 <CustomScrollBar>
                     {familiesData.length > 0 ? (
@@ -122,11 +120,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         padding: 16,
     },
-    headerContainer: {
-        alignItems: 'center',
-        padding: 16,
-        width: '70%',
-    },
     familyName: {
         fontSize: 18,
         color: 'white',
@@ -150,7 +143,6 @@ const styles = StyleSheet.create({
         fontSize: 60,
         color: 'white',
         fontWeight: 'bold',
-        marginBottom: 10,
     },
     alertMessage: {
         fontSize: 18,
@@ -173,7 +165,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         height: '75%',
         width: '60%',
-        padding: 16,
     },
     alertCountContainer: {
         position: 'absolute',

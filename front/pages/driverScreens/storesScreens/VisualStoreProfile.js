@@ -8,10 +8,11 @@ import {
     TouchableOpacity,
     Linking,
     TextInput,
-    Button, Modal
+    Modal
 } from 'react-native';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Icon from 'react-native-vector-icons/FontAwesome';
+import CustomScrollBar from "../../../components/CustomScrollBar";
 
 function StarRating({ rating }) {
     const stars = [1, 2, 3, 4, 5].map((value) => {
@@ -218,8 +219,8 @@ export function VisualStoreProfile({ route }) {
     };
 
     useEffect(() => {
-        fetchStoreData();
-        fetchReviews();
+        fetchStoreData().then();
+        fetchReviews().then();
     }, []);
 
     // This effect runs once and fetches the token and user ID
@@ -251,7 +252,7 @@ export function VisualStoreProfile({ route }) {
 
     useEffect(() => {
         if (inputs.userID) {
-            fetchUserReview(); // Fetch the user's review if userID is available
+            fetchUserReview().then(); // Fetch the user's review if userID is available
         }
     }, [inputs.userID]);
 
@@ -260,86 +261,88 @@ export function VisualStoreProfile({ route }) {
             <View style={styles.headerContainer}>
                 <Text style={styles.title}>Store Profile</Text>
             </View>
-            <ScrollView style={styles.vehiclesList}>
-                <View style={styles.infoContainer}>
-                    <Text style={styles.infoTitle}>Description</Text>
-                    <Text style={styles.infoContent}>{storeData.description}</Text>
-                </View>
-                <View style={styles.infoContainer}>
-                    <Text style={styles.infoTitle}>Phone Number</Text>
-                    <Text style={styles.infoContent}>{storeData.phoneNumber}</Text>
-                </View><View style={styles.iconRow}>
-                    <TouchableOpacity onPress={() => handleOpenURL(storeData.webPageLink)}>
-                        <Icon name="globe" size={30} color="#fff" />
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={() => handleOpenURL(storeData.instagramLink)}>
-                        <Icon name="instagram" size={30} color="#fff" />
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={() => handleOpenURL(storeData.googleMapsLink)}>
-                        <Icon name="map-marker" size={30} color="#fff" />
-                    </TouchableOpacity>
-                </View>
-                
-                {userReview ? (
-                    <View style={styles.userReviewContainer}>
-                        <Text style={styles.commentsTitle}>Your Review</Text>
-                        <View style={styles.starRatingContainer}>
-                            <StarRating rating={userReview.rating / 2} />
-                            <Text style={styles.creationDate}>{new Date(userReview.creationDate).toLocaleDateString()}</Text>
-                        </View>
-                        <Text style={styles.comment}>{userReview.comment}</Text>
-                        <View style={styles.userReviewActions}>
-                            <TouchableOpacity style={styles.actionButton} onPress={openModal}>
-                                <Text style={styles.actionButtonText}>Edit</Text>
-                                <ReviewModal
-                                    isVisible={isModalVisible}
-                                    onClose={closeModal}
-                                    fetchReviews={fetchReviews}
-                                    fetchUserReview={fetchUserReview}
-                                    route={route}
-                                    inputs={inputs}
-                                    currentReview={userReview}
-                                />
-                            </TouchableOpacity>
-                            <TouchableOpacity style={styles.actionButton} onPress={handleDeleteReview}>
-                                <Text style={styles.actionButtonText}>Delete</Text>
-                            </TouchableOpacity>
-                        </View>
+            <View style={styles.scrollBarContainer}>
+                <CustomScrollBar>
+                    <View style={styles.infoContainer}>
+                        <Text style={styles.infoTitle}>Description</Text>
+                        <Text style={styles.infoContent}>{storeData.description}</Text>
                     </View>
-                ) : (
-                    <View style={styles.ratingSection}>
-                        <Text style={styles.sectionTitle}>Rate and Comment</Text>
-                        <InteractiveStarRating rating={rating} setRating={setRating} />
-                        <TextInput
-                            style={styles.textArea}
-                            placeholder="Enter your comment"
-                            value={comment}
-                            onChangeText={setComment}
-                            multiline={true}
-                            numberOfLines={4}
-                        />
-                        <TouchableOpacity style={styles.submitButton} onPress={handleSubmitRatingAndComment}>
-                            <Text style={styles.submitButtonText}>Submit</Text>
+                    <View style={styles.infoContainer}>
+                        <Text style={styles.infoTitle}>Phone Number</Text>
+                        <Text style={styles.infoContent}>{storeData.phoneNumber}</Text>
+                    </View><View style={styles.iconRow}>
+                        <TouchableOpacity onPress={() => handleOpenURL(storeData.webPageLink)}>
+                            <Icon name="globe" size={30} color="#fff" />
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={() => handleOpenURL(storeData.instagramLink)}>
+                            <Icon name="instagram" size={30} color="#fff" />
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={() => handleOpenURL(storeData.googleMapsLink)}>
+                            <Icon name="map-marker" size={30} color="#fff" />
                         </TouchableOpacity>
                     </View>
-                )}
 
-                <View style={styles.commentsSection}>
-                    <Text style={styles.commentsTitle}>Reviews</Text>
-                    {reviews.filter(review => {
-                        console.log(review.userID + " " + inputs.userID);
-                        return String(review.userID) !== String(inputs.userID);
-                    }).map((review, index) => (
-                        <View key={index} style={styles.commentContainer}>
+                    {userReview ? (
+                        <View style={styles.userReviewContainer}>
+                            <Text style={styles.commentsTitle}>Your Review</Text>
                             <View style={styles.starRatingContainer}>
-                                <StarRating rating={review.rating / 2} />
-                                <Text style={styles.creationDate}>{new Date(review.creationDate).toLocaleDateString()}</Text>
+                                <StarRating rating={userReview.rating / 2} />
+                                <Text style={styles.creationDate}>{new Date(userReview.creationDate).toLocaleDateString()}</Text>
                             </View>
-                            <Text style={styles.comment}>{review.comment}</Text>
+                            <Text style={styles.comment}>{userReview.comment}</Text>
+                            <View style={styles.userReviewActions}>
+                                <TouchableOpacity style={styles.actionButton} onPress={openModal}>
+                                    <Text style={styles.actionButtonText}>Edit</Text>
+                                    <ReviewModal
+                                        isVisible={isModalVisible}
+                                        onClose={closeModal}
+                                        fetchReviews={fetchReviews}
+                                        fetchUserReview={fetchUserReview}
+                                        route={route}
+                                        inputs={inputs}
+                                        currentReview={userReview}
+                                    />
+                                </TouchableOpacity>
+                                <TouchableOpacity style={styles.actionButton} onPress={handleDeleteReview}>
+                                    <Text style={styles.actionButtonText}>Delete</Text>
+                                </TouchableOpacity>
+                            </View>
                         </View>
-                    ))}
-                </View>
-            </ScrollView>
+                    ) : (
+                        <View style={styles.ratingSection}>
+                            <Text style={styles.sectionTitle}>Rate and Comment</Text>
+                            <InteractiveStarRating rating={rating} setRating={setRating} />
+                            <TextInput
+                                style={styles.textArea}
+                                placeholder="Enter your comment"
+                                value={comment}
+                                onChangeText={setComment}
+                                multiline={true}
+                                numberOfLines={4}
+                            />
+                            <TouchableOpacity style={styles.submitButton} onPress={handleSubmitRatingAndComment}>
+                                <Text style={styles.submitButtonText}>Submit</Text>
+                            </TouchableOpacity>
+                        </View>
+                    )}
+
+                    <View style={styles.commentsSection}>
+                        <Text style={styles.commentsTitle}>Reviews</Text>
+                        {reviews.filter(review => {
+                            console.log(review.userID + " " + inputs.userID);
+                            return String(review.userID) !== String(inputs.userID);
+                        }).map((review, index) => (
+                            <View key={index} style={styles.commentContainer}>
+                                <View style={styles.starRatingContainer}>
+                                    <StarRating rating={review.rating / 2} />
+                                    <Text style={styles.creationDate}>{new Date(review.creationDate).toLocaleDateString()}</Text>
+                                </View>
+                                <Text style={styles.comment}>{review.comment}</Text>
+                            </View>
+                        ))}
+                    </View>
+                </CustomScrollBar>
+            </View>
         </ImageBackground>
     );
 }
@@ -607,5 +610,9 @@ const styles = StyleSheet.create({
         marginVertical: 8,
         borderRadius: 10,
     },
-
+    scrollBarContainer: {
+        flex: 1,
+        width: '60%',
+        paddingBottom: 20,
+    }
 })

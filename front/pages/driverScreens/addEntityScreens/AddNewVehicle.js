@@ -5,6 +5,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs';
 import {NotificationContext} from "../../../components/notification/NotificationContext";
+import InputText from "../../../components/InputText";
 
 export function AddNewVehicle({ navigation, route }) {
     const { familySurname, familyId } = route.params;
@@ -46,9 +47,7 @@ export function AddNewVehicle({ navigation, route }) {
 
     return (
         <ImageBackground source={require('../../../assets/BackgroundUnlocked.jpg')} style={styles.container}>
-            <View style={styles.headerContainer}>
-                <Text style={styles.title}>Add new Vehicle to the {familySurname} family</Text>
-                </View>
+            <Text style={styles.title}>Add new Vehicle</Text>
             <View style={styles.columnsContainer}>
                 <View style={styles.column}>
                     <View style={styles.inputContainer}>
@@ -136,20 +135,15 @@ export function AddNewVehicle({ navigation, route }) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'flex-start', // Start content from the top
-        alignItems: 'center', // Center content horizontally
-        padding: 16,
-        paddingTop: 30, // Adjust padding top to give space for the title
-    },
-    headerContainer: {
-        width: '100%',
+        justifyContent: 'space-between',
         alignItems: 'center',
-        marginBottom: 10, // Space below the header
+        padding: 16,
     },
     title: {
         fontSize: 60,
         color: 'white',
         fontWeight: 'bold',
+        paddingBottom: 20,
     },
     columnsContainer: {
         flex: 1,

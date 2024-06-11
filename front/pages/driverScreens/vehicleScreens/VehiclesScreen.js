@@ -1,5 +1,7 @@
 import React, {useEffect} from 'react';
 import {StyleSheet, View, Text, ImageBackground, Pressable, ScrollView} from 'react-native';
+import CustomScrollBar from "../../../components/CustomScrollBar";
+import AddButton from "../../../components/AddButton";
 
 export function VehiclesScreen({ navigation, route }) {
     let { familySurname, familyId, isUpdated } = route.params;
@@ -64,34 +66,32 @@ export function VehiclesScreen({ navigation, route }) {
 
     return (
         <ImageBackground source={require('../../../assets/BackgroundUnlocked.jpg')} style={styles.container}>
-            <View style={styles.headerContainer}>
-                <Text style={styles.title}>{familySurname}'s vehicles</Text>
-            </View>
-            <ScrollView style={styles.vehiclesList}>
-                {vehiclesData != null && vehiclesData.length > 0 ? (
-                    vehiclesData.map((vehicle, index) => (
-                        vehicle && ( // Check if family is not null
-                            <Pressable
-                                key={index}
-                                style={styles.vehicleButton}
-                                onPress={() => {navigation.navigate('VehicleProfile', { vehicle: vehicle, familySurname: familySurname, familyId: familyId });}}
-                            >
-                                <View style={styles.rowContainer}>
-                                    <Text style={styles.vehicleText}>{vehicle.marca} {vehicle.modelo} - {vehicle.patente}</Text>
-                                    <View style={styles.stateStyle}>
-                                        <View style={[styles.stateIndicator, {backgroundColor: colors[vehicle.estadoActual], borderRadius: 4}]}/>
+            <Text style={styles.title}>{familySurname}'s vehicles</Text>
+            <View style={styles.scrollBarContainer}>
+                <CustomScrollBar>
+                    {vehiclesData != null && vehiclesData.length > 0 ? (
+                        vehiclesData.map((vehicle, index) => (
+                            vehicle && ( // Check if family is not null
+                                <Pressable
+                                    key={index}
+                                    style={styles.vehicleButton}
+                                    onPress={() => {navigation.navigate('VehicleProfile', { vehicle: vehicle, familySurname: familySurname, familyId: familyId });}}
+                                >
+                                    <View style={styles.rowContainer}>
+                                        <Text style={styles.vehicleText}>{vehicle.marca} {vehicle.modelo} - {vehicle.patente}</Text>
+                                        <View style={styles.stateStyle}>
+                                            <View style={[styles.stateIndicator, {backgroundColor: colors[vehicle.estadoActual], borderRadius: 4}]}/>
+                                        </View>
                                     </View>
-                                </View>
-                            </Pressable>
-                        )
-                    ))
-                ) : (
-                    <Text style={styles.noVehiclesText}>No vehicles available</Text>
-                )}
-            </ScrollView>
-            <Pressable style={styles.addVehicleButton} onPress={() => navigation.navigate('AddNewVehicle', { familySurname, familyId })}>
-                <Text style={styles.addVehicleText}>Add a new vehicle</Text>
-            </Pressable>
+                                </Pressable>
+                            )
+                        ))
+                    ) : (
+                        <Text style={styles.noVehiclesText}>No vehicles available</Text>
+                    )}
+                </CustomScrollBar>
+            </View>
+            <AddButton onPress={() => navigation.navigate('AddNewVehicle', { familySurname, familyId })} text={"Add a new vehicle"}/>
         </ImageBackground>
     );
 }
@@ -99,54 +99,26 @@ export function VehiclesScreen({ navigation, route }) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    headerContainer: {
-        justifyContent: 'center',
+        justifyContent: 'space-between',
         alignItems: 'center',
         padding: 16,
-        paddingTop: 40,
-        width: '100%',
     },
-    vehiclesList: {
+    scrollBarContainer: {
         flex: 1,
-        width: '50%',
-        marginTop: 10,
-        marginBottom: 80,
+        width: '60%',
+        paddingBottom: 20,
     },
     title: {
         fontSize: 60,
         color: 'white',
         fontWeight: 'bold',
         alignSelf: 'center',
+        paddingBottom: 10,
     },
     buttonRow: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         width: '100%',
-    },
-    addVehicleButton: {
-        width: '20%',
-        paddingVertical: 12,
-        paddingHorizontal: 20,
-        marginVertical: 10,
-        backgroundColor: '#32cd32',
-        borderRadius: 20,
-        position: 'absolute',
-        bottom: 10,
-        alignSelf: 'center',
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.25,
-        shadowRadius: 5,
-        elevation: 5,
-    },
-    addVehicleText: {
-        fontSize: 18,
-        color: 'white',
-        fontWeight: '500',
-        textAlign: 'center',
     },
     vehicleButton: {
         padding: 15,
@@ -169,7 +141,7 @@ const styles = StyleSheet.create({
         fontSize: 18,
         color: 'white',
         textAlign: 'center',
-        marginTop: 20, // Add some space at the top of the message
+        marginTop: 20,
     },
     stateIndicator: {
         height: 40,
