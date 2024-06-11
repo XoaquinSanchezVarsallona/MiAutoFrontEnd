@@ -156,42 +156,6 @@ export function EditProfile({  }) {
         }
     };
 
-    // const handleImageSave = async (field) => {
-    //     const newValue = inputs[field];
-    //     const {userID, username, name, surname, domicilio, password, email} = inputs;
-    //     const token = await AsyncStorage.getItem('userToken');
-    //
-    //     try {
-    //         const response = await fetch('http://localhost:9002/saveDni', {
-    //             method: 'POST',
-    //             headers: {
-    //                 'Content-Type': 'application/json',
-    //                 'Authorization': `Bearer ${token}`,  // Include the JWT
-    //             },
-    //             body: JSON.stringify({
-    //                 userId: userID,
-    //                 field: field,
-    //                 value: newValue,
-    //             }),
-    //         });
-    //         console.log('Server response:', response);
-    //         console.log('token:' + token);
-    //
-    //         if (!response.ok) {
-    //             throw new Error('Network response was not ok');
-    //         }
-    //
-    //         const data = await response.json(); // Assuming the server responds with JSON
-    //         console.log(`Server response: `, data);
-    //
-    //         // Update UI or notify user based on success
-    //         alert(`Updated ${field} successfully!`);
-    //     }
-    //     catch (e) {
-    //         console.log("Error message: "+ e.message)
-    //     }
-    // }
-
     return (
         <ImageBackground source={require('../../../assets/BackgroundUnlocked.jpg')} style={styles.container}>
             <Text style={styles.title}>Edit Profile</Text>
