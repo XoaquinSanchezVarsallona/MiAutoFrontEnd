@@ -1,16 +1,47 @@
-import React, {useContext, useEffect} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {View, Text, StyleSheet, ImageBackground, Button, Pressable, Image} from 'react-native';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {NotificationContext} from "../../../components/notification/NotificationContext";
 
 export function AccidentInformation({navigation, route}) {
     const { patente } = route.params;
+    const [userId, setUserId] = React.useState('');
     const [username, setUsername] = React.useState('');
     const { showNotification, setColor } = useContext(NotificationContext);
-
+    const [canFetchProfile, setCanFetchProfile] = useState(false);
     const [frontDNI, setFront] = React.useState('');
     const [backDNI, setBack] = React.useState('');
     const [cedula, setCedula] = React.useState('');
+
+    useEffect(() => {
+        async function loadUserProfile() {
+            const token = await AsyncStorage.getItem('userToken');
+            console.log("Antes...")
+            if (token) {
+                const response = await fetch('http://localhost:9002/validateToken', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json',
+                    },
+                });
+                console.log("Paso!!")
+                const data = await response.json();
+                if (response.ok) {
+                    setUserId(data.userId)
+                    setUsername(data.username)
+
+                    console.log("UserID: "+ data.userId)
+                    console.log("Username: "+ data.username)
+                    setCanFetchProfile(true); // Enable fetching more details
+                } else {
+                    console.error('Token validation failed:', data.message);
+                    setCanFetchProfile(false);
+                }
+            }
+        }
+        loadUserProfile().then(r => console.log(r));
+    }, []);
 
     useEffect(() => {
         const getPapers = async () => {
@@ -25,8 +56,6 @@ export function AccidentInformation({navigation, route}) {
                         patente: patente
                     })
                 })
-                console.log("Username: " + username)
-                console.log("Patente: "+ patente)
                 if (response.ok) {
                     const data = await response.json();
                     console.log("The response was: " + data)
@@ -43,7 +72,8 @@ export function AccidentInformation({navigation, route}) {
             }
         }
         getPapers()
-    }, []);
+        setCanFetchProfile(false)
+    }, [canFetchProfile, userId]);
 
     const handleDownloadImage = async (base64Image) => {
         try {
@@ -57,27 +87,6 @@ export function AccidentInformation({navigation, route}) {
             console.log("The handleDownload: "+ e.message)
         }
     };
-    useEffect(() => {
-        async function loadUserProfile() {
-            const token = await AsyncStorage.getItem('userToken');
-            if (token) {
-                const response = await fetch('http://localhost:9002/validateToken', {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json',
-                    },
-                });
-                const data = await response.json();
-                if (response.ok) {
-                    setUsername(data.username);
-                } else {
-                    console.error('Token validation failed:', data.message);
-                }
-            }
-        }
-        loadUserProfile().then();
-    }, []);
 
     const sendAlert = async () => {
         try {
@@ -188,6 +197,7 @@ const styles = StyleSheet.create({
         fontWeight: '500',
         textAlign: 'center',
     },
+    imageContainer: { width: 200, height: 200, marginTop: 20 }
 });
 
 export default AccidentInformation;
