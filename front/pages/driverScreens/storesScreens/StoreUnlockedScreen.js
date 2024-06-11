@@ -10,8 +10,7 @@ export function StoreUnlockedScreen({ navigation, route }) {
 
     const sortByService = async (service, stores) => {
         if (service !== 'any') {
-            const list = [];
-            stores.filter(store => store.tipoDeServicio !== service)
+            let list = stores.filter(store => store.tipoDeServicio === service)
             setStores(list);
             setServicios(service);
         }
