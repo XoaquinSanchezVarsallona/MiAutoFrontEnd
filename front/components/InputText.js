@@ -1,9 +1,28 @@
 import React from 'react';
 import { Text, TextInput, View, StyleSheet } from 'react-native';
 
-const InputText = ({ label, value, onChangeText, placeholder }) => {
+const InputText = ({ label, value, onChangeText, placeholder, multiline }) => {
     const [hovered, setHovered] = React.useState(false);
 
+    if (multiline) {
+        return (
+            <View
+                onMouseEnter={() => setHovered(true)}
+                onMouseLeave={() => setHovered(false)}
+                style={[styles.inputContainer, hovered && styles.inputContainerHovered]}
+            >
+                <Text style={styles.label}>{label}</Text>
+                <TextInput
+                    style={styles.inputTextholder}
+                    onChangeText={onChangeText}
+                    value={value}
+                    placeholder={placeholder}
+                    placeholderTextColor="#FFFFFF80"
+                    multiline={true}
+                />
+            </View>
+        );
+    }
     return (
         <View
             onMouseEnter={() => setHovered(true)}

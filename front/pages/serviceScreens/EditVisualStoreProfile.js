@@ -2,23 +2,25 @@ import React, {useState, useEffect, useContext} from 'react';
 import {StyleSheet, View, Text, ImageBackground, ScrollView, TextInput, Pressable} from 'react-native';
 import {Picker} from "react-native-web";
 import {NotificationContext} from "../../components/notification/NotificationContext";
+import InputText from "../../components/InputText";
+import AddButton from "../../components/AddButton";
 
 const fields = [
-    'email', 'storeName', 'domicilio', 'tipoDeServicio', 'description', 'phoneNumber', 'webPageLink', 'instagramLink', 'googleMapsLink'
+    'Email', 'StoreName', 'Domicilio', 'TipoDeServicio', 'Description', 'PhoneNumber', 'WebPageLink', 'InstagramLink', 'GoogleMapsLink'
 ];
 
 export function EditVisualStoreProfile({ navigation , route}) {
 
     const [inputs, setInputs] = useState({
-        email: route.params.email,
-        storeName: '',
-        domicilio: '',
-        tipoDeServicio: '',
-        description: '',
-        phoneNumber: '',
-        webPageLink: '',
-        instagramLink: '',
-        googleMapsLink: '',
+        Email: route.params.email,
+        StoreName: '',
+        Domicilio: '',
+        TipoDeServicio: '',
+        Description: '',
+        PhoneNumber: '',
+        WebPageLink: '',
+        InstagramLink: '',
+        GoogleMapsLink: '',
     });
     const { showNotification, setColor } = useContext(NotificationContext);
 
@@ -44,15 +46,15 @@ export function EditVisualStoreProfile({ navigation , route}) {
 
             setInputs(prevState => ({
                 ...prevState,
-                email: route.params.email,
-                storeName: data.storeName || '',
-                domicilio: data.domicilio || '',
-                tipoDeServicio: data.tipoDeServicio || '',
-                description: data.description || '',
-                phoneNumber: data.phoneNumber || '',
-                webPageLink: data.webPageLink || '',
-                instagramLink: data.instagramLink || '',
-                googleMapsLink: data.googleMapsLink || '',
+                Email: route.params.email,
+                StoreName: data.storeName || '',
+                Domicilio: data.domicilio || '',
+                TipoDeServicio: data.tipoDeServicio || '',
+                Description: data.description || '',
+                PhoneNumber: data.phoneNumber || '',
+                WebPageLink: data.webPageLink || '',
+                InstagramLink: data.instagramLink || '',
+                GoogleMapsLink: data.googleMapsLink || '',
             }));
 
         } catch (error) {
@@ -110,38 +112,35 @@ export function EditVisualStoreProfile({ navigation , route}) {
                 <Text style={styles.title}>Edit Profile</Text>
                 {fields.map((field, index) => (
                     <View key={index} style={styles.inputContainer}>
-                        <Text style={styles.fieldText}>{field}</Text>
-                        {field === 'tipoDeServicio' ? (
+                        {field === 'TipoDeServicio' ? (
                             <Picker
                                 selectedValue={inputs[field]}
                                 onValueChange={(itemValue) => handleInputChange(field, itemValue)}
-                                style={styles.picker}
+                                style={styles.input}
                             >
                                 <Picker.Item label="mecanico" value="mecanico" />
                                 <Picker.Item label="estacion de servicio" value="estacion de servicio" />
                                 <Picker.Item label="lavadero" value="lavadero" />
                             </Picker>
-                        ) : field === 'description' ? (
-                            <TextInput
-                                style={styles.input}
-                                onChangeText={(text) => handleInputChange(field, text)}
+                        ) : field === 'Description' ? (
+                            <InputText
+                                label={field}
                                 value={inputs[field]}
+                                onChangeText={(text) => handleInputChange(field, text)}
                                 placeholder={`New ${field}`}
-                                multiline
+                                multiline={true}
                             />
                         ) : (
-                            <TextInput
-                                style={styles.input}
-                                onChangeText={(text) => handleInputChange(field, text)}
+                            <InputText
+                                label={field}
                                 value={inputs[field]}
+                                onChangeText={(text) => handleInputChange(field, text)}
                                 placeholder={`New ${field}`}
                             />
                         )}
                     </View>
                 ))}
-                <Pressable style={styles.addVehicleButton} onPress={handleSave}>
-                    <Text style={styles.addVehicleText}>Save</Text>
-                </Pressable>
+                <AddButton text={"Save"} onPress={handleSave} />
             </ScrollView>
         </ImageBackground>
     );
@@ -157,17 +156,12 @@ const styles = StyleSheet.create({
         paddingTop: 20,
     },
     inputContainer: {
+        width: '60%',
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
         marginBottom: 10,
         flex: 1,
-    },
-    fieldText: {
-        width: 120, // Set a fixed width
-        marginRight: 10,
-        fontSize: 16,
-        color: 'white',
     },
     picker: {
         flex: 1,
@@ -178,13 +172,13 @@ const styles = StyleSheet.create({
         borderColor: 'gray',
         borderWidth: 1,
     },
-    input: {
-        flex: 1,
-        height: 40,
+    inputTextholder: {
+        width: '100%',
+        color: 'white',
         borderColor: 'gray',
+        padding: 10,
+        borderRadius: 5,
         borderWidth: 1,
-        marginRight: 10,
-        paddingHorizontal: 10,
     },
     title: {
         fontSize: 60,
@@ -195,20 +189,5 @@ const styles = StyleSheet.create({
     buttonText: {
         fontSize: 16,
         marginLeft: 10,
-    },
-    addVehicleButton: {
-        width: '40%',
-        paddingVertical: 12,
-        paddingHorizontal: 20,
-        marginVertical: 10,
-        backgroundColor: '#32cd32',
-        borderRadius: 20,
-        alignSelf: 'center',
-    },
-    addVehicleText: {
-        fontSize: 18,
-        color: 'white',
-        fontWeight: '500',
-        textAlign: 'center',
     },
 });
