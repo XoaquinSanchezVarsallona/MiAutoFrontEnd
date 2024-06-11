@@ -17,7 +17,7 @@ export function VehiclesScreen({ navigation, route }) {
             if (response.ok) {
                 return await response.json();
             } else {
-                console.log('Failed to fetch cars for family: ${familySurname}');
+                console.log(`Failed to fetch cars for family: ${familySurname}`);
                 return [];
             }
         } catch (error) {

@@ -1,30 +1,10 @@
 import React, {useEffect, useState} from 'react';
-import {ImageBackground, Pressable, StyleSheet, Text, View, ScrollView, TextInput, Button} from 'react-native';
+import {ImageBackground, Pressable, Image, StyleSheet, Text, View, ScrollView, TextInput} from 'react-native';
+import InputText from "../../../components/InputText";
 
 export function StoreUnlockedScreen({ navigation, route }) {
     const [stores, setStores] = useState([]);
     const [search, setSearch] = useState('');
-
-    const fetchByRating = async () => {
-        try {
-            const response = await fetch('http://localhost:9002/getStoresByRating' , {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                }
-            });
-            if (response.ok) {
-                const data = await response
-                setStores(await data.json())
-            }
-            else {
-                console.log("There was a problem in fetchByRating, status " + response.status)
-            }
-        }
-        catch (e) {
-            console.log("There was an error in fetchByRating: " + e.message)
-        }
-    }
 
     const fetchStores = async () => {
         try {
@@ -62,13 +42,17 @@ export function StoreUnlockedScreen({ navigation, route }) {
             <View style={styles.headerContainer}>
                 <Text style={styles.title}>Stores</Text>
             </View>
-            <TextInput
-                style={styles.input}
-                onChangeText={setSearch}
-                value={search}
-                placeholder="Search for stores"
-            />
-            <Button title={"Stores by rating"} onPress={fetchByRating}/>
+            <View style={styles.searchContainer}>
+                <InputText
+                    placeholder="Search for stores"
+                    value={search}
+                    onChangeText={setSearch}
+                />
+                <Image
+                    style={styles.icon}
+                    source={require('../../../assets/lupa.png')}
+                />
+            </View>
             <ScrollView style={styles.storesList}>
                 {stores != null && stores.length > 0 ? (
                     stores.filter(store => store.storeName.startsWith(search)).map((store, index) => (
@@ -145,5 +129,17 @@ const styles = StyleSheet.create({
         color: 'white',
         textAlign: 'center',
         marginTop: 20,
+    },
+    searchContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: '80%',
+    },
+    icon: {
+        marginLeft: 10,
+        marginBottom: 15,
+        width: 50,
+        height: 50,
     },
 });

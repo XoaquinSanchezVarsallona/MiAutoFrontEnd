@@ -48,7 +48,7 @@ export function UnlockedScreenDriver({ navigation, route, children }) {
                     setLoading(false);
                 }
             };
-            fetchAndSetUser().then(r => console.log(r));
+            fetchAndSetUser().then();
         }, [])
     );
 
@@ -141,7 +141,7 @@ export function UnlockedScreenDriver({ navigation, route, children }) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'center',
+        justifyContent: 'space-between',
         alignItems: 'center',
     },
     header: {
@@ -177,7 +177,7 @@ const styles = StyleSheet.create({
     icon: {
         width: 100,
         height: 100,
-        marginVertical: 30, // Provides space between the icon and the buttons
+        marginVertical: 30,
     },
     buttonRow: {
         width: '80%',

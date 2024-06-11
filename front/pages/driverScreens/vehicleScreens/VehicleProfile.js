@@ -50,7 +50,7 @@ export function VehicleProfile({ navigation, route }) {
 
     const checkVehicleState = (vehicle, username) => {
         if (vehicle.estadoActual === 'Rojo') {
-            addAlert("The car with patente: " + vehicle.patente + "has a critic state", username).then()
+            addAlert("The car with patente: " + vehicle.patente + " has a critic state", username).then()
         }
     }
 
@@ -162,6 +162,9 @@ export function VehicleProfile({ navigation, route }) {
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.routesButton} onPress={() => navigation.navigate('VehicleCharts', { vehicle, familySurname, familyId})}>
                             <Text style={styles.buttonText}>View charts</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.routesButton} onPress={() => navigation.navigate('VehicleExperiences', { vehicle, familySurname, familyId})}>
+                            <Text style={styles.buttonText}>View experiences</Text>
                         </TouchableOpacity>
                     </View>
                 </View>

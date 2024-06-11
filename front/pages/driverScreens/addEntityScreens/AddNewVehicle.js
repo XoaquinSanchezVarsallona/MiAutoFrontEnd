@@ -154,17 +154,17 @@ const styles = StyleSheet.create({
     columnsContainer: {
         flex: 1,
         flexDirection: 'row',
-        justifyContent: 'center', // Center the columns within the container
-        alignItems: 'flex-start', // Align items to the start of their container
+        justifyContent: 'center',
+        alignItems: 'flex-start',
         width: '100%',
     },
     column: {
-        width: '20%', // Adjust width to bring columns closer
+        width: '20%',
         padding: 15,
     },
     inputContainer: {
-        width: '90%', // Full width to align inputs properly within the columns
-        marginBottom: 10, // Space between each input
+        width: '90%',
+        marginBottom: 10,
     },
     input: {
         width: '100%',
