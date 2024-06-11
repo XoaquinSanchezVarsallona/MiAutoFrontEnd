@@ -1,9 +1,30 @@
 import React, {useEffect, useState} from 'react';
-import {ImageBackground, Pressable, StyleSheet, Text, View, ScrollView, TextInput} from 'react-native';
+import {ImageBackground, Pressable, StyleSheet, Text, View, ScrollView, TextInput, Button} from 'react-native';
 
 export function StoreUnlockedScreen({ navigation, route }) {
     const [stores, setStores] = useState([]);
     const [search, setSearch] = useState('');
+
+    const fetchByRating = async () => {
+        try {
+            const response = await fetch('http://localhost:9002/getStoresByRating' , {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            });
+            if (response.ok) {
+                const data = await response
+                setStores(await data.json())
+            }
+            else {
+                console.log("There was a problem in fetchByRating, status " + response.status)
+            }
+        }
+        catch (e) {
+            console.log("There was an error in fetchByRating: " + e.message)
+        }
+    }
 
     const fetchStores = async () => {
         try {
@@ -47,6 +68,7 @@ export function StoreUnlockedScreen({ navigation, route }) {
                 value={search}
                 placeholder="Search for stores"
             />
+            <Button title={"Stores by rating"} onPress={fetchByRating}/>
             <ScrollView style={styles.storesList}>
                 {stores != null && stores.length > 0 ? (
                     stores.filter(store => store.storeName.startsWith(search)).map((store, index) => (
