@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
         transition: 'width 0.3s ease-in-out',
     },
     inputContainerHovered: {
-        width: '21%', // Change this to the width you want on hover
+        width: '21%',
     },
     label: {
         alignSelf: 'flex-start',

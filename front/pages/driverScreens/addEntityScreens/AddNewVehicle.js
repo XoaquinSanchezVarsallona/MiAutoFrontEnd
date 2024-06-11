@@ -6,6 +6,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs';
 import {NotificationContext} from "../../../components/notification/NotificationContext";
 import InputText from "../../../components/InputText";
+import AddButton from "../../../components/AddButton";
 
 export function AddNewVehicle({ navigation, route }) {
     const { familySurname, familyId } = route.params;
@@ -48,61 +49,42 @@ export function AddNewVehicle({ navigation, route }) {
     return (
         <ImageBackground source={require('../../../assets/BackgroundUnlocked.jpg')} style={styles.container}>
             <Text style={styles.title}>Add new Vehicle</Text>
-            <View style={styles.columnsContainer}>
-                <View style={styles.column}>
-                    <View style={styles.inputContainer}>
-                        <Text style={styles.label}>License Plate</Text>
-                        <TextInput
-                            style={styles.input}
-                            value={patente}
-                            onChangeText={setPatente}
-                            placeholder="License Plate"
-                            placeholderTextColor="#FFFFFF80"
-                        />
-                    </View>
-                    <View style={styles.inputContainer}>
-                        <Text style={styles.label}>Year</Text>
-                        <TextInput
-                            style={styles.input}
-                            value={ano}
-                            onChangeText={setAno}
-                            placeholder="Year"
-                            placeholderTextColor="#FFFFFF80"
-                        />
-                    </View>
-                    <View style={styles.inputContainer}>
-                        <Text style={styles.label}>Mileage</Text>
-                        <TextInput
-                            style={styles.input}
-                            value={kilometraje}
-                            onChangeText={setKilometraje}
-                            placeholder="Mileage"
-                            placeholderTextColor="#FFFFFF80"
-                        />
-                    </View>
-                    <View style={styles.inputContainer}>
-                        <Text style={styles.label}>Brand</Text>
-                        <TextInput
-                            style={styles.input}
-                            value={marca}
-                            onChangeText={setMarca}
-                            placeholder="Brand"
-                            placeholderTextColor="#FFFFFF80"
-                        />
-                    </View>
-                    <View style={styles.inputContainer}>
-                        <Text style={styles.label}>Model</Text>
-                        <TextInput
-                            style={styles.input}
-                            value={modelo}
-                            onChangeText={setModelo}
-                            placeholder="Model"
-                            placeholderTextColor="#FFFFFF80"
-                        />
-                    </View>
+                <View style={styles.row}>
+                    <InputText
+                        value={patente}
+                        onChangeText={setPatente}
+                        placeholder="License Plate"
+                        label={"License Plate"}
+                    />
+                    <InputText
+                        value={ano}
+                        onChangeText={setAno}
+                        placeholder="Year"
+                        label={"Year"}
+                    />
+                    <InputText
+                        value={kilometraje}
+                        onChangeText={setKilometraje}
+                        placeholder="Mileage"
+                        label={"Mileage"}
+                    />
                 </View>
-                <View style={styles.column}>
-                    <View style={styles.inputContainer}>
+                <View style={styles.row}>
+                    <InputText
+                        value={marca}
+                        onChangeText={setMarca}
+                        placeholder="Brand"
+                        label={"Brand"}
+                    />
+                    <InputText
+                        value={modelo}
+                        onChangeText={setModelo}
+                        placeholder="Model"
+                        label={"Model"}
+                    />
+                </View>
+                <View style={styles.row}>
+                    <View>
                         <Text style={styles.label}>Insurance Expiry</Text>
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
                             <DatePicker
@@ -113,7 +95,7 @@ export function AddNewVehicle({ navigation, route }) {
                             />
                         </LocalizationProvider>
                     </View>
-                    <View style={styles.inputContainer}>
+                    <View>
                         <Text style={styles.label}>VTV Expiry</Text>
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
                             <DatePicker
@@ -125,12 +107,9 @@ export function AddNewVehicle({ navigation, route }) {
                         </LocalizationProvider>
                     </View>
                 </View>
-            </View>
-            <Pressable style={styles.addVehicleButton} onPress={() => { addVehicle().then(navigation.navigate('VehiclesScreen', { familySurname, familyId })) }}>
-                <Text style={styles.addVehicleText}>Add vehicle</Text>
-            </Pressable>
+            <AddButton onPress={addVehicle} text={"Add vehicle"}/>
         </ImageBackground>
-);
+    );
 }
 const styles = StyleSheet.create({
     container: {
@@ -145,20 +124,14 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         paddingBottom: 20,
     },
-    columnsContainer: {
-        flex: 1,
+    row: {
+        width: '60%',
         flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'flex-start',
-        width: '100%',
+        justifyContent: 'space-evenly',
     },
     column: {
-        width: '20%',
+        width: '50%',
         padding: 15,
-    },
-    inputContainer: {
-        width: '90%',
-        marginBottom: 10,
     },
     input: {
         width: '100%',
@@ -171,30 +144,8 @@ const styles = StyleSheet.create({
     label: {
         alignSelf: 'flex-start',
         color: 'white',
-        fontSize: 16,
-        fontWeight: 'bold',
-        marginBottom: 3,
-    },
-    addVehicleButton: {
-        width: '20%',
-        paddingVertical: 12,
-        paddingHorizontal: 20,
-        marginVertical: 10,
-        backgroundColor: '#32cd32',
-        borderRadius: 20,
-        position: 'absolute',
-        bottom: 10,
-        alignSelf: 'center',
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.25,
-        shadowRadius: 5,
-        elevation: 5,
-    },
-    addVehicleText: {
         fontSize: 18,
-        color: 'white',
-        fontWeight: '500',
-        textAlign: 'center',
+        fontWeight: 'bold',
+        marginBottom: 5,
     },
 });
