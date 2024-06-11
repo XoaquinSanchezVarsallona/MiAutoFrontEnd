@@ -46,6 +46,7 @@ import {ServiceConfigurationScreen} from "./pages/serviceScreens/serviceConfigur
 import {ServiceEditProfile} from "./pages/serviceScreens/serviceConfiguration/ServiceEditProfile";
 import {ServiceViewProfile} from "./pages/serviceScreens/serviceConfiguration/ServiceViewProfile";
 import {VehicleCharts} from "./pages/driverScreens/vehicleScreens/VehicleCharts";
+import VehicleExperiences from "./pages/driverScreens/vehicleScreens/VehicleExperiences";
 
 
 const Stack = createNativeStackNavigator(); //used to configure the screens
@@ -130,6 +131,7 @@ function AppNavigation() {
                                     <Stack.Screen name="ServiceViewProfile" component={ServiceViewProfile}/>
                                     <Stack.Screen name="ServiceEditProfile" component={ServiceEditProfile}/>
                                     <Stack.Screen name="VehicleCharts" component={VehicleCharts}/>
+                                    <Stack.Screen name="VehicleExperiences" component={VehicleExperiences}/>
                                 </>
                             ) : (
                                 <>
@@ -169,6 +171,7 @@ function AppNavigation() {
                                     <Stack.Screen name="ServiceViewProfile" component={ServiceViewProfile}/>
                                     <Stack.Screen name="ServiceEditProfile" component={ServiceEditProfile}/>
                                     <Stack.Screen name="VehicleCharts" component={VehicleCharts}/>
+                                    <Stack.Screen name="VehicleExperiences" component={VehicleExperiences}/>
                                 </>
                             )}
                         </Stack.Navigator>
