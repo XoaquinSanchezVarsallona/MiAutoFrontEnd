@@ -1,5 +1,6 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {View, Text, StyleSheet, ImageBackground, TouchableOpacity, ScrollView, TextInput, Modal} from 'react-native';
+import {NotificationContext} from "../../components/notification/NotificationContext";
 
 export function StoreProfile({ navigation, route }) {
     const { store } = route.params;
@@ -9,6 +10,17 @@ export function StoreProfile({ navigation, route }) {
     const [experiences, setExperiences] = useState([]);
     const [isExperienceModalVisible, setIsExperienceModalVisible] = useState(false);
     const [storeId, setStoreId] = useState(null);
+    const { showNotification, setColor } = useContext(NotificationContext);
+    const [storeData, setInputs] = useState({
+        storeName: '',
+        domicilio: '',
+        tipoDeServicio: '',
+        description: '',
+        phoneNumber: '',
+        webPageLink: '',
+        instagramLink: '',
+        googleMapsLink: '',
+    });
 
     const deleteStore = async () => {
         try {
@@ -16,13 +28,17 @@ export function StoreProfile({ navigation, route }) {
                 method: 'DELETE',
             });
             if (response.ok) {
-                alert('Store deleted successfully');
+                setColor('#32cd32')
+                showNotification('Store deleted successfully');
                 navigation.goBack();
             } else {
-                console.error('Failed to delete store');
+                setColor('red')
+                showNotification('Failed to delete store');
             }
         } catch (error) {
             console.error('Error:', error);
+            setColor('red')
+            showNotification('Failed to delete store');
         }
     };
 
@@ -114,7 +130,7 @@ export function StoreProfile({ navigation, route }) {
         }
     };
 
-    const fetchStoreDetails = async () => {
+    const fetchStoreId = async () => {
         try {
             const response = await fetch(`http://localhost:9002/getStoreByEmail`, {
                 method: 'POST',
@@ -134,6 +150,43 @@ export function StoreProfile({ navigation, route }) {
         }
     };
 
+    const fetchStoreData = async () => {
+        try {
+            const response = await fetch('http://localhost:9002/getVisualStoreProfile', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    email: store.storeEmail,
+                }),
+            });
+
+            if (response.ok) {
+                console.log('Network response was ok');
+            } else {
+                console.log('Network response NOT was ok');
+            }
+
+            const data = await response.json();
+
+            setInputs(prevState => ({
+                ...prevState,
+                storeName: data.storeName || '',
+                domicilio: data.domicilio || '',
+                tipoDeServicio: data.tipoDeServicio || '',
+                description: data.description || '',
+                phoneNumber: data.phoneNumber || '',
+                webPageLink: data.webPageLink || '',
+                instagramLink: data.instagramLink || '',
+                googleMapsLink: data.googleMapsLink || '',
+            }));
+
+        } catch (error) {
+            console.error('Error fetching profile data:', error);
+        }
+    };
+
     const openExperienceModal = async () => {
         await fetchExperiences();
         setIsExperienceModalVisible(true);
@@ -144,19 +197,20 @@ export function StoreProfile({ navigation, route }) {
     };
 
     useEffect(() => {
-        fetchStoreDetails();
-        fetchNotifications();
-        fetchExperiences();
+        fetchStoreId().then();
+        fetchStoreData().then();
+        fetchNotifications().then();
+        fetchExperiences().then();
     }, []);
 
     return (
         <ScrollView contentContainerStyle={styles.scrollContainer}>
             <ImageBackground source={require('../../assets/BackgroundUnlocked.jpg')} style={styles.container}>
                 <View style={styles.content}>
-                    <Text style={styles.title}>{store.storeName}</Text>
+                    <Text style={styles.title}>{storeData.storeName}</Text>
                     <Text style={styles.detail}>Store Email: {store.storeEmail}</Text>
-                    <Text style={styles.detail}>Store Address: {store.domicilio}</Text>
-                    <Text style={styles.detail}>Store Service type: {store.tipoDeServicio}</Text>
+                    <Text style={styles.detail}>Store Address: {storeData.domicilio}</Text>
+                    <Text style={styles.detail}>Store Service type: {storeData.tipoDeServicio}</Text>
                     <View style={styles.buttonContainer}>
                         <TouchableOpacity style={styles.deleteButton} onPress={deleteStore}>
                             <Text style={styles.buttonText}>Delete Store</Text>

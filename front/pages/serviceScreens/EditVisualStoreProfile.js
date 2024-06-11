@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import {StyleSheet, View, Text, ImageBackground, ScrollView, TextInput, Pressable} from 'react-native';
-import StyledButton from "../../components/StyledButton";
 import {Picker} from "react-native-web";
+import {NotificationContext} from "../../components/notification/NotificationContext";
 
 const fields = [
     'email', 'storeName', 'domicilio', 'tipoDeServicio', 'description', 'phoneNumber', 'webPageLink', 'instagramLink', 'googleMapsLink'
@@ -20,6 +20,7 @@ export function EditVisualStoreProfile({ navigation , route}) {
         instagramLink: '',
         googleMapsLink: '',
     });
+    const { showNotification, setColor } = useContext(NotificationContext);
 
     const fetchProfileData = async () => {
         try {
@@ -33,8 +34,10 @@ export function EditVisualStoreProfile({ navigation , route}) {
                 }),
             });
 
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
+            if (response.ok) {
+                console.log('Network response was ok');
+            } else {
+                console.error('Network response was NOT ok')
             }
 
             const data = await response.json();
@@ -58,7 +61,7 @@ export function EditVisualStoreProfile({ navigation , route}) {
     };
 
     useEffect(() => {
-        fetchProfileData();
+        fetchProfileData().then();
     }, []);
 
     const handleInputChange = (field, value) => {
@@ -82,18 +85,22 @@ export function EditVisualStoreProfile({ navigation , route}) {
 
             console.log('Server response:', response);
 
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
+            if (response.ok) {
+                console.log('Network response was ok');
+            } else {
+                console.error('Network response was NOT ok')
             }
 
             const data = await response.json();
             console.log(`Server response: `, data);
 
-            alert(`Updated profile successfully!`);
+            setColor('#32cd32');
+            showNotification(`Updated profile successfully!`);
             navigation.navigate('UnlockedScreenService', { email: inputs.email });
         } catch (error) {
             console.error('Error updating profile:', error);
-            alert('Failed to update profile. Please try again.');
+            setColor('red');
+            showNotification('Failed to update profile. Please try again.');
         }
     };
 
@@ -167,10 +174,9 @@ const styles = StyleSheet.create({
         height: 40,
         marginRight: 10,
         paddingHorizontal: 10,
-        backgroundColor: 'transparent', // Add this line
+        backgroundColor: 'transparent',
         borderColor: 'gray',
         borderWidth: 1,
-
     },
     input: {
         flex: 1,
@@ -181,7 +187,9 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
     },
     title: {
-        fontSize: 24,
+        fontSize: 60,
+        color: 'white',
+        fontWeight: 'bold',
         marginBottom: 20,
     },
     buttonText: {
@@ -195,7 +203,6 @@ const styles = StyleSheet.create({
         marginVertical: 10,
         backgroundColor: '#32cd32',
         borderRadius: 20,
-        //position: 'absolute',
         alignSelf: 'center',
     },
     addVehicleText: {

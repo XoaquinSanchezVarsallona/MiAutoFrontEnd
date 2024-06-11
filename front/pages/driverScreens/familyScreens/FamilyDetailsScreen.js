@@ -7,7 +7,6 @@ function FamilyDetailsScreen({ route, navigation }) {
     const { family: initialFamily, email } = route.params;
     const [family, setFamily] = useState(initialFamily); // Add this line
     const [surname, setSurname] = useState(family.surname);
-    const [userID, setUserID] = useState(null);
     const { showNotification, setColor } = useContext(NotificationContext);
 
 

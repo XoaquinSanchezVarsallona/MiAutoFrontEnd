@@ -1,9 +1,9 @@
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, View, Text, ImageBackground, Pressable, ScrollView} from 'react-native';
-import { useFocusEffect } from '@react-navigation/native';
 import StyledButton2 from "../../components/StyledButton2";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import LoadingScreen from "../LoadingScreen";
+import {useIsFocused} from "@react-navigation/native";
 
 export function UnlockedScreenService({ navigation, route }) {
     // Me llega el email del usuario
@@ -11,6 +11,7 @@ export function UnlockedScreenService({ navigation, route }) {
     const [stores, setStores] = useState([]);
     const [serviceName, setServiceName] = useState('');
     const [isLoading, setLoading] = useState(true);
+    const isFocused = useIsFocused();
 
     // Get the service id from the token
     const loadServiceId = async () => {
@@ -74,6 +75,10 @@ export function UnlockedScreenService({ navigation, route }) {
     useEffect(() => {
         loadServiceEmail().then(r => fetchStores(r).then(r => setLoading(false)));
     }, []);
+
+    useEffect(() => {
+        loadServiceEmail().then(r => fetchStores(r).then(r => setLoading(false)));
+    }, [isFocused]);
 
     if (isLoading) {
         return <LoadingScreen />;
