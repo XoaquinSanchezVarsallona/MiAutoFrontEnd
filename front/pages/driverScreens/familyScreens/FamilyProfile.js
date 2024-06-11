@@ -175,7 +175,6 @@ const styles = StyleSheet.create({
     },
     scrollBarStyle: {
         alignItems: 'center',
-        height: '75%',
         width: '60%',
         padding: 16,
     },
