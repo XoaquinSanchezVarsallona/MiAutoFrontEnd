@@ -1,10 +1,31 @@
 import React, {useEffect, useState} from 'react';
-import {ImageBackground, Pressable, Image, StyleSheet, Text, View, ScrollView, TextInput} from 'react-native';
+import {ImageBackground, Pressable, Image, StyleSheet, Text, View, ScrollView, TextInput, Button} from 'react-native';
 import InputText from "../../../components/InputText";
+import {useLocation} from "react-router-dom";
 
 export function StoreUnlockedScreen({ navigation, route }) {
     const [stores, setStores] = useState([]);
     const [search, setSearch] = useState('');
+
+    const fetchRating = async () => {
+        try {
+            const response = await fetch(`http://localhost:9002/getStoresByRating`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            });
+
+            if (response.ok) {
+                const data = await response.json()
+                setStores(data)
+            }
+            else console.log("There is a problem in fetchRating!")
+
+        } catch (e) {
+            console.log("There is a error in fetchRating: " + e.message)
+        }
+    }
 
     const fetchStores = async () => {
         try {
@@ -53,6 +74,7 @@ export function StoreUnlockedScreen({ navigation, route }) {
                     source={require('../../../assets/lupa.png')}
                 />
             </View>
+            <Button style={styles.storeButton} onPress={fetchRating} title={"Sort stores by rating"}/>
             <ScrollView style={styles.storesList}>
                 {stores != null && stores.length > 0 ? (
                     stores.filter(store => store.storeName.startsWith(search)).map((store, index) => (
