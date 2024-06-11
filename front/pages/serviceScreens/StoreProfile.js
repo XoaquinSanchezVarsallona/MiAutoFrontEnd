@@ -1,6 +1,7 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {View, Text, StyleSheet, ImageBackground, TouchableOpacity, ScrollView, TextInput, Modal} from 'react-native';
 import {NotificationContext} from "../../components/notification/NotificationContext";
+import StarRating from '../../components/StarRating';
 
 export function StoreProfile({ navigation, route }) {
     const { store } = route.params;
@@ -21,6 +22,8 @@ export function StoreProfile({ navigation, route }) {
         instagramLink: '',
         googleMapsLink: '',
     });
+
+    const [averageRating, setAverageRating] = useState(0);
 
     const deleteStore = async () => {
         try {
@@ -189,6 +192,10 @@ export function StoreProfile({ navigation, route }) {
 
     const openExperienceModal = async () => {
         await fetchExperiences();
+        const storeExperiences = experiences.filter(experience => experience.storeId === storeId);
+        const averageRating = storeExperiences.length > 0 ? calculateAverageRating(storeExperiences) : 0;
+        setExperiences(storeExperiences);
+        setAverageRating(averageRating);
         setIsExperienceModalVisible(true);
     };
 
@@ -202,6 +209,11 @@ export function StoreProfile({ navigation, route }) {
         fetchNotifications().then();
         fetchExperiences().then();
     }, []);
+
+    const calculateAverageRating = (experiences) => {
+        const totalRating = experiences.reduce((sum, experience) => sum + experience.rating, 0);
+        return (totalRating / experiences.length) / 2;
+    };
 
     return (
         <ScrollView contentContainerStyle={styles.scrollContainer}>
@@ -269,20 +281,28 @@ export function StoreProfile({ navigation, route }) {
                 <View style={styles.modalContainer}>
                     <View style={styles.modalContent}>
                         <Text style={styles.sectionTitle}>Experiences</Text>
-                        {experiences.filter(experience => {
-                            console.log('Experience storeId:', experience.storeId, 'Current store idStore:', storeId);
-                            return experience.storeId === storeId;
-                        }).length === 0 ? (
+                        {experiences.length === 0 ? (
                             <Text style={styles.noExperiencesText}>No experiences yet</Text>
                         ) : (
-                            experiences.filter(experience => experience.storeId === storeId).map((experience) => (
-                                <View key={experience.experienceId} style={styles.experienceCard}>
-                                    <Text style={styles.experienceText}>Date: {new Date(experience.creationDate).toLocaleDateString()}</Text>
-                                    <Text style={styles.experienceText}>Car License Plate: {experience.patente}</Text>
-                                    <Text style={styles.experienceText}>Description: {experience.description}</Text>
-                                    <Text style={styles.experienceText}>Username: {experience.userId}</Text>
+                            <>
+                                <View style={styles.averageRatingContainer}>
+                                    <Text style={styles.experienceText}>Overall Rating: </Text>
+                                    <StarRating rating={averageRating} />
                                 </View>
-                            ))
+                                {experiences.map((experience) => (
+                                    <View key={experience.experienceId} style={styles.experienceCard}>
+                                        <View style={styles.experienceDetails}>
+                                            <View>
+                                                <Text style={styles.experienceText}>Date: {new Date(experience.creationDate).toLocaleDateString()}</Text>
+                                                <Text style={styles.experienceText}>Car License Plate: {experience.patente}</Text>
+                                                <Text style={styles.experienceText}>Description: {experience.description}</Text>
+                                                <Text style={styles.experienceText}>UserId: {experience.userId}</Text>
+                                            </View>
+                                            <StarRating rating={experience.rating / 2} />
+                                        </View>
+                                    </View>
+                                ))}
+                            </>
                         )}
                         <TouchableOpacity style={styles.closeButton} onPress={closeExperienceModal}>
                             <Text style={styles.closeButtonText}>Close</Text>
@@ -467,6 +487,16 @@ const styles = StyleSheet.create({
     closeButtonText: {
         color: 'white',
         fontWeight: 'bold',
+    },
+    experienceDetails: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+    },
+    averageRatingContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginVertical: 10,
     },
 });
 

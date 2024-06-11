@@ -74,10 +74,6 @@ export function UnlockedScreenService({ navigation, route }) {
 
     useEffect(() => {
         loadServiceEmail().then(r => fetchStores(r).then(r => setLoading(false)));
-    }, []);
-
-    useEffect(() => {
-        loadServiceEmail().then(r => fetchStores(r).then(r => setLoading(false)));
     }, [isFocused]);
 
     if (isLoading) {
