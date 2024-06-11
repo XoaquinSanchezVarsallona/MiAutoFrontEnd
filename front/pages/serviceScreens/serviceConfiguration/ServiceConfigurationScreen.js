@@ -32,14 +32,14 @@ export function ServiceConfigurationScreen({ navigation }) {
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.buttonContainer} onPress={() => navigation.navigate('ServiceEditProfile')}>
                     <StyledButton2
-                        onPress={() => navigation.navigate('EditProfile')}
+                        onPress={() => navigation.navigate('ServiceEditProfile')}
                         icon={require('../../../assets/pencil.png')}
                     />
                     <Text style={styles.subtitle}>Edit Profile</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.buttonContainer} onPress={() => navigation.navigate('ServiceViewProfile')}>
                     <StyledButton2
-                        onPress={() => navigation.navigate('ViewProfile')}
+                        onPress={() => navigation.navigate('ServiceEditProfile')}
                         icon={require('../../../assets/user.png')}
                     />
                     <Text style={styles.subtitle}>View Profile</Text>
