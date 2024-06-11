@@ -6,15 +6,15 @@ import image from "react-native-web/src/exports/Image";
 import ImageInput from "../../../components/ImageInput";
 
 const icons = {
-    'Edit username': require('../../../assets/pencil.png'),
-    'Edit email': require('../../../assets/pencil.png'),
+    'username': require('../../../assets/pencil.png'),
+    'email': require('../../../assets/pencil.png'),
 };
 
 const fields = [
     'username', 'email',
 ];
 
-export function ServiceEditProfile({  }) {
+export function ServiceEditProfile({ navigation }) {
     //const userToken  = AsyncStorage.getItem("userToken"); // agarro el token del authContext (si esta loggineado, lo va a tener)
 
     const [inputs, setInputs] = useState({
@@ -137,99 +137,35 @@ export function ServiceEditProfile({  }) {
 
             // Update UI or notify user based on success
             alert(`Updated ${field} successfully!`);
+            navigation.navigate('UnlockedScreenService')
         } catch (error) {
             console.error('Error updating profile:', error);
             alert('Failed to update profile. Please try again.');
         }
     };
 
-    // const handleImageSave = async (field) => {
-    //     const newValue = inputs[field];
-    //     const {userID, username, name, surname, domicilio, password, email} = inputs;
-    //     const token = await AsyncStorage.getItem('userToken');
-    //
-    //     try {
-    //         const response = await fetch('http://localhost:9002/saveDni', {
-    //             method: 'POST',
-    //             headers: {
-    //                 'Content-Type': 'application/json',
-    //                 'Authorization': `Bearer ${token}`,  // Include the JWT
-    //             },
-    //             body: JSON.stringify({
-    //                 userId: userID,
-    //                 field: field,
-    //                 value: newValue,
-    //             }),
-    //         });
-    //         console.log('Server response:', response);
-    //         console.log('token:' + token);
-    //
-    //         if (!response.ok) {
-    //             throw new Error('Network response was not ok');
-    //         }
-    //
-    //         const data = await response.json(); // Assuming the server responds with JSON
-    //         console.log(`Server response: `, data);
-    //
-    //         // Update UI or notify user based on success
-    //         alert(`Updated ${field} successfully!`);
-    //     }
-    //     catch (e) {
-    //         console.log("Error message: "+ e.message)
-    //     }
-    // }
-
     return (
         <ImageBackground source={require('../../../assets/BackgroundUnlocked.jpg')} style={styles.container}>
             <ScrollView contentContainerStyle={styles.scrollContainer}>
                 <Text style={styles.title}>Edit Profile</Text>
-                <View style={styles.columnsContainer}>
-                    <View style={styles.column}>
-                        {fields.slice(0, 4).map((field, index) => (
-                            <View key={index} style={styles.inputContainer}>
-                                <Text style={styles.label}>{field.charAt(0).toUpperCase() + field.slice(1)}</Text>
-                                <View style={styles.inputRow}>
-                                    <TextInput
-                                        style={styles.input}
-                                        onChangeText={(text) => handleInputChange(field, text)}
-                                        value={inputs[field]}
-                                        placeholder={inputs[field]}
-                                    />
-                                    <StyledButton2
-                                        icon={icons[`Edit ${field}`]}
-                                        onPress={() => handleSave(field)}
-                                    />
-                                </View>
+                <View style={styles.column}>
+                    {fields.map((field, index) => (
+                        <View key={index} style={styles.inputContainer}>
+                            <Text style={styles.label}>{field.charAt(0).toUpperCase() + field.slice(1)}</Text>
+                            <View style={styles.inputRow}>
+                                <TextInput
+                                    style={styles.input}
+                                    onChangeText={(text) => handleInputChange(field, text)}
+                                    value={inputs[field]}
+                                    placeholder={inputs[field]}
+                                />
+                                <StyledButton2
+                                    icon={icons[field]}
+                                    onPress={() => handleSave(field)}
+                                />
                             </View>
-                        ))}
-                    </View>
-                    <View style={styles.column}>
-                        {fields.slice(4, 6).map((field, index) => (
-                            <View key={index} style={styles.inputContainer}>
-                                <Text style={styles.label}>{field.charAt(0).toUpperCase() + field.slice(1)}</Text>
-                                <View style={styles.inputRow}>
-                                    <TextInput
-                                        style={styles.input}
-                                        onChangeText={(text) => handleInputChange(field, text)}
-                                        value={inputs[field]}
-                                        placeholder={inputs[field]}
-                                    />
-                                    <StyledButton2
-                                        icon={icons[`Edit ${field}`]}
-                                        onPress={() => handleSave(field)}
-                                    />
-                                </View>
-                            </View>
-                        ))}
-                        {fields.slice(6,8).map((field, index) => (
-                            <View key={index} style={styles.inputContainer}>
-                                <Text style={styles.label}>{field.charAt(0).toUpperCase() + field.slice(1)}</Text>
-                                <View style={styles.inputRow}>
-                                    <ImageInput userId={inputs.userID} patente={null} field={field} onChange={(image) => handleInputChange(field, image) }/>
-                                </View>
-                            </View>
-                        ))}
-                    </View>
+                        </View>
+                    ))}
                 </View>
             </ScrollView>
         </ImageBackground>
@@ -249,7 +185,7 @@ const styles = StyleSheet.create({
     },
     column: {
         flexDirection: 'column',
-        width: '50%',
+        width: '80%',
         padding: 25,
     },
     scrollContainer: {
