@@ -1,27 +1,14 @@
-import React, {useEffect, useState} from 'react';
-import { StyleSheet, View, Text, ImageBackground, ScrollView, TextInput } from 'react-native';
+import React, {useContext, useEffect, useState} from 'react';
+import { StyleSheet, View, Text, ImageBackground } from 'react-native';
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import StyledButton2 from "../../../components/StyledButton2";
-import image from "react-native-web/src/exports/Image";
 import ImageInput from "../../../components/ImageInput";
+import InputText from "../../../components/InputText";
+import AddButton from "../../../components/AddButton";
+import {NotificationContext} from "../../../components/notification/NotificationContext";
 
-const icons = {
-    'Edit username': require('../../../assets/pencil.png'),
-    'Edit name': require('../../../assets/pencil.png'),
-    'Edit password': require('../../../assets/pencil.png'),
-    'Edit email': require('../../../assets/pencil.png'),
-    'Edit surname': require('../../../assets/pencil.png'),
-    'Edit domicilio': require('../../../assets/pencil.png'),
-};
-const allowedExtensions = ['png', 'jpg', 'jpeg', 'gif'];
-
-const fields = [
-    'username', 'domicilio', 'name', 'password', 'email', 'surname', 'front of DNI', 'back of DNI'
-];
-
-export function EditProfile({  }) {
-    //const userToken  = AsyncStorage.getItem("userToken"); // agarro el token del authContext (si esta loggineado, lo va a tener)
-
+export function EditProfile({ navigation }) {
+    const { showNotification, setColor } = useContext(NotificationContext);
+    const [fields, setFields] = useState([]);
     const [inputs, setInputs] = useState({
         userID: '',
         username: '',
@@ -47,7 +34,6 @@ export function EditProfile({  }) {
                         'Content-Type': 'application/json',
                     },
                 });
-                console.log("Paso!!")
                 const data = await response.json();
                 if (response.ok) {
                     setInputs(prevInputs => ({
@@ -62,7 +48,7 @@ export function EditProfile({  }) {
                 }
             }
         }
-        loadUserProfile().then(r => console.log(r));
+        loadUserProfile().then();
     }, []);
 
     // This effect runs only when canFetchProfile is set to true
@@ -92,37 +78,81 @@ export function EditProfile({  }) {
         }
     }, [canFetchProfile, inputs.userID]); // Depend on canFetchProfile
 
+    // Función que elimina el usuario
+    const deleteUser = () => {
+        fetch(`http://localhost:9002/user/${inputs.userID}/deleteUser`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        }).then(r => {
+            if (r.ok) {
+                console.log("User deleted")
+                setColor('#32cd32')
+                showNotification("User deleted successfully.")
+                logout().then()
+            } else {
+                console.log("Failed to delete user")
+                setColor('red')
+                showNotification("Failed to delete user. Please try again.")
+            }
+        }).catch(e => {
+            console.log("Failed to delete user")
+            setColor('red')
+            showNotification("Failed to delete user. Please try again.")
+        })
+    }
 
+    const logout = async () => {
+        try {
+            await AsyncStorage.removeItem('userToken');
+            console.log('Token eliminado', AsyncStorage.getItem('userToken'));
+            navigation.reset({index: 0, routes: [{ name: 'Home' }],});
+        } catch (error) {
+            console.error('Logout failed:', error);
+        }
+    };
 
-    //función que se encarga de cambiar el valor de los inputs en tiempo real
+    // Función que se encarga de cambiar el valor de los inputs en tiempo real
     const handleInputChange = (field, value) => {
+        setFields(prevFields => Array.from(new Set([...prevFields, field])));
+        console.log(fields)
         setInputs(prevState => ({
             ...prevState,
             [field]: value
         }));
     };
 
-    //función que se encarga de enviar los datos al backend, y muestra un mensaje de éxito o error
+    // Función que se encarga de guardar los cambios en cada campo
+    const handleEachSave = async () => {
+        for (const field of fields) {
+            await handleSave(field);
+        }
+    };
+
+    // Función que se encarga de enviar los datos al backend, y muestra un mensaje de éxito o error
     const handleSave = async (field) => {
         const newValue = inputs[field];
         const {userID, username, name, surname, domicilio, password, email} = inputs;
 
         if (field === 'email' && !newValue.includes('@')) {
-            alert('Please enter a valid email address.');
+            setColor('red')
+            showNotification('Please enter a valid email address.');
             return;
         }
         if (field === 'password' && newValue.length < 8) {
-            alert('Password must be at least 8 characters.');
+            setColor('red')
+            showNotification('Password must be at least 8 characters.');
             return;
         }
         if (field === 'username' && (username === '' || name === '' || surname === '' || domicilio === '')) {
-            alert('Please fill in all fields.');
+            setColor('red')
+            showNotification('Please fill in all fields.');
             return;
         }
 
         console.log(`Attempting to save ${field} with value: ${newValue}`);
-
-
+        console.log(field + ": " + newValue)
         try {
             const token = await AsyncStorage.getItem('userToken');
             const response = await fetch('http://localhost:9002/editProfile', {
@@ -138,77 +168,89 @@ export function EditProfile({  }) {
                 }),
             });
 
-            console.log('Server response:', response);
-            console.log('token:' + token);
 
             if (!response.ok) {
-                throw new Error('Network response was not ok');
+                console.error('Network response was not ok');
+                setColor('red')
+                showNotification('Failed to update profile. Please try again.');
+            } else {
+                setColor('#32cd32')
+                showNotification(`Updated profile successfully!`);
             }
 
-            const data = await response.json(); // Assuming the server responds with JSON
-            console.log(`Server response: `, data);
+            if (response.status === 409) {
+                setColor('red');
+                showNotification('Username or email already in use.');
+            }
 
-            // Update UI or notify user based on success
-            alert(`Updated ${field} successfully!`);
         } catch (error) {
             console.error('Error updating profile:', error);
-            alert('Failed to update profile. Please try again.');
+            setColor('red')
+            showNotification('Failed to update profile. Please try again.');
         }
     };
 
     return (
         <ImageBackground source={require('../../../assets/BackgroundUnlocked.jpg')} style={styles.container}>
             <Text style={styles.title}>Edit Profile</Text>
-            <ScrollView contentContainerStyle={styles.scrollContainer}>
-                <View style={styles.columnsContainer}>
-                    <View style={styles.column}>
-                        {fields.slice(0, 4).map((field, index) => (
-                            <View key={index} style={styles.inputContainer}>
-                                <Text style={styles.label}>{field.charAt(0).toUpperCase() + field.slice(1)}</Text>
-                                <View style={styles.inputRow}>
-                                    <TextInput
-                                        style={styles.input}
-                                        onChangeText={(text) => handleInputChange(field, text)}
-                                        value={inputs[field]}
-                                        placeholder={inputs[field]}
-                                    />
-                                    <StyledButton2
-                                        icon={icons[`Edit ${field}`]}
-                                        onPress={() => handleSave(field)}
-                                    />
-                                </View>
-                            </View>
-                        ))}
-                    </View>
-                    <View style={styles.column}>
-                        {fields.slice(4, 6).map((field, index) => (
-                            <View key={index} style={styles.inputContainer}>
-                                <Text style={styles.label}>{field.charAt(0).toUpperCase() + field.slice(1)}</Text>
-                                <View style={styles.inputRow}>
-                                    <TextInput
-                                        style={styles.input}
-                                        onChangeText={(text) => handleInputChange(field, text)}
-                                        value={inputs[field]}
-                                        placeholder={inputs[field]}
-                                    />
-                                    <StyledButton2
-                                        icon={icons[`Edit ${field}`]}
-                                        onPress={() => handleSave(field)}
-                                    />
-                                </View>
-                            </View>
-                        ))}
-                        {fields.slice(6,8).map((field, index) => (
-                            <View key={index} style={styles.inputContainer}>
-                                <Text style={styles.label}>{field.charAt(0).toUpperCase() + field.slice(1)}</Text>
-                                <View style={styles.inputRow}>
-                                    <ImageInput userId={inputs.userID} patente={null} field={field} onChange={(image) => handleInputChange(field, image) }/>
-                                </View>
-                            </View>
-                        ))}
+            <View style={styles.row}>
+                <InputText
+                    label={"Name"}
+                    onChangeText={(text) => handleInputChange("name", text)}
+                    value={inputs["name"]}
+                    placeholder={inputs["name"]}
+                />
+                <InputText
+                    label={"Username"}
+                    onChangeText={(text) => handleInputChange("username", text)}
+                    value={inputs["username"]}
+                    placeholder={inputs["username"]}
+                />
+                <InputText
+                    label={"Surname"}
+                    onChangeText={(text) => handleInputChange("surname", text)}
+                    value={inputs["surname"]}
+                    placeholder={inputs["surname"]}
+                />
+            </View>
+            <View style={styles.row}>
+                <InputText
+                    label={"Domicilio"}
+                    onChangeText={(text) => handleInputChange("domicilio", text)}
+                    value={inputs["domicilio"]}
+                    placeholder={inputs["domicilio"]}
+                />
+                <InputText
+                    label={"Email"}
+                    onChangeText={(text) => handleInputChange("email", text)}
+                    value={inputs["email"]}
+                    placeholder={inputs["email"]}
+                />
+                <InputText
+                    label={"Password"}
+                    onChangeText={(text) => handleInputChange("password", text)}
+                    value={inputs["password"]}
+                    placeholder={inputs["password"]}
+                />
+            </View>
+            <View style={styles.row}>
+                <View>
+                    <Text style={styles.label}>Front of DNI</Text>
+                    <View style={styles.inputRow}>
+                        <ImageInput userId={inputs.userID} patente={null} field={"front of DNI"} onChange={(image) => handleInputChange("front of DNI", image) }/>
                     </View>
                 </View>
-            </ScrollView>
+                <View>
+                    <Text style={styles.label}>Back of DNI</Text>
+                    <View style={styles.inputRow}>
+                        <ImageInput userId={inputs.userID} patente={null} field={"back of DNI"} onChange={(image) => handleInputChange("back of DNI", image) }/>
+                    </View>
+                </View>
+            </View>
+            <View style={styles.row}>
+                <AddButton text={"Save"} onPress={() => handleEachSave()} />
+                <AddButton text={"Delete User"} color={"red"} onPress={() => deleteUser()} />
+            </View>
         </ImageBackground>
     );
 }
@@ -218,6 +260,17 @@ const styles = StyleSheet.create({
         flex: 1,
         padding: 16,
         alignItems: 'center',
+        justifyContent: "space-between"
+    },
+    row: {
+        flexDirection: 'row',
+        flex: 1,
+        justifyContent: 'space-around',
+        width: '80%',
+    },
+    scrollBarContainer: {
+        width: '40%',
+        flex: 1,
     },
     columnsContainer: {
         flexDirection: 'row',
@@ -237,7 +290,7 @@ const styles = StyleSheet.create({
         color: 'white',
         fontSize: 16,
         fontWeight: 'bold',
-        marginLeft: 2,
+        marginLeft: 10,
     },
     inputContainer: {
         flexDirection: 'column',
@@ -272,7 +325,7 @@ const styles = StyleSheet.create({
         marginRight: 10,
         paddingHorizontal: 10,
         width: 50,
-    }
+    },
 });
 
 

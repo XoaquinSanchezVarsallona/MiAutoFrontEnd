@@ -4,12 +4,11 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import StyledButton2 from "../../components/StyledButton2";
 
 export function ConfigurationScreen({ navigation }) {
+
     const logout = async () => {
         try {
-            //elimino el token del storage local
+            // Elimino el token del storage local
             await AsyncStorage.removeItem('userToken');
-
-            //chequeo
             console.log('Token eliminado', AsyncStorage.getItem('userToken'));
 
             // This resets the stack navigator to the initial route
@@ -30,7 +29,7 @@ export function ConfigurationScreen({ navigation }) {
                     />
                     <Text style={styles.subtitle}>Logout</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.buttonContainer} onPress={() => navigation.navigate('EditProfile')}>
+                <TouchableOpacity style={styles.buttonContainer} onPress={() => navigation.navigate('EditProfile', navigation)}>
                     <StyledButton2
                         onPress={() => navigation.navigate('EditProfile')}
                         icon={require('../../assets/pencil.png')}

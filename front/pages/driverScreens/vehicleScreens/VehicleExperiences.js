@@ -1,6 +1,5 @@
 import { ImageBackground, Pressable, ScrollView, StyleSheet, Text, View, Modal, TextInput, TouchableOpacity } from "react-native";
 import React, { useContext, useEffect, useState } from "react";
-import RouteCard from "../../../components/RouteCard";
 import { NotificationContext } from "../../../components/notification/NotificationContext";
 import CustomScrollBar from "../../../components/CustomScrollBar";
 import {Picker} from "react-native-web";
@@ -123,12 +122,12 @@ export function VehicleExperiences({ navigation, route }) {
 
 
     useEffect(() => {
-        fetchExperiences();
-        fetchStores();
+        fetchExperiences().then();
+        fetchStores().then();
     }, [routesPassed, experiencesUpdated, distance]);
 
     useEffect(() => {
-        fetchStoreNames();
+        fetchStoreNames().then();
     }, [experiences]);
 
     const deleteExperience = async (experienceId) => {
@@ -170,7 +169,7 @@ export function VehicleExperiences({ navigation, route }) {
             });
 
             if (!response.ok) {
-                throw new Error('Network response was not ok');
+                console.error('Network response was not ok');
             }
             setColor('#32cd32');
             showNotification('Experience added successfully');

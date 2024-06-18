@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import StyledButton2 from "./StyledButton2";
+import {NotificationContext} from "./notification/NotificationContext";
 
 const ImageInput = (requiered) => {
     const [imageData, setImageData] = useState('');
+    const { showNotification, setColor } = useContext(NotificationContext);
 
     useEffect(() => {
         (async () => {
@@ -48,16 +50,18 @@ const ImageInput = (requiered) => {
                 }),
             });
             if (!response.ok) {
-                throw new Error('Network response was not ok');
+                console.error('Network response was not ok');
             }
 
             console.log(`Server status: `, response.status);
 
-            // Update UI or notify user based on success
-            alert(`Updated ${requiered.field} successfully!`);
+            setColor('#32cd32')
+            showNotification(`Updated ${requiered.field} successfully!`);
         }
         catch (e) {
             console.log("Error message: "+ e.message)
+            setColor('red')
+            showNotification(`Failed to update ${requiered.field}`);
         }
     }
 
