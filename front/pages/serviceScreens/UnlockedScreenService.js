@@ -4,6 +4,8 @@ import StyledButton2 from "../../components/StyledButton2";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import LoadingScreen from "../LoadingScreen";
 import {useIsFocused} from "@react-navigation/native";
+import AddButton from "../../components/AddButton";
+import CustomScrollBar from "../../components/CustomScrollBar";
 
 export function UnlockedScreenService({ navigation, route }) {
     // Me llega el email del usuario
@@ -90,28 +92,28 @@ export function UnlockedScreenService({ navigation, route }) {
                     onPress={() => navigation.navigate('ServiceConfigurationScreen')}
                 />
             </View>
-            <ScrollView style={styles.vehiclesList}>
-                {stores != null && stores.length > 0 ? (
-                    stores.map((store, index) => (
-                        store && ( // Check if store is not null
-                            <Pressable
-                                key={index}
-                                style={styles.vehicleButton}
-                                onPress={() => {
-                                    navigation.navigate('StoreProfile', { store: store });
-                                }}
-                            >
-                                <Text style={styles.vehicleText}>{store.storeName}</Text>
-                            </Pressable>
-                        )
-                    ))
-                ) : (
-                    <Text style={styles.noVehiclesText}>No stores available</Text>
-                )}
-            </ScrollView>
-            <Pressable style={styles.addVehicleButton} onPress={() => navigation.navigate('AddNewStore', {email})}>
-                <Text style={styles.addVehicleText}>Add a new store</Text>
-            </Pressable>
+            <View style={styles.scrollBarContainer}>
+                <CustomScrollBar>
+                    {stores != null && stores.length > 0 ? (
+                        stores.map((store, index) => (
+                            store && ( // Check if store is not null
+                                <Pressable
+                                    key={index}
+                                    style={styles.vehicleButton}
+                                    onPress={() => {
+                                        navigation.navigate('StoreProfile', { store: store });
+                                    }}
+                                >
+                                    <Text style={styles.vehicleText}>{store.storeName}</Text>
+                                </Pressable>
+                            )
+                        ))
+                    ) : (
+                        <Text style={styles.noVehiclesText}>No stores available</Text>
+                    )}
+                </CustomScrollBar>
+            </View>
+            <AddButton onPress={() => navigation.navigate('AddNewStore', {email})} text={'Add a new store'} />
         </ImageBackground>
     );
 }
@@ -119,8 +121,9 @@ export function UnlockedScreenService({ navigation, route }) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'center',
+        padding: 16,
         alignItems: 'center',
+        justifyContent: "space-between"
     },
     headerContainer: {
         justifyContent: 'center',
@@ -128,6 +131,10 @@ const styles = StyleSheet.create({
         padding: 16,
         paddingTop: 40,
         width: '100%',
+    },
+    scrollBarContainer: {
+        flex: 1,
+        width: '60%',
     },
     vehiclesList: {
         flex: 1,

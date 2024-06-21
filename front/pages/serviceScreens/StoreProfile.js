@@ -1,7 +1,18 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {View, Text, StyleSheet, ImageBackground, TouchableOpacity, ScrollView, TextInput, Modal} from 'react-native';
+import {
+    View,
+    Text,
+    StyleSheet,
+    ImageBackground,
+    TouchableOpacity,
+    ScrollView,
+    TextInput,
+    Modal,
+    Image
+} from 'react-native';
 import {NotificationContext} from "../../components/notification/NotificationContext";
 import StarRating from '../../components/StarRating';
+import crossIcon from "../../assets/cross.png";
 
 export function StoreProfile({ navigation, route }) {
     const { store } = route.params;
@@ -96,20 +107,22 @@ export function StoreProfile({ navigation, route }) {
             });
 
             if (response.status === 400) {
-                alert('No users to notify');
+                setColor('red')
+                showNotification('No users to notify');
                 return;
             }
 
             if (!response.ok) {
-                throw new Error('Network response was not ok');
+                console.error('Network response was not ok');
             }
 
-            //const data = await response.json();
             setNotificationDescription('');
             await fetchNotifications();
 
         } catch (error) {
             console.error('Error submitting notification:', error);
+            setColor('red')
+            showNotification('Error submitting notification');
         }
     };
 
@@ -260,13 +273,14 @@ export function StoreProfile({ navigation, route }) {
                         return unique;
                     }, []).sort((a, b) => new Date(b.creationDate) - new Date(a.creationDate)).map((notification, index) => (
                         <View key={index} style={styles.commentContainer}>
-                            <View style={styles.commentTextContainer}>
-                                <Text style={styles.comment}>{notification.description}</Text>
-                                <Text style={styles.creationDate}>{new Date(notification.creationDate).toLocaleDateString()}</Text>
-                            </View>
-                            <TouchableOpacity style={styles.deleteNotificationButton} onPress={() => handleDeleteNotification(notification.description)}>
-                                <Text style={styles.deleteButtonText}>X</Text>
+                            <TouchableOpacity onPress={() => handleDeleteNotification(notification.description)}>
+                                <Image
+                                    source={crossIcon}
+                                    style={styles.crossIcon}
+                                />
                             </TouchableOpacity>
+                            <Text style={styles.comment}>{notification.description}</Text>
+                            <Text style={styles.creationDate}>{new Date(notification.creationDate).toLocaleDateString()}</Text>
                         </View>
                     ))}
                 </ScrollView>
@@ -364,7 +378,6 @@ const styles = StyleSheet.create({
         color: 'white',
         fontWeight: 'bold',
     },
-
     container: {
         flex: 1,
         width: '100%',
@@ -428,11 +441,9 @@ const styles = StyleSheet.create({
     commentContainer: {
         backgroundColor: 'rgba(30, 144, 255, 0.9)',
         padding: 10,
+        paddingVertical: 25,
         borderRadius: 5,
         marginBottom: 10,
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
     },
     comment: {
         fontSize: 14,
@@ -441,17 +452,17 @@ const styles = StyleSheet.create({
     creationDate: {
         fontSize: 12,
         color: 'white',
-        textAlign: 'right',
-        marginTop: 5,
+        position: 'absolute',
+        bottom: 5,
+        right: 5,
     },
-    deleteNotificationButton: {
-        backgroundColor: '#ff6347',
-        paddingVertical: 2, // Reduced padding
-        paddingHorizontal: 5, // Reduced padding
-        borderRadius: 5,
-        position: 'absolute', // Absolute positioning
-        right: 5, // Positioned to the right
-        top: 5, // Positioned above the date
+    crossIcon: {
+        width: 25,
+        height: 25,
+        position: 'absolute',
+        zIndex: 9999,
+        top: -13,
+        right: 2,
     },
     modalContainer: {
         flex: 1,

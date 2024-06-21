@@ -1,6 +1,9 @@
 import {StyleSheet, View, Text, ImageBackground, TextInput, Button, Pressable} from 'react-native';
 import React, {useContext, useState} from "react";
 import {NotificationContext} from "../../components/notification/NotificationContext";
+import AddButton from "../../components/AddButton";
+import InputText from "../../components/InputText";
+import Select from "react-select";
 
 export function AddNewStore({ navigation, route }) {
     const { email } = route.params;
@@ -36,38 +39,60 @@ export function AddNewStore({ navigation, route }) {
         }
     };
 
+    const serviceOptions = [
+        { value: 'mecanico', label: 'Mechanic' },
+        { value: 'estacion de servicio', label: 'Service Station' },
+        { value: 'lavadero', label: 'Car Wash' }
+    ];
+
     return (
         <ImageBackground source={require('../../assets/BackgroundUnlocked.jpg')} style={styles.container}>
-            <View style={styles.headerContainer}>
-                <Text style={styles.title}>Add a new Store</Text>
+            <Text style={styles.title}>Add a new Store</Text>
+            <View style={[styles.pickerContainer, { overflow: 'visible' }]}>
+                <Text style={styles.label}>Service Type</Text>
+                <Select
+                    options={serviceOptions}
+                    value={serviceOptions.find(option => option.value === tipoDeServicio)}
+                    onChange={(selectedOption) => setTipoDeServicio(selectedOption.value)}
+                    styles={{
+                        control: (provided) => ({
+                            ...provided,
+                            backgroundColor: 'transparent',
+                            color: 'white',
+                            borderColor: 'gray',
+                            borderWidth: 1,
+                            borderRadius: 5,
+                        }),
+                        singleValue: (provided) => ({
+                            ...provided,
+                            color: 'white',
+                        }),
+                        menu: (provided) => ({
+                            ...provided,
+                            color: 'black',
+                        }),
+                    }}
+                />
             </View>
-            <TextInput
-                style={styles.input}
+            <InputText
+                label={'Store Email'}
+                onChangeText={(text) => setStoreEmail(text)}
                 value={storeEmail}
-                onChangeText={setStoreEmail}
-                placeholder="Store Email"
+                placeholder={'Store Email'}
             />
-            <TextInput
-                style={styles.input}
+            <InputText
+                label={'Store Name'}
+                onChangeText={(text) => setStoreName(text)}
                 value={storeName}
-                onChangeText={setStoreName}
-                placeholder="Store Name"
+                placeholder={'Store Name'}
             />
-            <TextInput
-                style={styles.input}
+            <InputText
+                label={'Address'}
+                onChangeText={(text) => setDomicilio(text)}
                 value={domicilio}
-                onChangeText={setDomicilio}
-                placeholder="Address"
+                placeholder={'Address'}
             />
-            <TextInput
-                style={styles.input}
-                value={tipoDeServicio}
-                onChangeText={setTipoDeServicio}
-                placeholder="Type of Service"
-            />
-            <Pressable style={styles.addVehicleButton} onPress={addStore} >
-                <Text style={styles.addVehicleText}>Add store</Text>
-            </Pressable>
+            <AddButton onPress={addStore} text={'Add Store'} />
         </ImageBackground>
     );
 }
@@ -75,9 +100,9 @@ export function AddNewStore({ navigation, route }) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
         padding: 16,
+        alignItems: 'center',
+        justifyContent: "space-between"
     },
     title: {
         fontSize: 60,
@@ -99,16 +124,18 @@ const styles = StyleSheet.create({
         marginBottom: 20,
         paddingLeft: 10,
     },
-    addVehicleButton: {
-        width: '40%',
-        paddingVertical: 12,
-        paddingHorizontal: 20,
-        marginVertical: 10,
-        backgroundColor: '#32cd32',
-        borderRadius: 20,
-        position: 'absolute',
-        bottom: 10,
-        alignSelf: 'center',
+    label: {
+        alignSelf: 'flex-start',
+        color: 'white',
+        fontSize: 18,
+        fontWeight: 'bold',
+        marginBottom: 5,
     },
-
+    pickerContainer: {
+        flex: 1,
+        width: '20%',
+        marginBottom: 20,
+        alignSelf: 'center',
+        zIndex: 9999,
+    },
 });

@@ -1,28 +1,20 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import { StyleSheet, View, Text, ImageBackground, ScrollView, TextInput } from 'react-native';
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import StyledButton2 from "../../../components/StyledButton2";
-import image from "react-native-web/src/exports/Image";
-import ImageInput from "../../../components/ImageInput";
+import {NotificationContext} from "../../../components/notification/NotificationContext";
+import InputText from "../../../components/InputText";
+import AddButton from "../../../components/AddButton";
 
-const icons = {
-    'username': require('../../../assets/pencil.png'),
-    'email': require('../../../assets/pencil.png'),
-};
-
-const fields = [
-    'username', 'email',
-];
 
 export function ServiceEditProfile({ navigation }) {
-    //const userToken  = AsyncStorage.getItem("userToken"); // agarro el token del authContext (si esta loggineado, lo va a tener)
-
     const [inputs, setInputs] = useState({
         userID: '',
         username: '',
         email: '',
     });
+    const [fields, setFields] = useState([]);
     const [canFetchProfile, setCanFetchProfile] = useState(false);
+    const { showNotification, setColor  } = useContext(NotificationContext);
 
     // This effect runs once and fetches the token and user ID
     useEffect(() => {
@@ -37,13 +29,11 @@ export function ServiceEditProfile({ navigation }) {
                         'Content-Type': 'application/json',
                     },
                 });
-                console.log("Paso!!")
                 const data = await response.json();
                 if (response.ok) {
                     setInputs(prevInputs => ({
                         ...prevInputs,
                         userID: data.userId,
-                        username: data.username,
                     }));
                     setCanFetchProfile(true); // Enable fetching more details
                 } else {
@@ -52,7 +42,7 @@ export function ServiceEditProfile({ navigation }) {
                 }
             }
         }
-        loadUserProfile().then(r => console.log(r));
+        loadUserProfile().then();
     }, []);
 
     // This effect runs only when canFetchProfile is set to true
@@ -69,24 +59,33 @@ export function ServiceEditProfile({ navigation }) {
                     const data = await response.json();
                     setInputs(prevInputs => ({
                         ...prevInputs,
+                        username: data.username,
                         email: data.email,
                     }));
                 } catch (error) {
                     console.error('Error:', error);
                 }
             }
-            fetchAndSetUser().then(r => console.log(r));
+            fetchAndSetUser().then();
         }
     }, [canFetchProfile, inputs.userID]); // Depend on canFetchProfile
 
 
 
-    //función que se encarga de cambiar el valor de los inputs en tiempo real
+    // Función que se encarga de cambiar el valor de los inputs en tiempo real
     const handleInputChange = (field, value) => {
+        setFields(prevFields => Array.from(new Set([...prevFields, field])));
         setInputs(prevState => ({
             ...prevState,
             [field]: value
         }));
+    };
+
+    // Función que se encarga de guardar los cambios en cada campo
+    const handleEachSave = async () => {
+        for (const field of fields) {
+            await handleSave(field);
+        }
     };
 
     //función que se encarga de enviar los datos al backend, y muestra un mensaje de éxito o error
@@ -95,15 +94,15 @@ export function ServiceEditProfile({ navigation }) {
         const {userID, username, name, surname, domicilio, password, email} = inputs;
 
         if (field === 'email' && !newValue.includes('@')) {
-            alert('Please enter a valid email address.');
+            showNotification('Please enter a valid email address.');
             return;
         }
         if (field === 'password' && newValue.length < 8) {
-            alert('Password must be at least 8 characters.');
+            showNotification('Password must be at least 8 characters.');
             return;
         }
         if (field === 'username' && (username === '' || name === '' || surname === '' || domicilio === '')) {
-            alert('Please fill in all fields.');
+            showNotification('Please fill in all fields.');
             return;
         }
 
@@ -129,45 +128,39 @@ export function ServiceEditProfile({ navigation }) {
             console.log('token:' + token);
 
             if (!response.ok) {
-                throw new Error('Network response was not ok');
+                console.error('Network response was not ok');
+                setColor('red')
+                showNotification('Failed to update profile. Please try again.');
             }
 
-            const data = await response.json(); // Assuming the server responds with JSON
-            console.log(`Server response: `, data);
-
-            // Update UI or notify user based on success
-            alert(`Updated ${field} successfully!`);
+            setColor('#32cd32')
+            showNotification(`Updated profile successfully!`);
             navigation.navigate('UnlockedScreenService')
         } catch (error) {
             console.error('Error updating profile:', error);
-            alert('Failed to update profile. Please try again.');
+            setColor('red')
+            showNotification('Failed to update profile. Please try again.');
         }
-    };
+    }
 
     return (
         <ImageBackground source={require('../../../assets/BackgroundUnlocked.jpg')} style={styles.container}>
-            <ScrollView contentContainerStyle={styles.scrollContainer}>
-                <Text style={styles.title}>Edit Profile</Text>
-                <View style={styles.column}>
-                    {fields.map((field, index) => (
-                        <View key={index} style={styles.inputContainer}>
-                            <Text style={styles.label}>{field.charAt(0).toUpperCase() + field.slice(1)}</Text>
-                            <View style={styles.inputRow}>
-                                <TextInput
-                                    style={styles.input}
-                                    onChangeText={(text) => handleInputChange(field, text)}
-                                    value={inputs[field]}
-                                    placeholder={inputs[field]}
-                                />
-                                <StyledButton2
-                                    icon={icons[field]}
-                                    onPress={() => handleSave(field)}
-                                />
-                            </View>
-                        </View>
-                    ))}
-                </View>
-            </ScrollView>
+            <Text style={styles.title}>Edit Profile</Text>
+            <View style={styles.inputs}>
+                <InputText
+                    label={'Username'}
+                    onChangeText={(text) => handleInputChange("username", text)}
+                    value={inputs["username"]}
+                    placeholder={inputs["username"]}
+                />
+                <InputText
+                    label={'Email'}
+                    onChangeText={(text) => handleInputChange("email", text)}
+                    value={inputs["email"]}
+                    placeholder={inputs["email"]}
+                />
+            </View>
+            <AddButton onPress={handleEachSave} text={'Save'} />
         </ImageBackground>
     );
 }
@@ -177,45 +170,7 @@ const styles = StyleSheet.create({
         flex: 1,
         padding: 16,
         alignItems: 'center',
-    },
-    columnsContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-around',
-        width: '100%',
-    },
-    column: {
-        flexDirection: 'column',
-        width: '80%',
-        padding: 25,
-    },
-    scrollContainer: {
-        alignItems: 'center',
-    },
-    label: {
-        alignSelf: 'flex-start',
-        color: 'white',
-        fontSize: 16,
-        fontWeight: 'bold',
-        marginLeft: 2,
-    },
-    inputContainer: {
-        flexDirection: 'column',
-        width: '25%',
-        alignItems: 'center',
-    },
-    inputRow: {
-        flexDirection: 'row',
-        width: '100%',
-        alignItems: 'center',
-    },
-    input: {
-        flex: 1,
-        height: 40,
-        color: '#FFFFFF80',
-        borderColor: 'gray',
-        borderWidth: 1,
-        marginRight: 10,
-        paddingHorizontal: 10,
+        justifyContent: "space-between"
     },
     title: {
         fontSize: 60,
@@ -223,14 +178,10 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         marginBottom: 10,
     },
-    inputImage: {
-        flex: 1,
-        height: 40,
-        borderColor: 'gray',
-        borderWidth: 1,
-        marginRight: 10,
-        paddingHorizontal: 10,
-        width: 50,
+    inputs: {
+        width: '100%',
+        alignItems: 'center',
+        justifyContent: 'center',
     }
 });
 

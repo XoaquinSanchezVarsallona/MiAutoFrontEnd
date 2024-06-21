@@ -133,8 +133,8 @@ export function EditVisualStoreProfile({ navigation , route}) {
                     placeholder={inputs["Domicilio"]}
                 />
             </View>
-            <View style={styles.row}>
-                <View style={styles.pickerContainer}>
+            <View style={[styles.row, { overflow: 'visible', zIndex: 9999}]}>
+                <View style={[styles.pickerContainer, { overflow: 'visible' }]}>
                     <Text style={styles.label}>Service Type</Text>
                     <Select
                         options={serviceOptions}
@@ -148,16 +148,17 @@ export function EditVisualStoreProfile({ navigation , route}) {
                                 borderColor: 'gray',
                                 borderWidth: 1,
                                 borderRadius: 5,
+                                zIndex: 9999,
                             }),
                             singleValue: (provided) => ({
                                 ...provided,
                                 color: 'white',
+                                zIndex: 9999,
                             }),
                             menu: (provided) => ({
                                 ...provided,
                                 color: 'black',
                                 zIndex: 9999,
-                                position: 'relative',
                             })
                         }}
                     />
@@ -245,5 +246,6 @@ const styles = StyleSheet.create({
         width: '20%',
         marginBottom: 20,
         alignSelf: 'center',
+        zIndex: 9999,
     },
 });
