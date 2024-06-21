@@ -3,6 +3,7 @@ import {Image, View, Text, StyleSheet, ImageBackground, TouchableOpacity} from '
 import {useIsFocused} from "@react-navigation/native";
 import {NotificationContext} from "../../../components/notification/NotificationContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import AddButton from "../../../components/AddButton";
 
 export function VehicleProfile({ navigation, route }) {
     const { vehicle, familySurname, familyId } = route.params;
@@ -173,13 +174,8 @@ export function VehicleProfile({ navigation, route }) {
                 </View>
             </View>
             <View style={styles.buttonContainer}>
-                <TouchableOpacity style={styles.deleteButton} onPress={deleteVehicle}>
-                    <Text style={styles.buttonText}>Delete Vehicle</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.modifyButton} onPress={() => {
-                    navigation.navigate("EditCarProfile", {patente : vehicle.patente} ) }}>
-                    <Text style={styles.buttonText}>Modify Vehicle Details</Text>
-                </TouchableOpacity>
+                <AddButton onPress={deleteVehicle} color={'red'} text={'Delete Vehicle'} />
+                <AddButton onPress={() => {navigation.navigate('EditCarProfile', {patente : vehicle.patente} )}} color={'orange'} text={'Modify Vehicle Details'} />
             </View>
         </ImageBackground>
     );
@@ -187,6 +183,7 @@ export function VehicleProfile({ navigation, route }) {
 
 const styles = StyleSheet.create({
     content: {
+        flex: 1,
         marginTop: 15,
         padding: 15,
         margin: 2,
@@ -207,43 +204,12 @@ const styles = StyleSheet.create({
         width: 250,
     },
     buttonContainer: {
+        flex: 1,
         flexDirection: 'row',
         alignSelf: 'center',
         marginTop: 20,
-        justifyContent: 'space-between',
-        width: '70%',
-    },
-    deleteButton: {
-        width: '50%',
-        paddingVertical: 12,
-        paddingHorizontal: 20,
-        marginVertical: 10,
-        marginRight: 20,
-        bottom: 10,
-        backgroundColor: 'red',
-        borderRadius: 20,
-        alignSelf: 'center',
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.25,
-        shadowRadius: 5,
-        elevation: 5,
-    },
-    modifyButton: {
-        width: '50%',
-        paddingVertical: 12,
-        paddingHorizontal: 20,
-        marginVertical: 10,
-        marginLeft: 20,
-        bottom: 10,
-        backgroundColor: 'orange',
-        borderRadius: 20,
-        alignSelf: 'center',
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.25,
-        shadowRadius: 5,
-        elevation: 5,
+        justifyContent: 'space-evenly',
+        width: '100%',
     },
     buttonText: {
         color: 'white',
@@ -258,6 +224,7 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 20,
         fontWeight: 'bold',
+        paddingBottom: -8,
     },
     detail: {
         fontSize: 16,
@@ -331,8 +298,8 @@ const styles = StyleSheet.create({
         padding: 5,
     },
     stateIndicator: {
-        height: 20,
-        width: 20,
+        height: 18,
+        width: 18,
         margin: 3.5,
         marginLeft: 5,
         shadowColor: '#000',

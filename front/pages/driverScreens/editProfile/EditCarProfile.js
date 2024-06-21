@@ -1,26 +1,17 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import { StyleSheet, View, Text, ImageBackground, ScrollView, TextInput } from 'react-native';
-import StyledButton from "../../../components/StyledButton";
 import StyledButton3 from "../../../components/StyleButton3";
 import {NotificationContext} from "../../../components/notification/NotificationContext";
+import InputText from "../../../components/InputText";
+import {LocalizationProvider} from "@mui/x-date-pickers/LocalizationProvider";
+import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
+import {DatePicker} from "@mui/x-date-pickers/DatePicker";
+import dayjs from "dayjs";
+import AddButton from "../../../components/AddButton";
 
-const icons = {
-    'Edit username': require('../../../assets/pencil.png'),
-    'Edit name': require('../../../assets/pencil.png'),
-    'Edit password': require('../../../assets/pencil.png'),
-    'Edit email': require('../../../assets/pencil.png'),
-    'Edit surname': require('../../../assets/pencil.png'),
-    'Edit domicilio': require('../../../assets/pencil.png'),
+export function EditCarProfile({ route }) {
+    const patente = route.params.patente
 
-};
-
-const fields = [
-    'marca', 'modelo', 'fechaVencimientoSeguro', 'fechaVencimientoVTV','ano', 'kilometraje', 'patente'
-];
-
-export function EditCarProfile({ navigation , route}) {
-
-    //esto tendrá los valores de los inputs
     const [inputs, setInputs] = useState({
         marca: '',
         fechaVencimientoSeguro: '',
@@ -28,11 +19,41 @@ export function EditCarProfile({ navigation , route}) {
         ano: '',
         kilometraje: '',
         patente: '',
+        modelo: '',
     });
-    const { showNotification, setColor } = useContext(NotificationContext);
 
-    //función que se encarga de cambiar el valor de los inputs en tiempo real
+    const { showNotification, setColor } = useContext(NotificationContext);
+    const [fields, setFields] = useState([]);
+
+    // Función que se encarga de buscar la información actual del auto
+    const getCarInfo = async () => {
+        try {
+            const response = await fetch(`http://localhost:9002/car/${patente}/getInfo`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+            const data = await response.json();
+            setInputs(prevInputs => ({
+                ...prevInputs,
+                marca: data.marca,
+                fechaVencimientoSeguro: data.fechaVencimientoSeguro,
+                fechaVencimientoVTV: data.fechaVencimientoVTV,
+                ano: data.ano,
+                kilometraje: data.kilometraje,
+                patente: data.patente,
+                modelo: data.modelo,
+            }));
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+
+    // Función que se encarga de cambiar el valor de los inputs en tiempo real
     const handleInputChange = (field, value) => {
+        setFields(prevFields => Array.from(new Set([...prevFields, field])));
+        console.log(fields)
         setInputs(prevState => ({
             ...prevState,
             [field]: value
@@ -44,8 +65,6 @@ export function EditCarProfile({ navigation , route}) {
         const newValue = inputs[field];
         const patente = route.params.patente;
         console.log(`Attempting to save ${field} with value: ${newValue}`);
-        console.log(`Patente is ${patente}`)
-
 
         try {
             const response = await fetch('http://localhost:9002/editCarProfile', {
@@ -63,7 +82,7 @@ export function EditCarProfile({ navigation , route}) {
             console.log('Server response:', response);
 
             if (!response.ok) {
-                throw new Error('Network response was not ok');
+                console.error('Network response was not ok');
             }
 
             const data = await response.json(); // Assuming the server responds with JSON
@@ -79,25 +98,79 @@ export function EditCarProfile({ navigation , route}) {
         }
     };
 
+    // Función que se encarga de guardar los cambios en cada campo
+    const handleEachSave = async () => {
+        for (const field of fields) {
+            await handleSave(field);
+        }
+    };
+
+    useEffect(() => {
+        getCarInfo().then();
+    }, []);
+
     return (
         <ImageBackground source={require('../../../assets/BackgroundUnlocked.jpg')} style={styles.container}>
-            <ScrollView contentContainerStyle={styles.scrollContainer}>
-                <Text style={styles.title}>Edit Profile</Text>
-                {fields.map((field, index) => (
-                    <View key={index} style={styles.inputContainer}>
-                        <TextInput
-                            style={styles.input}
-                            onChangeText={(text) => handleInputChange(field, text)}
-                            value={inputs[field]}
-                            placeholder={`New ${field}`}
+            <Text style={styles.title}>Edit Vehicle</Text>
+            <View style={styles.row}>
+                <InputText
+                    value={inputs["patente"]}
+                    onChangeText={(text) => handleInputChange("patente", text)}
+                    placeholder="License Plate"
+                    label={"License Plate"}
+                />
+                <InputText
+                    value={inputs["ano"]}
+                    onChangeText={(text) => handleInputChange("ano", text)}
+                    placeholder="Year"
+                    label={"Year"}
+                />
+                <InputText
+                    value={inputs["kilometraje"]}
+                    onChangeText={(text) => handleInputChange("kilometraje", text)}
+                    placeholder="Mileage"
+                    label={"Mileage"}
+                />
+            </View>
+            <View style={styles.row}>
+                <InputText
+                    value={inputs["marca"]}
+                    onChangeText={(text) => handleInputChange("marca", text)}
+                    placeholder="Brand"
+                    label={"Brand"}
+                />
+                <InputText
+                    value={inputs["modelo"]}
+                    onChangeText={(text) => handleInputChange("modelo", text)}
+                    placeholder="Model"
+                    label={"Model"}
+                />
+            </View>
+            <View style={styles.row}>
+                <View>
+                    <Text style={styles.label}>Insurance Expiry</Text>
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <DatePicker
+                            value={inputs["fechaVencimientoSeguro"] ? dayjs(inputs["fechaVencimientoSeguro"]) : null}
+                            onChange={(newValue) => {
+                                handleInputChange("fechaVencimientoSeguro",newValue ? dayjs(newValue).format('YYYY-MM-DD') : '');
+                            }}
                         />
-                        <StyledButton3
-                            icon={icons[`Edit ${field}`]}
-                            onPress={() => handleSave(field)}
+                    </LocalizationProvider>
+                </View>
+                <View>
+                    <Text style={styles.label}>VTV Expiry</Text>
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <DatePicker
+                            value={inputs["fechaVencimientoVTV"] ? dayjs(inputs["fechaVencimientoVTV"]) : null}
+                            onChange={(newValue) => {
+                                handleInputChange("fechaVencimientoVTV",newValue ? dayjs(newValue).format('YYYY-MM-DD') : '');
+                            }}
                         />
-                    </View>
-                ))}
-            </ScrollView>
+                    </LocalizationProvider>
+                </View>
+            </View>
+            <AddButton onPress={handleEachSave} text={"Save"}/>
         </ImageBackground>
     );
 }
@@ -105,31 +178,38 @@ export function EditCarProfile({ navigation , route}) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        justifyContent: 'space-between',
+        alignItems: 'center',
         padding: 16,
     },
-    scrollContainer: {
-        alignItems: 'center',
-        paddingTop: 20,
+    title: {
+        fontSize: 60,
+        color: 'white',
+        fontWeight: 'bold',
+        paddingBottom: 20,
     },
-    inputContainer: {
+    row: {
+        width: '60%',
         flexDirection: 'row',
-        alignItems: 'center',
-        marginBottom: 10,
+        justifyContent: 'space-evenly',
+    },
+    column: {
+        width: '50%',
+        padding: 15,
     },
     input: {
-        flex: 1,
-        height: 40,
+        width: '100%',
+        color: 'white',
         borderColor: 'gray',
+        padding: 10,
+        borderRadius: 2,
         borderWidth: 1,
-        marginRight: 10,
-        paddingHorizontal: 10,
     },
-    title: {
-        fontSize: 24,
-        marginBottom: 20,
-    },
-    buttonText: {
-        fontSize: 16,
-        marginLeft: 10,
+    label: {
+        alignSelf: 'flex-start',
+        color: 'white',
+        fontSize: 18,
+        fontWeight: 'bold',
+        marginBottom: 5,
     },
 });

@@ -268,34 +268,12 @@ const styles = StyleSheet.create({
         justifyContent: 'space-around',
         width: '80%',
     },
-    scrollBarContainer: {
-        width: '40%',
-        flex: 1,
-    },
-    columnsContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-around',
-        width: '100%',
-    },
-    column: {
-        flexDirection: 'column',
-        width: '50%',
-        padding: 25,
-    },
-    scrollContainer: {
-        alignItems: 'center',
-    },
     label: {
         alignSelf: 'flex-start',
         color: 'white',
         fontSize: 16,
         fontWeight: 'bold',
         marginLeft: 10,
-    },
-    inputContainer: {
-        flexDirection: 'column',
-        width: '25%',
-        alignItems: 'center',
     },
     inputRow: {
         flexDirection: 'row',
