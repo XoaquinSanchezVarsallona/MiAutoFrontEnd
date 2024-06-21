@@ -1,6 +1,10 @@
 {
   "dependencies": {
+    "@mercadopago/sdk-react": "^0.0.19",
     "expo-file-system": "^17.0.1",
     "react-dropzone": "^14.2.3"
+  },
+  "devDependencies": {
+    "expo-web-browser": "^13.0.3"
   }
 }

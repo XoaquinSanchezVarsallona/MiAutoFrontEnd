@@ -1,9 +1,13 @@
-import { ImageBackground, Pressable, ScrollView, StyleSheet, Text, View, Modal, TextInput, TouchableOpacity } from "react-native";
+import { ImageBackground, Image, StyleSheet, Text, View, Modal, TextInput, TouchableOpacity } from "react-native";
 import React, { useContext, useEffect, useState } from "react";
 import { NotificationContext } from "../../../components/notification/NotificationContext";
 import CustomScrollBar from "../../../components/CustomScrollBar";
 import {Picker} from "react-native-web";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import AddButton from "../../../components/AddButton";
+import { initMercadoPago, Wallet } from '@mercadopago/sdk-react'
+initMercadoPago('TEST-25cf5ee8-fbe8-4fa3-b59f-bcb11680dd53', {locale: "en-US"});
+import crossIcon from '../../../assets/cross.png';
 
 function InteractiveStarRating({ rating, setRating }) {
     const handlePress = (value) => {
@@ -29,8 +33,8 @@ function InteractiveStarRating({ rating, setRating }) {
     );
 }
 
-export function VehicleExperiences({ navigation, route }) {
-    const { vehicle, familyId, routesPassed, distance, userID } = route.params;
+export function VehicleExperiences({ route }) {
+    const { vehicle, routesPassed, distance } = route.params;
     const [experiences, setExperiences] = useState([]);
     const [stores, setStores] = useState([]);
     const [selectedStore, setSelectedStore] = useState(null);
@@ -40,6 +44,7 @@ export function VehicleExperiences({ navigation, route }) {
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [rating, setRating] = useState('');
     const [comment, setComment] = useState('');
+    const [preferenceId, setPreferenceId] = useState('');
 
     const [inputs, setInputs] = useState({
         userID: '',
@@ -73,7 +78,7 @@ export function VehicleExperiences({ navigation, route }) {
             }
         };
 
-        loadUserProfile().then(r => console.log(r));
+        loadUserProfile().then();
     }, []);
 
 
@@ -84,7 +89,6 @@ export function VehicleExperiences({ navigation, route }) {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-
             });
 
             if (response.ok) {
@@ -111,6 +115,10 @@ export function VehicleExperiences({ navigation, route }) {
                 const stores = await response.json();
                 console.log(`Stores fetched:`, stores);
                 setStores(stores);
+                // Set the first store as the default selected store if no store is selected
+                if (!selectedStore && stores.length > 0) {
+                    setSelectedStore(stores[0].storeName);
+                }
             } else {
                 console.log(`Failed to fetch stores`);
                 return null;
@@ -170,16 +178,17 @@ export function VehicleExperiences({ navigation, route }) {
 
             if (!response.ok) {
                 console.error('Network response was not ok');
+                setColor('red');
+                showNotification('Failed to add experience');
             }
-            setColor('#32cd32');
-            showNotification('Experience added successfully');
 
             await fetchExperiences(); // refetch experiences
             setRating('');
             setComment('');
-            setIsModalVisible(false); // Close the modal after submitting
         } catch (error) {
             console.error('Error submitting experience:', error);
+            setColor('red');
+            showNotification('Failed to add experience');
         }
     };
 
@@ -225,6 +234,51 @@ export function VehicleExperiences({ navigation, route }) {
         setStoreNames(storeNameMap);
     };
 
+    // MERCADO PAGO
+    // Obtengo el Id de la preferencia
+    const createPreference = async () => {
+        const preference = {
+            "items": [
+                {
+                    "title": `Experience on ${selectedStore}`,
+                    "quantity": 1,
+                    "currency_id": "ARS",
+                    "unit_price": 10
+                }
+            ]
+        }
+
+        try {
+            const response = await fetch(`http://localhost:9002/mercadopago/createPreference`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer TEST-7331184439919894-061911-895658e6ee20fbf990aa7b0a32d6c6ed-1068060174`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(preference)
+            });
+            if (!response.ok) {
+                console.error('Network response was not ok');
+                return;
+            }
+            const id = await response.json();
+            console.log('Preference created with id:', id.preferenceId)
+            if (!id) {
+                console.error("Error creating preference")
+            } else { // Ensure that you're setting preferenceId to a valid string or number
+                setPreferenceId(id.preferenceId || id)
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    const handlePayment = async () => {
+        if (preferenceId) return;
+        handleSubmitExperience().then()
+        createPreference().then()
+    }
+
     return (
         <ImageBackground source={require('../../../assets/BackgroundUnlocked.jpg')} style={styles.container}>
             <View>
@@ -241,21 +295,24 @@ export function VehicleExperiences({ navigation, route }) {
                                 .sort((a, b) => new Date(b.creationDate) - new Date(a.creationDate))
                                 .map((experience) => (
                                     <View key={experience.experienceId} style={styles.experienceCard}>
-                                        <Text style={styles.experienceText}>Date: {new Date(experience.creationDate).toLocaleDateString()}</Text>
-                                        <Text style={styles.experienceText}>Description: {experience.description}</Text>
-                                        <Text style={styles.experienceText}>Store: {storeNames[experience.storeId] || 'Loading...'}</Text>
-                                        <TouchableOpacity style={styles.deleteButton} onPress={() => deleteExperience(experience.experienceId)}>
-                                            <Text style={styles.deleteButtonText}>Delete</Text>
-                                        </TouchableOpacity>
+                                        <View style={styles.crossIconContainer}>
+                                            <TouchableOpacity onPress={() => deleteExperience(experience.experienceId)}>
+                                                <Image
+                                                    source={crossIcon}
+                                                    style={styles.crossIcon}
+                                                />
+                                            </TouchableOpacity>
+                                        </View>
+                                        <Text style={styles.titleCard}><Text style={styles.bold}>Store:</Text> {storeNames[experience.storeId] || 'Loading...'}</Text>
+                                        <Text style={styles.experienceText}><Text style={styles.bold}>Date:</Text> {new Date(experience.creationDate).toLocaleDateString()}</Text>
+                                        <Text style={styles.experienceText}><Text style={styles.bold}>Description:</Text> {experience.description}</Text>
                                     </View>
                                 ))}
                         </View>
                     )}
                 </CustomScrollBar>
             </View>
-            <Pressable style={styles.addExperienceButton} onPress={openModal}>
-                <Text style={styles.addExperienceText}>Add Experience</Text>
-            </Pressable>
+            <AddButton onPress={openModal} text={"Add Experience"}/>
             <Modal
                 visible={isModalVisible}
                 animationType="slide"
@@ -283,15 +340,15 @@ export function VehicleExperiences({ navigation, route }) {
                             multiline={true}
                             numberOfLines={4}
                         />
-                        <TouchableOpacity style={styles.submitButton} onPress={handleSubmitExperience}>
-                            <Text style={styles.submitButtonText}>Submit</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.cancelButton} onPress={closeModal}>
-                            <Text style={styles.cancelButtonText}>Cancel</Text>
-                        </TouchableOpacity>
+                        <View style={styles.row}>
+                            <AddButton onPress={handlePayment} text={"Continue"}/>
+                            <AddButton onPress={closeModal} text={"Cancel"} color={'red'}/>
+                        </View>
+                        {preferenceId && <Wallet initialization={{ preferenceId: preferenceId }} customization={{ texts:{ valueProp: 'smart_option'}}} />}
                     </View>
                 </View>
             </Modal>
+
         </ImageBackground>
     );
 }
@@ -306,9 +363,15 @@ const styles = StyleSheet.create({
     },
     scrollContainer: {
         flex: 1,
-        width: '80%',
+        width: '60%',
         alignSelf: 'center',
         paddingHorizontal: 16,
+    },
+    row: {
+        flex: 1,
+        flexDirection: 'row',
+        width: '100%',
+        justifyContent: 'space-evenly',
     },
     noExperiencesText: {
         fontSize: 20,
@@ -323,31 +386,11 @@ const styles = StyleSheet.create({
         marginBottom: 10,
         textAlign: 'center',
     },
-    addExperienceButton: {
-        width: '50%',
-        paddingVertical: 12,
-        paddingHorizontal: 20,
-        marginVertical: 10,
-        backgroundColor: '#32cd32',
-        borderRadius: 20,
-        alignSelf: 'center',
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.25,
-        shadowRadius: 5,
-        elevation: 5,
-    },
-    addExperienceText: {
-        fontSize: 18,
-        color: 'white',
-        fontWeight: '500',
-        textAlign: 'center',
-    },
     modalContainer: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        backgroundColor: 'rgba(0, 0, 0, 0.2)',
     },
     modalContent: {
         width: '80%',
@@ -392,15 +435,17 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
     starContainer: {
+        flex: 1,
         flexDirection: 'row',
+        marginBottom: 5,
     },
     filledStar: {
         color: 'gold',
-        fontSize: 20,
+        fontSize: 30,
     },
     emptyStar: {
         color: 'gray',
-        fontSize: 20,
+        fontSize: 30,
     },
     experiencesContainer: {
         alignItems: 'center',
@@ -411,13 +456,30 @@ const styles = StyleSheet.create({
         width: '100%',
         marginBottom: 10,
     },
+    titleCard: {
+        fontSize: 20,
+        fontWeight: 'bold',
+    },
     experienceCard: {
-        backgroundColor: 'rgba(255, 255, 255, 0.8)',
-        borderRadius: 10,
+        marginTop: 15,
         padding: 15,
-        marginVertical: 10,
+        margin: 2,
+        backgroundColor: '#f8f8f8',
+        borderRadius: 10,
         width: '100%',
-        alignItems: 'center',
+        alignSelf: 'center',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.25,
+        shadowRadius: 5,
+        elevation: 5,
+        position: 'relative',
+    },
+    crossIconContainer: {
+        position: 'absolute',
+        top: 10,
+        right: 10,
+        zIndex: 10,
     },
     experienceText: {
         fontSize: 16,
@@ -434,6 +496,15 @@ const styles = StyleSheet.create({
         color: 'white',
         fontWeight: 'bold',
     },
-
+    bold: {
+        fontWeight: '500'
+    },
+    crossIcon: {
+        width: 30,
+        height: 30,
+        position: 'absolute',
+        top: 10,
+        right: 10,
+    },
 });
 export default VehicleExperiences;
