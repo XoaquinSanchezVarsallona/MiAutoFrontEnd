@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, {useContext, useState} from 'react';
 import { StyleSheet, View, Text, ImageBackground, ScrollView, TextInput } from 'react-native';
-import StyledButton from "../../components/StyledButton";
 import StyledButton3 from "../../components/StyleButton3";
+import {NotificationContext} from "../../components/notification/NotificationContext";
 
 const icons = {
     'Edit email': require('../../assets/pencil.png'),
@@ -15,7 +15,7 @@ const fields = [
 ];
 
 export function EditStoreProfile({ navigation , route}) {
-
+    const { showNotification, setColor } = useContext(NotificationContext);
     const [inputs, setInputs] = useState({
         email: '',
         name: '',
@@ -52,17 +52,17 @@ export function EditStoreProfile({ navigation , route}) {
             console.log('Server response:', response);
 
             if (!response.ok) {
-                throw new Error('Network response was not ok');
+                console.error('Network response was not ok');
+                setColor('red')
+                showNotification(`Failed to update ${field}. Please try again.`);
             }
 
-            const data = await response.json();
-            console.log(`Server response: `, data);
-
-            alert(`Updated ${field} successfully!`);
+            setColor('#32cd32')
+            showNotification(`Updated ${field} successfully!`);
             navigation.navigate('UnlockedScreenService', { email: email });
         } catch (error) {
             console.error('Error updating profile:', error);
-            alert('Failed to update profile. Please try again.');
+            showNotification('Failed to update profile. Please try again.');
         }
     };
 

@@ -1,13 +1,11 @@
 import React, {useState, useEffect, useContext} from 'react';
 import {StyleSheet, View, Text, ImageBackground, ScrollView, TextInput, Pressable} from 'react-native';
 import {Picker} from "react-native-web";
+import Select from 'react-select';
+
 import {NotificationContext} from "../../components/notification/NotificationContext";
 import InputText from "../../components/InputText";
 import AddButton from "../../components/AddButton";
-
-const fields = [
-    'Email', 'StoreName', 'Domicilio', 'TipoDeServicio', 'Description', 'PhoneNumber', 'WebPageLink', 'InstagramLink', 'GoogleMapsLink'
-];
 
 export function EditVisualStoreProfile({ navigation , route}) {
 
@@ -106,42 +104,99 @@ export function EditVisualStoreProfile({ navigation , route}) {
         }
     };
 
+    const serviceOptions = [
+        { value: 'mecanico', label: 'Mechanic' },
+        { value: 'estacion de servicio', label: 'Service Station' },
+        { value: 'lavadero', label: 'Car Wash' }
+    ];
+
     return (
         <ImageBackground source={require('../../assets/BackgroundUnlocked.jpg')} style={styles.container}>
-            <ScrollView contentContainerStyle={styles.scrollContainer}>
-                <Text style={styles.title}>Edit Profile</Text>
-                {fields.map((field, index) => (
-                    <View key={index} style={styles.inputContainer}>
-                        {field === 'TipoDeServicio' ? (
-                            <Picker
-                                selectedValue={inputs[field]}
-                                onValueChange={(itemValue) => handleInputChange(field, itemValue)}
-                                style={styles.input}
-                            >
-                                <Picker.Item label="mecanico" value="mecanico" />
-                                <Picker.Item label="estacion de servicio" value="estacion de servicio" />
-                                <Picker.Item label="lavadero" value="lavadero" />
-                            </Picker>
-                        ) : field === 'Description' ? (
-                            <InputText
-                                label={field}
-                                value={inputs[field]}
-                                onChangeText={(text) => handleInputChange(field, text)}
-                                placeholder={`New ${field}`}
-                                multiline={true}
-                            />
-                        ) : (
-                            <InputText
-                                label={field}
-                                value={inputs[field]}
-                                onChangeText={(text) => handleInputChange(field, text)}
-                                placeholder={`New ${field}`}
-                            />
-                        )}
-                    </View>
-                ))}
-                <AddButton text={"Save"} onPress={handleSave} />
-            </ScrollView>
+            <Text style={styles.title}>Edit Profile</Text>
+            <View style={styles.row}>
+                <InputText
+                    label={"Email"}
+                    onChangeText={(text) => handleInputChange("Email", text)}
+                    value={inputs["Email"]}
+                    placeholder={inputs["Email"]}
+                />
+                <InputText
+                    label={"StoreName"}
+                    onChangeText={(text) => handleInputChange("StoreName", text)}
+                    value={inputs["StoreName"]}
+                    placeholder={inputs["StoreName"]}
+                />
+                <InputText
+                    label={"Address"}
+                    onChangeText={(text) => handleInputChange("Domicilio", text)}
+                    value={inputs["Domicilio"]}
+                    placeholder={inputs["Domicilio"]}
+                />
+            </View>
+            <View style={styles.row}>
+                <View style={styles.pickerContainer}>
+                    <Text style={styles.label}>Service Type</Text>
+                    <Select
+                        options={serviceOptions}
+                        value={serviceOptions.find(option => option.value === inputs["TipoDeServicio"])}
+                        onChange={(selectedOption) => handleInputChange("TipoDeServicio", selectedOption.value)}
+                        styles={{
+                            control: (provided) => ({
+                                ...provided,
+                                backgroundColor: 'transparent',
+                                color: 'white',
+                                borderColor: 'gray',
+                                borderWidth: 1,
+                                borderRadius: 5,
+                            }),
+                            singleValue: (provided) => ({
+                                ...provided,
+                                color: 'white',
+                            }),
+                            menu: (provided) => ({
+                                ...provided,
+                                color: 'black',
+                                zIndex: 9999,
+                                position: 'relative',
+                            })
+                        }}
+                    />
+                </View>
+                <InputText
+                    label={"Description"}
+                    value={inputs["Description"]}
+                    onChangeText={(text) => handleInputChange("Description", text)}
+                    placeholder={inputs["Description"]}
+                    multiline={true}
+                />
+                <InputText
+                    label={"Phone Number"}
+                    onChangeText={(text) => handleInputChange("PhoneNumber", text)}
+                    value={inputs["PhoneNumber"]}
+                    placeholder={inputs["PhoneNumber"]}
+                />
+            </View>
+            <View style={styles.row}>
+                <InputText
+                    label={"WebPage Link"}
+                    onChangeText={(text) => handleInputChange("WebPageLink", text)}
+                    value={inputs["WebPageLink"]}
+                    placeholder={inputs["WebPageLink"]}
+                />
+                <InputText
+                    label={"Instagram Link"}
+                    onChangeText={(text) => handleInputChange("InstagramLink", text)}
+                    value={inputs["InstagramLink"]}
+                    placeholder={inputs["InstagramLink"]}
+                />
+                <InputText
+                    label={"GoogleMaps Link"}
+                    onChangeText={(text) => handleInputChange("GoogleMapsLink", text)}
+                    value={inputs["GoogleMapsLink"]}
+                    placeholder={inputs["GoogleMapsLink"]}
+                />
+            </View>
+            <AddButton text={"Save"} onPress={handleSave} />
         </ImageBackground>
     );
 }
@@ -150,35 +205,24 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 16,
-    },
-    scrollContainer: {
         alignItems: 'center',
-        paddingTop: 20,
+        justifyContent: "space-between"
     },
-    inputContainer: {
-        width: '60%',
+    row: {
         flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        marginBottom: 10,
         flex: 1,
+        justifyContent: 'space-around',
+        width: '80%',
     },
     picker: {
-        flex: 1,
         height: 40,
+        width: '100%',
+        color: 'white',
         marginRight: 10,
-        paddingHorizontal: 10,
         backgroundColor: 'transparent',
         borderColor: 'gray',
         borderWidth: 1,
-    },
-    inputTextholder: {
-        width: '100%',
-        color: 'white',
-        borderColor: 'gray',
-        padding: 10,
         borderRadius: 5,
-        borderWidth: 1,
     },
     title: {
         fontSize: 60,
@@ -186,8 +230,20 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         marginBottom: 20,
     },
-    buttonText: {
-        fontSize: 16,
-        marginLeft: 10,
+    pickerItem: {
+        color: 'black',
+        backgroundColor: 'transparent',
+    },
+    label: {
+        alignSelf: 'flex-start',
+        color: 'white',
+        fontSize: 18,
+        fontWeight: 'bold',
+        marginBottom: 5,
+    },
+    pickerContainer: {
+        width: '20%',
+        marginBottom: 20,
+        alignSelf: 'center',
     },
 });

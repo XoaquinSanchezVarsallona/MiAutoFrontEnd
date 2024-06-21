@@ -5,6 +5,7 @@
     "react-dropzone": "^14.2.3"
   },
   "devDependencies": {
-    "expo-web-browser": "^13.0.3"
+    "expo-web-browser": "^13.0.3",
+    "react-select": "^5.8.0"
   }
 }
