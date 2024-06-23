@@ -1,4 +1,4 @@
-import {ImageBackground, Pressable, StyleSheet, Text, TextInput, View} from "react-native";
+import {ImageBackground, Pressable, ScrollView, StyleSheet, Text, TextInput, View} from "react-native";
 import {useContext, useState} from "react";
 import {NotificationContext} from "../components/notification/NotificationContext";
 import ReturnButton from "../components/ReturnButton";
@@ -31,8 +31,12 @@ export function Register( {navigation, route}) {
             showNotification('Password must be at least 8 characters.');
             return;
         }
-        if (userType === 'driver' && (username === '' || name === '' || surname === '' || domicilio === '')) {
+        if (userType === 'driver' && (username === '' || name === '' || surname === '')) {
             showNotification('Please fill in all fields.');
+            return;
+        }
+        if (userType === 'driver' && (latitud === null || longitud === null)) {
+            showNotification('Please pick your address.');
             return;
         }
         if (userType === 'service' && serviceName === '') {
@@ -106,7 +110,7 @@ export function Register( {navigation, route}) {
         <ImageBackground source={require('../assets/BackgroundLocked.jpg')} style={styles.container}>
             <ReturnButton navigation={navigation} />
             <Text style={styles.title}>Register as {userType}</Text>
-            <View style={styles.inputs}>
+            <ScrollView contentContainerStyle={styles.scrollContent} style={styles.scrollview}>
                 {userType === 'driver' && (
                     <>
                         <InputText
@@ -127,31 +131,48 @@ export function Register( {navigation, route}) {
                             onChangeText={setSurname}
                             label={"Surname"}
                         />
-                        <LocationPicker onLocationSelect={handleLocationSelect} />
+                        <InputText
+                            placeholder="Email"
+                            value={email}
+                            onChangeText={setEmail}
+                            label={"Email"}
+                        />
+                        <InputText
+                            placeholder="Password"
+                            value={password}
+                            onChangeText={setPassword}
+                            label={"Password"}
+                        />
+                        <View style={styles.mapContainer}>
+                            <Text style={styles.mapLabel}>Select Your Location</Text>
+                            <LocationPicker onLocationSelect={handleLocationSelect} />
+                        </View>
                     </>
                 )}
 
                 {userType === 'service' && (
-                    <InputText
-                        placeholder="Service Name"
-                        value={serviceName}
-                        onChangeText={setServiceName}
-                        label={"Service Name"}
-                    />
+                    <>
+                        <InputText
+                            placeholder="Service Name"
+                            value={serviceName}
+                            onChangeText={setServiceName}
+                            label={"Service Name"}
+                        />
+                        <InputText
+                            placeholder="Email"
+                            value={email}
+                            onChangeText={setEmail}
+                            label={"Email"}
+                        />
+                        <InputText
+                            placeholder="Password"
+                            value={password}
+                            onChangeText={setPassword}
+                            label={"Password"}
+                        />
+                    </>
                 )}
-                <InputText
-                    placeholder="Email"
-                    value={email}
-                    onChangeText={setEmail}
-                    label={"Email"}
-                />
-                <InputText
-                    placeholder="Password"
-                    value={password}
-                    onChangeText={setPassword}
-                    label={"Password"}
-                />
-            </View>
+            </ScrollView>
             <CustomButton onPress={handleRegister} text="Register" />
         </ImageBackground>
     );
@@ -171,5 +192,26 @@ const styles = StyleSheet.create({
     },
     inputs: {
         width: '100%'
-    }
+    },
+    scrollContent: {
+        alignItems: 'center',
+        width: '100%',
+        paddingBottom: 20,
+    },
+    mapContainer: {
+        width: '100%',
+        height: 400,
+        marginTop: 20,
+        marginBottom: 20,
+        alignItems: 'center',
+    },
+    mapLabel: {
+        fontSize: 18,
+        color: 'white',
+        marginBottom: 10,
+        textAlign: 'center',
+    },
+    scrollview: {
+        width: '90%',
+    },
 });

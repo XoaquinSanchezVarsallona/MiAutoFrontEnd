@@ -1,16 +1,20 @@
-import {StyleSheet, View, Text, ImageBackground, TextInput, Button, Pressable} from 'react-native';
+import {StyleSheet, View, Text, ImageBackground, TextInput, Button, Pressable, ScrollView} from 'react-native';
 import React, {useContext, useState} from "react";
 import {NotificationContext} from "../../components/notification/NotificationContext";
 import AddButton from "../../components/AddButton";
 import InputText from "../../components/InputText";
 import Select from "react-select";
+import LocationPicker from "../../components/map/LocationPicker";
+
 
 export function AddNewStore({ navigation, route }) {
     const { email } = route.params;
     const [storeEmail, setStoreEmail] = useState('');
     const [storeName, setStoreName] = useState('');
-    const [domicilio, setDomicilio] = useState('');
     const [tipoDeServicio, setTipoDeServicio] = useState('');
+    const [latitud, setLatitud] = useState(null);
+    const [longitud, setLongitud] = useState(null);
+
     const { showNotification, setColor } = useContext(NotificationContext);
 
     const addStore = async () => {
@@ -21,7 +25,7 @@ export function AddNewStore({ navigation, route }) {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ email, storeEmail, storeName, domicilio, tipoDeServicio }),
+                body: JSON.stringify({ email, storeEmail, storeName, longitud, latitud, tipoDeServicio }),
             });
             if (response.ok) {
                 setColor('#32cd32');
@@ -48,51 +52,51 @@ export function AddNewStore({ navigation, route }) {
     return (
         <ImageBackground source={require('../../assets/BackgroundUnlocked.jpg')} style={styles.container}>
             <Text style={styles.title}>Add a new Store</Text>
-            <View style={[styles.pickerContainer, { overflow: 'visible' }]}>
-                <Text style={styles.label}>Service Type</Text>
-                <Select
-                    options={serviceOptions}
-                    value={serviceOptions.find(option => option.value === tipoDeServicio)}
-                    onChange={(selectedOption) => setTipoDeServicio(selectedOption.value)}
-                    styles={{
-                        control: (provided) => ({
-                            ...provided,
-                            backgroundColor: 'transparent',
-                            color: 'white',
-                            borderColor: 'gray',
-                            borderWidth: 1,
-                            borderRadius: 5,
-                        }),
-                        singleValue: (provided) => ({
-                            ...provided,
-                            color: 'white',
-                        }),
-                        menu: (provided) => ({
-                            ...provided,
-                            color: 'black',
-                        }),
-                    }}
+            <ScrollView contentContainerStyle={styles.scrollContent} style={styles.scrollView}>
+                <View style={[styles.pickerContainer, { overflow: 'visible' }]}>
+                    <Text style={styles.label}>Service Type</Text>
+                    <Select
+                        options={serviceOptions}
+                        value={serviceOptions.find(option => option.value === tipoDeServicio)}
+                        onChange={(selectedOption) => setTipoDeServicio(selectedOption.value)}
+                        styles={{
+                            control: (provided) => ({
+                                ...provided,
+                                backgroundColor: 'transparent',
+                                color: 'white',
+                                borderColor: 'gray',
+                                borderWidth: 1,
+                                borderRadius: 5,
+                            }),
+                            singleValue: (provided) => ({
+                                ...provided,
+                                color: 'white',
+                            }),
+                            menu: (provided) => ({
+                                ...provided,
+                                color: 'black',
+                            }),
+                        }}
+                    />
+                </View>
+                <InputText
+                    label={'Store Email'}
+                    onChangeText={(text) => setStoreEmail(text)}
+                    value={storeEmail}
+                    placeholder={'Store Email'}
                 />
-            </View>
-            <InputText
-                label={'Store Email'}
-                onChangeText={(text) => setStoreEmail(text)}
-                value={storeEmail}
-                placeholder={'Store Email'}
-            />
-            <InputText
-                label={'Store Name'}
-                onChangeText={(text) => setStoreName(text)}
-                value={storeName}
-                placeholder={'Store Name'}
-            />
-            <InputText
-                label={'Address'}
-                onChangeText={(text) => setDomicilio(text)}
-                value={domicilio}
-                placeholder={'Address'}
-            />
-            <AddButton onPress={addStore} text={'Add Store'} />
+                <InputText
+                    label={'Store Name'}
+                    onChangeText={(text) => setStoreName(text)}
+                    value={storeName}
+                    placeholder={'Store Name'}
+                />
+                <View style={styles.mapContainer}>
+                    <Text style={styles.mapLabel}>Select Store Location</Text>
+                    <LocationPicker onLocationSelect={(lat, lng) => { setLatitud(lat); setLongitud(lng); }} />
+                </View>
+                <AddButton onPress={addStore} text={'Add Store'} />
+            </ScrollView>
         </ImageBackground>
     );
 }
@@ -137,5 +141,25 @@ const styles = StyleSheet.create({
         marginBottom: 20,
         alignSelf: 'center',
         zIndex: 9999,
+    },
+    mapContainer: {
+        width: '100%',
+        height: 400,
+        marginTop: 20,
+        marginBottom: 20,
+    },
+    mapLabel: {
+        fontSize: 18,
+        color: 'white',
+        marginBottom: 10,
+        textAlign: 'center',
+    },
+    scrollView: {
+        width: '90%',
+    },
+    scrollContent: {
+        alignItems: 'center',
+        width: '100%',
+        paddingBottom: 20,
     },
 });
