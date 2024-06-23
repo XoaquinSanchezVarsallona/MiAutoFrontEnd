@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, View, Text, ImageBackground} from 'react-native';
+import {StyleSheet, View, Text, ImageBackground, StatusBar} from 'react-native';
 import StyledButton from "../../components/StyledButton";
 import {useFocusEffect, useIsFocused} from '@react-navigation/native';
 import StyledButton2 from "../../components/StyledButton2";
@@ -7,9 +7,8 @@ import StyledButton4 from "../../components/StyledButton4";
 import LoadingScreen from "../LoadingScreen";
 import * as PropTypes from "prop-types";
 import StyledButtonWithAddOn from "../../components/StyledButtonWithAddOn";
-
 import NotificationsPopUp from '../../components/NotificationsPopUp';
-
+import VanishText from "../../components/VanishText";
 StyledButtonWithAddOn.propTypes = {
     onPress: PropTypes.func,
     icon: PropTypes.any,
@@ -21,7 +20,6 @@ export function UnlockedScreenDriver({ navigation, route, children }) {
     const [username, setUsername] = useState('');
     const [familias, setFamilies] = useState([]);
     const [isNotificationVisible, setIsNotificationVisible] = useState(false);
-
     const [isLoading, setLoading] = useState(true);
     const [AllUnreadAlertsCount, setAllUnreadAlertsCount] = useState(0);
     const isFocused = useIsFocused();
@@ -94,7 +92,9 @@ export function UnlockedScreenDriver({ navigation, route, children }) {
                                onPress={() => setIsNotificationVisible(true)}
                 />
                 <Text style={styles.headerTitle}>MIAUTO</Text>
-                <Text style={styles.subTitle}>Welcome {username}!</Text>
+                <View style={styles.subTitle}>
+                    <VanishText username={username} />
+                </View>
                 <View style={styles.buttonRow}>
                     <StyledButtonWithAddOn
                         unreadAlertsCount={AllUnreadAlertsCount}
@@ -171,8 +171,8 @@ const styles = StyleSheet.create({
         padding: 30,
     },
     subTitle: {
-        fontSize: 30,
-        color: '#FFFFFF',
+        width: '40%',
+        padding: 25,
     },
     icon: {
         width: 100,
