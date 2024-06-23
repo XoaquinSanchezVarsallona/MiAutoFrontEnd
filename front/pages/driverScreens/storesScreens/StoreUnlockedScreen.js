@@ -77,9 +77,7 @@ export function StoreUnlockedScreen({ navigation, route }) {
 
     return (
         <ImageBackground source={require('../../../assets/BackgroundUnlocked.jpg')} style={styles.container}>
-            <View style={styles.headerContainer}>
-                <Text style={styles.title}>Stores</Text>
-            </View>
+            <Text style={styles.title}>Stores</Text>
             <View style={styles.searchContainer}>
                 <InputText
                     placeholder="Search for stores"
@@ -99,10 +97,10 @@ export function StoreUnlockedScreen({ navigation, route }) {
                     onValueChange={(itemValue) => handleInputChange(itemValue)}
                     style={styles.picker}
                 >
-                    <Picker.Item label="any" value="any" />
-                    <Picker.Item label="mecanico" value="mecanico" />
-                    <Picker.Item label="estacion de servicio" value="estacion de servicio" />
-                    <Picker.Item label="lavadero" value="lavadero" />
+                    <Picker.Item label="Any" value="any" />
+                    <Picker.Item label="Mechanic" value="mecanico" />
+                    <Picker.Item label="Service Station" value="estacion de servicio" />
+                    <Picker.Item label="Car Wash" value="lavadero" />
                 </Picker>
             </View>
             <ScrollView style={styles.storesList}>
@@ -129,18 +127,12 @@ export function StoreUnlockedScreen({ navigation, route }) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'center',
+        justifyContent: 'space-between',
         alignItems: 'center',
+        padding: 16,
     },
     contentContainerStyle: {
         alignItems: 'center',
-    },
-    headerContainer: {
-        justifyContent: 'center',
-        alignItems: 'center',
-        padding: 16,
-        paddingTop: 40,
-        width: '100%',
     },
     title: {
         fontSize: 60,

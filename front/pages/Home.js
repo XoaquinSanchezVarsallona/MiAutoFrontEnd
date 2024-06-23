@@ -22,13 +22,11 @@ export function Home({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-    gradient: {
-        flex: 1,
-    },
     container: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
+        padding: 16,
     },
     header: {
         fontSize: 40,
@@ -37,12 +35,17 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
     title: {
-        fontSize: 80,
+        fontSize: 90,
+        position: 'absolute',
+        top: 50,
         color: 'white',
         marginBottom: 60,
     },
+    gradient: {
+        flex: 1,
+    },
     button: {
-        marginVertical: 10, //espacio entre botones
+        marginVertical: 10,
     },
     buttonContainer: {
         flexDirection: 'row', // Align children in a row

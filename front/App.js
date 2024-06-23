@@ -95,10 +95,10 @@ function AppNavigation() {
                         <Stack.Navigator initialRouteName={isAuthenticated ? (userType === 'driver' ? "UnlockedScreenDriver" : "UnlockedScreenService") : "Home"}>
                             {isAuthenticated ? (
                                 <>
-                                    <Stack.Screen name="Home" component={Home}/>
-                                    <Stack.Screen name="Login" component={Login}/>
-                                    <Stack.Screen name="Register" component={Register}/>
-                                    <Stack.Screen name="UnlockedScreenDriver" component={UnlockedScreenDriver} initialParams={{ email: userEmail }} />
+                                    <Stack.Screen options={{ headerShown: false, headerTransparent: true }} name="Home" component={Home}/>
+                                    <Stack.Screen options={{ headerShown: false, headerTransparent: true }} name="Login" component={Login}/>
+                                    <Stack.Screen options={{ headerShown: false, headerTransparent: true }} name="Register" component={Register}/>
+                                    <Stack.Screen options={{ headerShown: false, headerTransparent: true }} name="UnlockedScreenDriver" component={UnlockedScreenDriver} initialParams={{ email: userEmail }} />
                                     <Stack.Screen name="AlertsScreen" component={AlertScreen}/>
                                     <Stack.Screen name="ConfigurationScreen" component={ConfigurationScreen}/>
                                     <Stack.Screen name="FamilyProfile" component={FamilyProfile}/>
@@ -135,10 +135,10 @@ function AppNavigation() {
                                 </>
                             ) : (
                                 <>
-                                    <Stack.Screen name="Home" component={Home}/>
-                                    <Stack.Screen name="Login" component={Login}/>
-                                    <Stack.Screen name="Register" component={Register}/>
-                                    <Stack.Screen name="UnlockedScreenDriver" component={UnlockedScreenDriver} initialParams={{ email: userEmail }} />
+                                    <Stack.Screen options={{ headerShown: false, headerTransparent: true }} name="Home" component={Home}/>
+                                    <Stack.Screen options={{ headerShown: false, headerTransparent: true }} name="Login" component={Login}/>
+                                    <Stack.Screen options={{ headerShown: false, headerTransparent: true }} name="Register" component={Register}/>
+                                    <Stack.Screen options={{ headerShown: false, headerTransparent: true }} name="UnlockedScreenDriver" component={UnlockedScreenDriver} initialParams={{ email: userEmail }} />
                                     <Stack.Screen name="AlertsScreen" component={AlertScreen}/>
                                     <Stack.Screen name="ConfigurationScreen" component={ConfigurationScreen}/>
                                     <Stack.Screen name="FamilyProfile" component={FamilyProfile}/>

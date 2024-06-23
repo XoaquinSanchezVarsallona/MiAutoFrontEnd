@@ -19,29 +19,31 @@ const CustomButton = ({ onPress, text, color = 'transparent' }) => {
 
 const styles = StyleSheet.create({
     button: {
+        marginVertical: 10,
         width: '10%',
         borderColor: 'gray',
         borderWidth: 3,
         alignSelf: 'center',
         alignItems: 'center',
         justifyContent: 'center',
-        borderRadius: 5,
+        borderRadius: 7,
         transition: 'transform 0.25s ease-in-out',
+        elevation: 8,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
     },
     buttonHovered: {
         transform: 'scale(1.035)',
     },
     buttonInner: {
         paddingVertical: 12,
+        width: '100%',
         paddingHorizontal: 20,
-        borderRadius: 20,
+        borderRadius: 10,
         alignItems: 'center',
         justifyContent: 'center',
-        elevation: 4,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.25,
-        shadowRadius: 3.84,
     },
     text: {
         fontSize: 18,

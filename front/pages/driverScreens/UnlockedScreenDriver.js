@@ -145,7 +145,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     header: {
-        paddingTop: 5,
+        paddingTop: 30,
         alignItems: 'center',
         width: '100%',
     },

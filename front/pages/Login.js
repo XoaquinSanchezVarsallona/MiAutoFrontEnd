@@ -4,6 +4,7 @@ import {AuthContext} from "./AuthContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import InputText from "../components/InputText";
 import CustomButton from "../components/CustomButton";
+import ReturnButton from "../components/ReturnButton";
 
 export function Login({navigation, route}) {
     const {userType} = route.params;
@@ -93,6 +94,7 @@ export function Login({navigation, route}) {
 
     return (
         <ImageBackground source={require('../assets/BackgroundLocked.jpg')} style={styles.container}>
+            <ReturnButton navigation={navigation} />
             <Text style={styles.title}>Login</Text>
             <View style={styles.inputs}>
                 <InputText
@@ -116,7 +118,10 @@ export function Login({navigation, route}) {
             <View style={{ flexDirection: 'row', paddingBottom: 30 }}>
                 <Text style={styles.littletext}>Don't have an account? </Text>
                 <Pressable onPress={() => navigation.navigate('Register', { userType })}>
-                    <Text style={styles.linkText}>Register here</Text>
+                    <View>
+                        <Text style={styles.linkText}>Register here</Text>
+                        <View style={styles.underlineStyle} />
+                    </View>
                 </Pressable>
             </View>
         </ImageBackground>
@@ -134,7 +139,7 @@ const styles = StyleSheet.create({
         width: '100%',
     },
     title: {
-        fontSize: 70,
+        fontSize: 90,
         color: 'white',
         paddingTop: 30,
     },
@@ -166,7 +171,14 @@ const styles = StyleSheet.create({
     linkText: {
         fontSize: 20,
         margin: 20,
-        color: 'blue',
+        color: 'lightblue',
+    },
+    underlineStyle: {
+        borderBottomWidth: 1,
+        borderBottomColor: 'lightblue',
+        marginTop: -18,
+        width: '77%',
+        alignSelf: 'center',
     },
     errorContainer: {
         height: 20,

@@ -1,6 +1,9 @@
 import {ImageBackground, Pressable, StyleSheet, Text, TextInput, View} from "react-native";
 import {useContext, useState} from "react";
 import {NotificationContext} from "../components/notification/NotificationContext";
+import ReturnButton from "../components/ReturnButton";
+import CustomButton from "../components/CustomButton";
+import InputText from "../components/InputText";
 
 export function Register( {navigation, route}) {
     // Declaro las variables que voy a pedir luego para registrar al usuario.
@@ -15,20 +18,21 @@ export function Register( {navigation, route}) {
     const { showNotification, setColor } = useContext(NotificationContext);
 
     const handleRegister = () => {
+        setColor('red')
         if (!email.includes('@')) {
-            alert('Please enter a valid email address.');
+            showNotification('Please enter a valid email address.');
             return;
         }
         if (password.length < 8) {
-            alert('Password must be at least 8 characters.');
+            showNotification('Password must be at least 8 characters.');
             return;
         }
         if (userType === 'driver' && (username === '' || name === '' || surname === '' || domicilio === '')) {
-            alert('Please fill in all fields.');
+            showNotification('Please fill in all fields.');
             return;
         }
         if (userType === 'service' && serviceName === '') {
-            alert('Please fill in all fields.');
+            showNotification('Please fill in all fields.');
             return;
         }
 
@@ -89,60 +93,60 @@ export function Register( {navigation, route}) {
     // Dependiendo si es driver o service, solicito información distinta.
     return (
         <ImageBackground source={require('../assets/BackgroundLocked.jpg')} style={styles.container}>
+            <ReturnButton navigation={navigation} />
             <Text style={styles.title}>Register as {userType}</Text>
-            {userType === 'driver' && (
-                <>
-                    <TextInput
-                        style={styles.input}
-                        placeholder="userName"
-                        value={username}
-                        onChangeText={setUsername}
-                    />
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Name"
-                        value={name}
-                        onChangeText={setName}
-                    />
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Surname"
-                        value={surname}
-                        onChangeText={setSurname}
-                    />
-                    <TextInput
-                        style={styles.input}
-                        placeholder="address"
-                        value={domicilio}
-                        onChangeText={setDomicilio}
-                    />
-                </>
-            )}
+            <View style={styles.inputs}>
+                {userType === 'driver' && (
+                    <>
+                        <InputText
+                            placeholder="Username"
+                            value={username}
+                            onChangeText={setUsername}
+                            label={"Username"}
+                        />
+                        <InputText
+                            placeholder={"Name"}
+                            value={name}
+                            onChangeText={setName}
+                            label={"Name"}
+                        />
+                        <InputText
+                            placeholder="Surname"
+                            value={surname}
+                            onChangeText={setSurname}
+                            label={"Surname"}
+                        />
+                        <InputText
+                            placeholder="Address"
+                            value={domicilio}
+                            onChangeText={setDomicilio}
+                            label={"Address"}
+                        />
+                    </>
+                )}
 
-            {userType === 'service' && (
-                <TextInput
-                    style={styles.input}
-                    placeholder="Service Name"
-                    value={serviceName}
-                    onChangeText={setServiceName}
+                {userType === 'service' && (
+                    <InputText
+                        placeholder="Service Name"
+                        value={serviceName}
+                        onChangeText={setServiceName}
+                        label={"Service Name"}
+                    />
+                )}
+                <InputText
+                    placeholder="Email"
+                    value={email}
+                    onChangeText={setEmail}
+                    label={"Email"}
                 />
-            )}
-            <TextInput
-                style={styles.input}
-                placeholder="Email"
-                value={email}
-                onChangeText={setEmail}
-            />
-            <TextInput
-                style={styles.input}
-                placeholder="Password"
-                value={password}
-                onChangeText={setPassword}
-            />
-            {/*ACA IRIA FUNCIÓN QUE REGISTRE AL USUARIO EN BASE DE DATOS */}
-            <Pressable style={styles.button} onPress={handleRegister}>
-                <Text style={styles.buttonText}>Register</Text>
-            </Pressable>
+                <InputText
+                    placeholder="Password"
+                    value={password}
+                    onChangeText={setPassword}
+                    label={"Password"}
+                />
+            </View>
+            <CustomButton onPress={handleRegister} text="Register" />
         </ImageBackground>
     );
 }
@@ -150,33 +154,16 @@ export function Register( {navigation, route}) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'center',
+        justifyContent: 'space-between',
         alignItems: 'center',
         padding: 20,
     },
     title: {
-        fontSize: 24,
-        marginBottom: 20,
+        fontSize: 70,
         color: 'white',
-    },input: {
-        width: '25%',
-        borderWidth: 1,
-        borderColor: 'gray',
-        padding: 10,
-        marginBottom: 10,
-        color: 'white',
+        paddingTop: 30,
     },
-    button: {
-        width: '10%',
-        borderColor: 'gray',
-        borderWidth: 3,
-        padding: 10,
-        alignItems: 'center',
-        justifyContent: 'center',
-        borderRadius: 5,
-        marginTop: 10,
-    },
-    buttonText: {
-        color: 'white',
-    },
+    inputs: {
+        width: '100%'
+    }
 });
