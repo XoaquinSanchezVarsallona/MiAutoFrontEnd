@@ -1,15 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {
-    StyleSheet,
-    View,
-    Text,
-    ImageBackground,
-    ScrollView,
-    TouchableOpacity,
-    Linking,
-    TextInput,
-    Modal
-} from 'react-native';
+import {StyleSheet, View, Text, ImageBackground, TouchableOpacity, Linking, TextInput, Modal} from 'react-native';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Icon from 'react-native-vector-icons/FontAwesome';
 import CustomScrollBar from "../../../components/CustomScrollBar";
@@ -86,7 +76,7 @@ export function VisualStoreProfile({ route }) {
 
     const fetchStoreData = async () => {
         try {
-            console.log(route.params.store.storeEmail + "MAILLLL")
+            console.log(route.params.store.storeEmail)
             const response = await fetch('http://localhost:9002/getVisualStoreProfile', {
                 method: 'POST',
                 headers: {
@@ -98,7 +88,7 @@ export function VisualStoreProfile({ route }) {
             });
 
             if (!response.ok) {
-                throw new Error('Network response was not ok');
+                console.error('Network response was not ok');
             }
 
             const data = await response.json();
@@ -121,7 +111,7 @@ export function VisualStoreProfile({ route }) {
             });
 
             if (!response.ok) {
-                throw new Error('Network response was not ok');
+                console.error('Network response was not ok');
             }
             const data = await response.json();
             setReviews(data);
@@ -144,7 +134,7 @@ export function VisualStoreProfile({ route }) {
             });
 
             if (!response.ok) {
-                throw new Error('Network response was not ok');
+                console.error('Network response was not ok');
             }
 
             const data = await response.json();

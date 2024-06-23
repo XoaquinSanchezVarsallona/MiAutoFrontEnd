@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {ImageBackground, Pressable, Image, StyleSheet, Text, View, ScrollView, Button} from 'react-native';
 import InputText from "../../../components/InputText";
 import {Picker} from "react-native-web";
+import Select from "react-select";
 
 export function StoreUnlockedScreen({ navigation, route }) {
     const [stores, setStores] = useState([]);
@@ -9,6 +10,9 @@ export function StoreUnlockedScreen({ navigation, route }) {
     const [tipoDeServicio, setServicios] = useState('Type of Service');
 
     const sortByService = async (service, stores) => {
+        if (service === "rating") {
+            fetchRating().then()
+        }
         if (service !== 'any') {
             let list = stores.filter(store => store.tipoDeServicio === service)
             setStores(list);
@@ -75,6 +79,14 @@ export function StoreUnlockedScreen({ navigation, route }) {
             .catch(error => console.error('Error:', error));
     }, []);
 
+    const serviceOptions = [
+        { value: 'any', label: 'Any' },
+        { value: 'rating', label: 'Rating' },
+        { value: 'mecanico', label: 'Mechanic' },
+        { value: 'estacion de servicio', label: 'Service Station' },
+        { value: 'lavadero', label: 'Car Wash' }
+    ];
+
     return (
         <ImageBackground source={require('../../../assets/BackgroundUnlocked.jpg')} style={styles.container}>
             <Text style={styles.title}>Stores</Text>
@@ -89,9 +101,9 @@ export function StoreUnlockedScreen({ navigation, route }) {
                     source={require('../../../assets/lupa.png')}
                 />
             </View>
-            <View>
-                <Text style={styles.noStoresText}> Sort Stores by </Text>
-                <Button style={styles.storeButton} onPress={fetchRating} title={"rating"}/>
+            <View style={styles.row}>
+                <Text style={styles.noStoresText}>Sort Stores by </Text>
+
                 <Picker
                     selectedValue={tipoDeServicio}
                     onValueChange={(itemValue) => handleInputChange(itemValue)}
@@ -101,6 +113,7 @@ export function StoreUnlockedScreen({ navigation, route }) {
                     <Picker.Item label="Mechanic" value="mecanico" />
                     <Picker.Item label="Service Station" value="estacion de servicio" />
                     <Picker.Item label="Car Wash" value="lavadero" />
+                    <Picker.Item label="Rating" value="rating" />
                 </Picker>
             </View>
             <ScrollView style={styles.storesList}>
@@ -140,6 +153,14 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         textAlign: 'center',
     },
+    row: {
+        flexDirection: 'row',
+        overflow: 'visible',
+        width: '15%',
+        marginBottom: 20,
+        alignSelf: 'center',
+        zIndex: 9999,
+    },
     input: {
         height: 40,
         borderColor: 'gray',
@@ -171,8 +192,9 @@ const styles = StyleSheet.create({
     noStoresText: {
         fontSize: 18,
         color: 'white',
+        width: '100%',
         textAlign: 'center',
-        marginTop: 20,
+        padding: 5,
     },
     searchContainer: {
         flexDirection: 'row',
@@ -191,9 +213,9 @@ const styles = StyleSheet.create({
         height: 40,
         marginRight: 10,
         paddingHorizontal: 10,
-        backgroundColor: 'transparent', // Add this line
+        backgroundColor: 'transparent',
         borderColor: 'gray',
+        borderRadius: 5,
         borderWidth: 1,
-
     }
 });
