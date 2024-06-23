@@ -16,6 +16,7 @@
     "@mui/material": "^5.15.16",
     "@mui/styled-engine-sc": "^6.0.0-alpha.18",
     "@mui/x-date-pickers": "^7.3.2",
+    "@react-google-maps/api": "^2.19.3",
     "@react-navigation/native": "^6.1.17",
     "dayjs": "^1.11.11",
     "expo": "~50.0.19",

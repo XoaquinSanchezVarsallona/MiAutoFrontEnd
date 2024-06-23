@@ -4,6 +4,8 @@ import {NotificationContext} from "../components/notification/NotificationContex
 import ReturnButton from "../components/ReturnButton";
 import CustomButton from "../components/CustomButton";
 import InputText from "../components/InputText";
+import LocationPicker from "../components/map/LocationPicker";
+
 
 export function Register( {navigation, route}) {
     // Declaro las variables que voy a pedir luego para registrar al usuario.
@@ -14,8 +16,10 @@ export function Register( {navigation, route}) {
     const [serviceName, setServiceName] = useState('');
     const [password, setPassword] = useState('');
     const [username, setUsername] = useState('');
-    const [domicilio, setDomicilio] = useState('');
+    const [latitud, setLatitud] = useState(null);
+    const [longitud, setLongitud] = useState(null);
     const { showNotification, setColor } = useContext(NotificationContext);
+
 
     const handleRegister = () => {
         setColor('red')
@@ -45,7 +49,8 @@ export function Register( {navigation, route}) {
             name: name,
             surname: surname,
             password: password,
-            domicilio: domicilio,
+            latitud: latitud,
+            longitud: longitud,
             usertype: userType,
         } : {
             username: serviceName,
@@ -53,7 +58,8 @@ export function Register( {navigation, route}) {
             name: "",
             surname: "",
             password: password,
-            domicilio: "",
+            latitud: 0,
+            longitud:0,
             usertype: userType,
         };
 
@@ -89,6 +95,11 @@ export function Register( {navigation, route}) {
             });
     };
 
+    const handleLocationSelect = (lat, lng) => {
+        setLatitud(lat);
+        setLongitud(lng);
+    };
+
 
     // Dependiendo si es driver o service, solicito información distinta.
     return (
@@ -116,12 +127,7 @@ export function Register( {navigation, route}) {
                             onChangeText={setSurname}
                             label={"Surname"}
                         />
-                        <InputText
-                            placeholder="Address"
-                            value={domicilio}
-                            onChangeText={setDomicilio}
-                            label={"Address"}
-                        />
+                        <LocationPicker onLocationSelect={handleLocationSelect} />
                     </>
                 )}
 

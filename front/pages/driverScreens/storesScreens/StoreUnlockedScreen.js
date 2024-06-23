@@ -2,12 +2,14 @@ import React, {useEffect, useState} from 'react';
 import {ImageBackground, Pressable, Image, StyleSheet, Text, View, ScrollView, Button} from 'react-native';
 import InputText from "../../../components/InputText";
 import {Picker} from "react-native-web";
-import Select from "react-select";
-
+import StoreMapModal from "../../../components/map/StoreMapModal";
 export function StoreUnlockedScreen({ navigation, route }) {
     const [stores, setStores] = useState([]);
     const [search, setSearch] = useState('');
     const [tipoDeServicio, setServicios] = useState('Type of Service');
+    const [modalVisible, setModalVisible] = useState(false);
+    const [filteredStores, setFilteredStores] = useState([]);
+
 
     const sortByService = async (service, stores) => {
         if (service === "rating") {
@@ -17,6 +19,8 @@ export function StoreUnlockedScreen({ navigation, route }) {
             let list = stores.filter(store => store.tipoDeServicio === service)
             setStores(list);
             setServicios(service);
+            setFilteredStores(list);
+
         }
     }
 
@@ -116,6 +120,7 @@ export function StoreUnlockedScreen({ navigation, route }) {
                     <Picker.Item label="Rating" value="rating" />
                 </Picker>
             </View>
+            <Button title="Map" onPress={() => setModalVisible(true)} />
             <ScrollView style={styles.storesList}>
                 {stores != null && stores.length > 0 ? (
                     stores.filter(store => store.storeName.startsWith(search)).map((store, index) => (
@@ -133,6 +138,12 @@ export function StoreUnlockedScreen({ navigation, route }) {
                     <Text style={styles.noStoresText}>No stores available</Text>
                 )}
             </ScrollView>
+            <StoreMapModal
+                visible={modalVisible}
+                onClose={() => setModalVisible(false)}
+                navigation={navigation}
+                stores={filteredStores}
+            />
         </ImageBackground>
     );
 }
