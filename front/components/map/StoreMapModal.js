@@ -30,7 +30,7 @@ const StoreMapModal = ({ visible, onClose, navigation, stores, centro = { lat: -
                         {stores.map(store => (
                             <Marker
                                 key={store.id}
-                                position={{ lat: -34.6037, lng: -58.3816 }}
+                                position={{ lat: store.domicilioLatitud, lng: store.domicilioLongitud }}
                                 label="📍"
                                 onClick={() => {
                                     onClose();
@@ -42,7 +42,7 @@ const StoreMapModal = ({ visible, onClose, navigation, stores, centro = { lat: -
                         ))}
                         {selectedStore && (
                             <InfoWindow
-                                position={{ lat: -34.6037, lng: -58.3816 }}
+                                position={{ lat: selectedStore.domicilioLatitud, lng: selectedStore.domicilioLongitud }}
                                 onCloseClick={() => setSelectedStore(null)}
                             >
                                 <View>

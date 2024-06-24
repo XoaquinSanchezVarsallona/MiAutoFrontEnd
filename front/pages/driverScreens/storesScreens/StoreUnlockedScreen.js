@@ -3,24 +3,61 @@ import {ImageBackground, Pressable, Image, StyleSheet, Text, View, ScrollView, B
 import InputText from "../../../components/InputText";
 import {Picker} from "react-native-web";
 import StoreMapModal from "../../../components/map/StoreMapModal";
+import {haversineDistance} from "../../../components/map/haversineDistance"
+
 export function StoreUnlockedScreen({ navigation, route }) {
     const [stores, setStores] = useState([]);
     const [search, setSearch] = useState('');
     const [tipoDeServicio, setServicios] = useState('Type of Service');
     const [modalVisible, setModalVisible] = useState(false);
-    const [filteredStores, setFilteredStores] = useState([]);
+    const [filteredStores, setFilteredStores] = useState(stores);
+    const [centro, setCentro] = useState(null);
+
+    const fetchUserLocation = async () => {
+        try {
+            const response = await fetch(`http://localhost:9002/user/${route.params.email}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+            if (response.ok) {
+                const data = await response.json();
+                console.log("user data:", data)
+                setCentro({ lat: data.domicilioLatitude, lng: data.domicilioLongitude });
+            } else {
+                console.log(`Failed to fetch user location`);
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    };
 
 
     const sortByService = async (service, stores) => {
         if (service === "rating") {
             fetchRating().then()
         }
+
+        if (service === 'distance' && centro) {
+            let list = stores.sort((a, b) => {
+                const distanceA = haversineDistance(centro, {lat: a.domicilioLatitud, lng: a.domicilioLongitud});
+                const distanceB = haversineDistance(centro, {lat: b.domicilioLatitud, lng: b.domicilioLongitud});
+                return distanceA - distanceB;
+            }); //llega bien las coordenadas, sortea bien, printea bien, pero no se guarda bien.
+            console.log(list);
+            setStores(list);
+            setServicios(service);
+            setFilteredStores(list);
+            console.log(stores);
+        }
+
         if (service !== 'any') {
             let list = stores.filter(store => store.tipoDeServicio === service)
             setStores(list);
             setServicios(service);
             setFilteredStores(list);
-
+            console.log(list);
         }
     }
 
@@ -83,12 +120,17 @@ export function StoreUnlockedScreen({ navigation, route }) {
             .catch(error => console.error('Error:', error));
     }, []);
 
+    useEffect(() => {
+        fetchUserLocation();
+    }, []);
+
     const serviceOptions = [
         { value: 'any', label: 'Any' },
         { value: 'rating', label: 'Rating' },
         { value: 'mecanico', label: 'Mechanic' },
         { value: 'estacion de servicio', label: 'Service Station' },
-        { value: 'lavadero', label: 'Car Wash' }
+        { value: 'lavadero', label: 'Car Wash' },
+        { value: 'distance', label: 'Distance' }
     ];
 
     return (
@@ -118,6 +160,7 @@ export function StoreUnlockedScreen({ navigation, route }) {
                     <Picker.Item label="Service Station" value="estacion de servicio" />
                     <Picker.Item label="Car Wash" value="lavadero" />
                     <Picker.Item label="Rating" value="rating" />
+                    <Picker.Item label="Distance" value="distance" />
                 </Picker>
             </View>
             <Button title="Map" onPress={() => setModalVisible(true)} />
@@ -142,7 +185,8 @@ export function StoreUnlockedScreen({ navigation, route }) {
                 visible={modalVisible}
                 onClose={() => setModalVisible(false)}
                 navigation={navigation}
-                stores={filteredStores}
+                stores={stores}
+                centro={centro}
             />
         </ImageBackground>
     );
@@ -228,5 +272,5 @@ const styles = StyleSheet.create({
         borderColor: 'gray',
         borderRadius: 5,
         borderWidth: 1,
-    }
+    },
 });
