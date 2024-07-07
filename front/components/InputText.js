@@ -1,8 +1,15 @@
 import React from 'react';
 import { Text, TextInput, View, StyleSheet } from 'react-native';
 
-const InputText = ({ label, value, onChangeText, placeholder, multiline, secureTextEntry }) => {
+const InputText = ({ label, value, onChangeText, placeholder, multiline, secureTextEntry, backcolor= 'transparent' }) => {
     const [hovered, setHovered] = React.useState(false);
+
+    const inputTextStyle = {
+        ...styles.inputTextholder,
+        backgroundColor: backcolor,
+        color: backcolor === 'white' ? 'black' : 'white',
+    };
+
     if (secureTextEntry) {
         return (
             <View
@@ -12,7 +19,7 @@ const InputText = ({ label, value, onChangeText, placeholder, multiline, secureT
             >
                 <Text style={styles.label}>{label}</Text>
                 <TextInput
-                    style={styles.inputTextholder}
+                    style={inputTextStyle}
                     onChangeText={onChangeText}
                     value={value}
                     placeholder={placeholder}
@@ -31,7 +38,7 @@ const InputText = ({ label, value, onChangeText, placeholder, multiline, secureT
             >
                 <Text style={styles.label}>{label}</Text>
                 <TextInput
-                    style={styles.inputTextholder}
+                    style={inputTextStyle}
                     onChangeText={onChangeText}
                     value={value}
                     placeholder={placeholder}
@@ -49,7 +56,7 @@ const InputText = ({ label, value, onChangeText, placeholder, multiline, secureT
         >
             <Text style={styles.label}>{label}</Text>
             <TextInput
-                style={styles.inputTextholder}
+                style={inputTextStyle}
                 onChangeText={onChangeText}
                 value={value}
                 placeholder={placeholder}
@@ -79,6 +86,7 @@ const styles = StyleSheet.create({
     inputTextholder: {
         width: '100%',
         color: 'white',
+        backgroundColor: 'transparent',
         borderColor: 'gray',
         padding: 10,
         borderRadius: 5,

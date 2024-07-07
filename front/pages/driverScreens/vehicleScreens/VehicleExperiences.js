@@ -8,6 +8,8 @@ import AddButton from "../../../components/AddButton";
 import { initMercadoPago, Wallet } from '@mercadopago/sdk-react'
 initMercadoPago('TEST-25cf5ee8-fbe8-4fa3-b59f-bcb11680dd53', {locale: "en-US"});
 import crossIcon from '../../../assets/cross.png';
+import InputText from "../../../components/InputText";
+import StarRating from "../../../components/StarRating";
 
 function InteractiveStarRating({ rating, setRating }) {
     const handlePress = (value) => {
@@ -42,9 +44,11 @@ export function VehicleExperiences({ route }) {
     const [experiencesUpdated, setExperiencesUpdated] = useState(false);
     const { showNotification, setColor } = useContext(NotificationContext);
     const [isModalVisible, setIsModalVisible] = useState(false);
+    const [paymentModalVisible, setPaymentModalVisible] = useState(false);
     const [rating, setRating] = useState('');
     const [comment, setComment] = useState('');
     const [preferenceId, setPreferenceId] = useState('');
+    const [unitPrice, setUnitPrice] = useState(0);
 
     const [inputs, setInputs] = useState({
         userID: '',
@@ -173,6 +177,7 @@ export function VehicleExperiences({ route }) {
                     idAuto: vehicle.patente,
                     description: comment,
                     rating: rating,
+                    price: unitPrice,
                 }),
             });
 
@@ -183,8 +188,6 @@ export function VehicleExperiences({ route }) {
             }
 
             await fetchExperiences(); // refetch experiences
-            setRating('');
-            setComment('');
         } catch (error) {
             console.error('Error submitting experience:', error);
             setColor('red');
@@ -196,9 +199,17 @@ export function VehicleExperiences({ route }) {
         setIsModalVisible(true);
     };
 
+    const openPaymentModal = () => {
+        setPaymentModalVisible(true)
+    }
+
     const closeModal = () => {
         setIsModalVisible(false);
     };
+
+    const closePaymentModal = () => {
+        setPaymentModalVisible(false)
+    }
 
     const getStoreName = async (storeId) => {
         console.log('getStoreName called with storeId:', storeId);
@@ -243,7 +254,7 @@ export function VehicleExperiences({ route }) {
                     "title": `Experience on ${selectedStore}`,
                     "quantity": 1,
                     "currency_id": "ARS",
-                    "unit_price": 10
+                    "unit_price": unitPrice,
                 }
             ]
         }
@@ -274,9 +285,22 @@ export function VehicleExperiences({ route }) {
     }
 
     const handlePayment = async () => {
-        if (preferenceId) return;
+        if (unitPrice === 0) {
+            setColor('red');
+            showNotification('Please enter a price');
+            return;
+        } else if (comment === '') {
+            setColor('red');
+            showNotification('Please enter a comment');
+            return;
+        } else if (rating === '') {
+            setColor('red');
+            showNotification('Please select a rating');
+            return;
+        }
         handleSubmitExperience().then()
-        createPreference().then()
+        closeModal();
+        createPreference().then(() => openPaymentModal());
     }
 
     return (
@@ -304,9 +328,13 @@ export function VehicleExperiences({ route }) {
                                             </TouchableOpacity>
                                         </View>
                                         <Text style={styles.titleCard}><Text style={styles.bold}>Store:</Text> {storeNames[experience.storeId] || 'Loading...'}</Text>
-                                        <Text style={styles.experienceText}><Text style={styles.bold}>Date:</Text> {new Date(experience.creationDate).toLocaleDateString()}</Text>
                                         <Text style={styles.experienceText}><Text style={styles.bold}>Description:</Text> {experience.description}</Text>
-                                    </View>
+                                        <View style={styles.row}>
+                                            <Text style={styles.experienceRowText}><Text style={styles.bold}>Date:</Text> {new Date(experience.creationDate).toLocaleDateString()}</Text>
+                                            <Text style={styles.experienceRowText}><Text style={styles.bold}>Price:</Text> $ {experience.price} ARS</Text>
+                                            <StarRating rating={experience.rating / 2} />
+                                        </View>
+                                        </View>
                                 ))}
                         </View>
                     )}
@@ -322,6 +350,7 @@ export function VehicleExperiences({ route }) {
                 <View style={styles.modalContainer}>
                     <View style={styles.modalContent}>
                         <Text style={styles.sectionTitle}>Add Experience</Text>
+                        <Text style={styles.label}>Select a store</Text>
                         <Picker
                             selectedValue={selectedStore}
                             onValueChange={(itemValue) => setSelectedStore(itemValue)}
@@ -332,6 +361,7 @@ export function VehicleExperiences({ route }) {
                             ))}
                         </Picker>
                         <InteractiveStarRating rating={rating} setRating={setRating} />
+                        <Text style={styles.label}>Comment</Text>
                         <TextInput
                             style={styles.textArea}
                             placeholder="Enter your comment"
@@ -340,15 +370,30 @@ export function VehicleExperiences({ route }) {
                             multiline={true}
                             numberOfLines={4}
                         />
+                        <InputText
+                            label="Price"
+                            value={unitPrice}
+                            onChangeText={(value) => {setUnitPrice(value)}}
+                            placeholder={"Enter the price"}
+                            backcolor={'white'}
+                        />
                         <View style={styles.row}>
                             <AddButton onPress={handlePayment} text={"Continue"}/>
                             <AddButton onPress={closeModal} text={"Cancel"} color={'red'}/>
                         </View>
-                        {preferenceId && <Wallet initialization={{ preferenceId: preferenceId }} customization={{ texts:{ valueProp: 'smart_option'}}} />}
                     </View>
                 </View>
             </Modal>
-
+            <Modal
+                visible={paymentModalVisible}
+                animationType="slide"
+                transparent={true}
+                onRequestClose={closePaymentModal}
+            >
+                <View style={styles.modalContainer}>
+                    {preferenceId && <Wallet initialization={{ preferenceId: preferenceId }} customization={{ texts:{ valueProp: 'smart_option'}}} />}
+                </View>
+            </Modal>
         </ImageBackground>
     );
 }
@@ -366,6 +411,13 @@ const styles = StyleSheet.create({
         width: '60%',
         alignSelf: 'center',
         paddingHorizontal: 16,
+    },
+    label: {
+        alignSelf: 'flex-start',
+        color: 'white',
+        fontSize: 18,
+        fontWeight: 'bold',
+        marginBottom: 5,
     },
     row: {
         flex: 1,
@@ -400,7 +452,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     sectionTitle: {
-        fontSize: 18,
+        fontSize: 24,
         fontWeight: 'bold',
         marginBottom: 10,
         color: 'white',
@@ -485,6 +537,11 @@ const styles = StyleSheet.create({
         fontSize: 16,
         color: '#000',
         marginBottom: 5,
+    },
+    experienceRowText: {
+        fontSize: 16,
+        marginTop: 8,
+        color: '#000',
     },
     deleteButton: {
         backgroundColor: '#ff0000',

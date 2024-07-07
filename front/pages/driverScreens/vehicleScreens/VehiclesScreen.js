@@ -2,10 +2,12 @@ import React, {useEffect} from 'react';
 import {StyleSheet, View, Text, ImageBackground, Pressable, ScrollView} from 'react-native';
 import CustomScrollBar from "../../../components/CustomScrollBar";
 import AddButton from "../../../components/AddButton";
+import LoadingScreen from "../../LoadingScreen";
 
 export function VehiclesScreen({ navigation, route }) {
     let { familySurname, familyId, isUpdated } = route.params;
     const [vehiclesData, setVehicles] = React.useState([]);
+    const [loading, setLoading] = React.useState(true);
 
     const fetchPatentes = async (data) => {
         try {
@@ -51,6 +53,7 @@ export function VehiclesScreen({ navigation, route }) {
             const fetchAndSetVehicles = async (patentesData) => {
                 const fetchedVehicles = await fetchVehicles(patentesData);
                 setVehicles(fetchedVehicles);
+                setLoading(false)
             };
 
             fetchAndSetPatentes().then(r => fetchAndSetVehicles(r));
@@ -62,6 +65,10 @@ export function VehiclesScreen({ navigation, route }) {
         'Verde': '#32cd32',
         'Amarillo': '#ffd700',
         'Rojo': '#ff0000',
+    }
+
+    if (loading) {
+        return <LoadingScreen/>
     }
 
     return (

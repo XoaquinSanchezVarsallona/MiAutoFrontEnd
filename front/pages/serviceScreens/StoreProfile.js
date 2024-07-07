@@ -310,7 +310,6 @@ export function StoreProfile({ navigation, route }) {
                                                 <Text style={styles.experienceText}>Date: {new Date(experience.creationDate).toLocaleDateString()}</Text>
                                                 <Text style={styles.experienceText}>Car License Plate: {experience.patente}</Text>
                                                 <Text style={styles.experienceText}>Description: {experience.description}</Text>
-                                                <Text style={styles.experienceText}>UserId: {experience.userId}</Text>
                                             </View>
                                             <StarRating rating={experience.rating / 2} />
                                         </View>

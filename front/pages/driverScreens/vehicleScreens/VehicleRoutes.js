@@ -3,6 +3,7 @@ import React, {useContext, useEffect, useState} from "react";
 import RouteCard from "../../../components/RouteCard";
 import {NotificationContext} from "../../../components/notification/NotificationContext";
 import CustomScrollBar from "../../../components/CustomScrollBar";
+import LoadingScreen from "../../LoadingScreen";
 
 export function VehicleRoutes({ navigation, route }) {
     const { vehicle, familyId, routesPassed, distance } = route.params;
@@ -11,6 +12,7 @@ export function VehicleRoutes({ navigation, route }) {
     const [users, setUsers] = useState([]);
     const [routesUpdated, setRoutesUpdated] = useState(false);
     const { showNotification, setColor } = useContext(NotificationContext);
+    const [loading, setLoading] = React.useState(true);
 
     // Fetch de todas las rutas de un vehículo
     const fetchRoutes = async (users) => {
@@ -25,6 +27,7 @@ export function VehicleRoutes({ navigation, route }) {
                 if (response.ok) {
                     const userRoutes = await response.json();
                     console.log(`Routes for user ${user.userId}:`, userRoutes);
+                    setLoading(false);
                     return userRoutes;
                 }
             } catch (error) {
@@ -90,6 +93,10 @@ export function VehicleRoutes({ navigation, route }) {
         } catch (error) {
             console.error('Error:', error);
         }
+    }
+
+    if (loading) {
+        return <LoadingScreen/>
     }
 
     return (

@@ -4,6 +4,7 @@ import {useIsFocused} from "@react-navigation/native";
 import {NotificationContext} from "../../../components/notification/NotificationContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import AddButton from "../../../components/AddButton";
+import LoadingScreen from "../../LoadingScreen";
 
 export function VehicleProfile({ navigation, route }) {
     const { vehicle, familySurname, familyId } = route.params;
@@ -11,6 +12,7 @@ export function VehicleProfile({ navigation, route }) {
     const [vehicleFetched, setVehicle] = React.useState([]);
     const isFocused = useIsFocused();
     const { showNotification, setColor } = useContext(NotificationContext);
+    const [loading, setLoading] = React.useState(true);
 
     const fetchVehicle = async () => {
         try {
@@ -18,6 +20,7 @@ export function VehicleProfile({ navigation, route }) {
             if (response.ok) {
                 const data = await response.json();
                 setVehicle(data);
+                setLoading(false);
                 return data;
             } else {
                 console.log(`Failed to fetch vehicle with patente: ${vehicle.patente}`);
@@ -105,6 +108,10 @@ export function VehicleProfile({ navigation, route }) {
         'Verde': '#32cd32',
         'Amarillo': '#ffd700',
         'Rojo': '#ff0000',
+    }
+
+    if (loading) {
+        return <LoadingScreen/>
     }
 
     return (
