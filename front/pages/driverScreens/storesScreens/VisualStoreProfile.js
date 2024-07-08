@@ -3,6 +3,7 @@ import {StyleSheet, View, Text, ImageBackground, TouchableOpacity, Linking, Text
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Icon from 'react-native-vector-icons/FontAwesome';
 import CustomScrollBar from "../../../components/CustomScrollBar";
+import AddButton from "../../../components/AddButton";
 
 function StarRating({ rating }) {
     const stars = [1, 2, 3, 4, 5].map((value) => {
@@ -398,12 +399,10 @@ const ReviewModal = ({ isVisible, onClose, fetchReviews, fetchUserReview, route,
                         multiline={true}
                         numberOfLines={4}
                     />
-                    <TouchableOpacity style={styles.submitButton} onPress={handleUpdate}>
-                        <Text style={styles.submitButtonText}>Update</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.cancelButton} onPress={onClose}>
-                        <Text style={styles.cancelButtonText}>Cancel</Text>
-                    </TouchableOpacity>
+                    <View style={styles.buttonsContainer}>
+                        <AddButton onPress={handleUpdate} text={'Update'}></AddButton>
+                        <AddButton onPress={onClose} text={'Cancel'} color={'#ff6347'}></AddButton>
+                    </View>
                 </View>
             </View>
         </Modal>
@@ -564,6 +563,11 @@ const styles = StyleSheet.create({
         marginBottom: 10,
         color: 'white',
     },
+    buttonsContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        width: '80%',
+    },
     textArea: {
         width: '100%',
         height: 100,
@@ -572,21 +576,27 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         padding: 10,
         marginBottom: 10,
+        color: '#FFFFFF',
     },
     submitButton: {
-        backgroundColor: '#007BFF',
+        flex: 1,
+        backgroundColor: '#32cd32',
         padding: 10,
         borderRadius: 5,
         marginBottom: 10,
+        alignItems: 'center',
     },
     submitButtonText: {
         color: 'white',
         fontWeight: 'bold',
     },
     cancelButton: {
-        backgroundColor: '#6c757d',
+        flex: 1,
+        backgroundColor: '#ff6347',
         padding: 10,
         borderRadius: 5,
+        marginHorizontal: 5,
+        alignItems: 'center',
     },
     cancelButtonText: {
         color: 'white',

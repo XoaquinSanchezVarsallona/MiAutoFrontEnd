@@ -6,19 +6,22 @@ import Select from 'react-select';
 import {NotificationContext} from "../../components/notification/NotificationContext";
 import InputText from "../../components/InputText";
 import AddButton from "../../components/AddButton";
+import LocationPicker from "../../components/map/LocationPicker";
+
 
 export function EditVisualStoreProfile({ navigation , route}) {
 
     const [inputs, setInputs] = useState({
         Email: route.params.email,
         StoreName: '',
-        Domicilio: '',
         TipoDeServicio: '',
         Description: '',
         PhoneNumber: '',
         WebPageLink: '',
         InstagramLink: '',
         GoogleMapsLink: '',
+        longitud: 0,
+        latitud: 0,
     });
     const { showNotification, setColor } = useContext(NotificationContext);
 
@@ -46,13 +49,14 @@ export function EditVisualStoreProfile({ navigation , route}) {
                 ...prevState,
                 Email: route.params.email,
                 StoreName: data.storeName || '',
-                Domicilio: data.domicilio || '',
                 TipoDeServicio: data.tipoDeServicio || '',
                 Description: data.description || '',
                 PhoneNumber: data.phoneNumber || '',
                 WebPageLink: data.webPageLink || '',
                 InstagramLink: data.instagramLink || '',
                 GoogleMapsLink: data.googleMapsLink || '',
+                latitud: data.domicilioLatitud || 0,
+                longitud: data.domicilioLongitud || 0,
             }));
 
         } catch (error) {
@@ -113,90 +117,96 @@ export function EditVisualStoreProfile({ navigation , route}) {
     return (
         <ImageBackground source={require('../../assets/BackgroundUnlocked.jpg')} style={styles.container}>
             <Text style={styles.title}>Edit Profile</Text>
-            <View style={styles.row}>
-                <InputText
-                    label={"Email"}
-                    onChangeText={(text) => handleInputChange("Email", text)}
-                    value={inputs["Email"]}
-                    placeholder={inputs["Email"]}
-                />
-                <InputText
-                    label={"StoreName"}
-                    onChangeText={(text) => handleInputChange("StoreName", text)}
-                    value={inputs["StoreName"]}
-                    placeholder={inputs["StoreName"]}
-                />
-                <InputText
-                    label={"Address"}
-                    onChangeText={(text) => handleInputChange("Domicilio", text)}
-                    value={inputs["Domicilio"]}
-                    placeholder={inputs["Domicilio"]}
-                />
-            </View>
-            <View style={[styles.row, { overflow: 'visible', zIndex: 9999}]}>
-                <View style={[styles.pickerContainer, { overflow: 'visible' }]}>
-                    <Text style={styles.label}>Service Type</Text>
-                    <Select
-                        options={serviceOptions}
-                        value={serviceOptions.find(option => option.value === inputs["TipoDeServicio"])}
-                        onChange={(selectedOption) => handleInputChange("TipoDeServicio", selectedOption.value)}
-                        styles={{
-                            control: (provided) => ({
-                                ...provided,
-                                backgroundColor: 'transparent',
-                                color: 'white',
-                                borderColor: 'gray',
-                                borderWidth: 1,
-                                borderRadius: 5,
-                                zIndex: 9999,
-                            }),
-                            singleValue: (provided) => ({
-                                ...provided,
-                                color: 'white',
-                                zIndex: 9999,
-                            }),
-                            menu: (provided) => ({
-                                ...provided,
-                                color: 'black',
-                                zIndex: 9999,
-                            })
-                        }}
+            <ScrollView contentContainerStyle={styles.scrollContent} style={styles.scrollView}>
+                <View style={styles.row}>
+                    <InputText
+                        label={"Email"}
+                        onChangeText={(text) => handleInputChange("Email", text)}
+                        value={inputs["Email"]}
+                        placeholder={inputs["Email"]}
+                    />
+                    <InputText
+                        label={"StoreName"}
+                        onChangeText={(text) => handleInputChange("StoreName", text)}
+                        value={inputs["StoreName"]}
+                        placeholder={inputs["StoreName"]}
                     />
                 </View>
-                <InputText
-                    label={"Description"}
-                    value={inputs["Description"]}
-                    onChangeText={(text) => handleInputChange("Description", text)}
-                    placeholder={inputs["Description"]}
-                    multiline={true}
-                />
-                <InputText
-                    label={"Phone Number"}
-                    onChangeText={(text) => handleInputChange("PhoneNumber", text)}
-                    value={inputs["PhoneNumber"]}
-                    placeholder={inputs["PhoneNumber"]}
-                />
-            </View>
-            <View style={styles.row}>
-                <InputText
-                    label={"WebPage Link"}
-                    onChangeText={(text) => handleInputChange("WebPageLink", text)}
-                    value={inputs["WebPageLink"]}
-                    placeholder={inputs["WebPageLink"]}
-                />
-                <InputText
-                    label={"Instagram Link"}
-                    onChangeText={(text) => handleInputChange("InstagramLink", text)}
-                    value={inputs["InstagramLink"]}
-                    placeholder={inputs["InstagramLink"]}
-                />
-                <InputText
-                    label={"GoogleMaps Link"}
-                    onChangeText={(text) => handleInputChange("GoogleMapsLink", text)}
-                    value={inputs["GoogleMapsLink"]}
-                    placeholder={inputs["GoogleMapsLink"]}
-                />
-            </View>
+                <View style={[styles.row, { overflow: 'visible', zIndex: 9999}]}>
+                    <View style={[styles.pickerContainer, { overflow: 'visible' }]}>
+                        <Text style={styles.label}>Service Type</Text>
+                        <Select
+                            options={serviceOptions}
+                            value={serviceOptions.find(option => option.value === inputs["TipoDeServicio"])}
+                            onChange={(selectedOption) => handleInputChange("TipoDeServicio", selectedOption.value)}
+                            styles={{
+                                control: (provided) => ({
+                                    ...provided,
+                                    backgroundColor: 'transparent',
+                                    color: 'white',
+                                    borderColor: 'gray',
+                                    borderWidth: 1,
+                                    borderRadius: 5,
+                                    zIndex: 9999,
+                                }),
+                                singleValue: (provided) => ({
+                                    ...provided,
+                                    color: 'white',
+                                    zIndex: 9999,
+                                }),
+                                menu: (provided) => ({
+                                    ...provided,
+                                    color: 'black',
+                                    zIndex: 9999,
+                                })
+                            }}
+                        />
+                    </View>
+                    <InputText
+                        label={"Description"}
+                        value={inputs["Description"]}
+                        onChangeText={(text) => handleInputChange("Description", text)}
+                        placeholder={inputs["Description"]}
+                        multiline={true}
+                    />
+                    <InputText
+                        label={"Phone Number"}
+                        onChangeText={(text) => handleInputChange("PhoneNumber", text)}
+                        value={inputs["PhoneNumber"]}
+                        placeholder={inputs["PhoneNumber"]}
+                    />
+                </View>
+                <View style={styles.row}>
+                    <InputText
+                        label={"WebPage Link"}
+                        onChangeText={(text) => handleInputChange("WebPageLink", text)}
+                        value={inputs["WebPageLink"]}
+                        placeholder={inputs["WebPageLink"]}
+                    />
+                    <InputText
+                        label={"Instagram Link"}
+                        onChangeText={(text) => handleInputChange("InstagramLink", text)}
+                        value={inputs["InstagramLink"]}
+                        placeholder={inputs["InstagramLink"]}
+                    />
+                    <InputText
+                        label={"GoogleMaps Link"}
+                        onChangeText={(text) => handleInputChange("GoogleMapsLink", text)}
+                        value={inputs["GoogleMapsLink"]}
+                        placeholder={inputs["GoogleMapsLink"]}
+                    />
+                </View>
+                <View style={styles.mapContainer}>
+                    <Text style={styles.mapLabel}>Select Store Location</Text>
+                    <LocationPicker onLocationSelect={(lat, lng) => {
+                        setInputs(prevState => ({
+                            ...prevState,
+                            latitude: lat,
+                            longitude: lng
+                        }));
+                    }} />
+                </View>
+            </ScrollView>
             <AddButton text={"Save"} onPress={handleSave} />
         </ImageBackground>
     );
@@ -247,5 +257,25 @@ const styles = StyleSheet.create({
         marginBottom: 20,
         alignSelf: 'center',
         zIndex: 9999,
+    },
+    scrollView: {
+        width: '100%',
+    },
+    scrollContent: {
+        alignItems: 'center',
+        width: '100%',
+        paddingBottom: 20,
+    },
+    mapContainer: {
+        width: '90%',
+        height: 400,
+        marginTop: 20,
+        marginBottom: 20,
+    },
+    mapLabel: {
+        fontSize: 18,
+        color: 'white',
+        marginBottom: 10,
+        textAlign: 'center',
     },
 });
