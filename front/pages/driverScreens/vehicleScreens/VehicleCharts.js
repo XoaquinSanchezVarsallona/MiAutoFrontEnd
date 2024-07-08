@@ -1,11 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import { ImageBackground, View, Text, StyleSheet } from 'react-native';
+import {ImageBackground, View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import Select from "react-select";
+import arrowImage from '../../../assets/blackArrow.png';
 
 export function VehicleCharts({ navigation, route }) {
     const { vehicle } = route.params;
     const [chartData, setChartData] = useState([]);
+    const [chartFilteredData, setChartFilteredData] = useState([[]])
     const [usernames, setUsernames] = useState([]);
+    const [month, setMonth] = useState(0);
+    const [week, setWeek] = useState(0);
+    const [year, setYear] = useState(0);
+    const [perspective, setPerspective] = useState('')
 
     const fetchData = async () => {
         try {
@@ -56,16 +63,118 @@ export function VehicleCharts({ navigation, route }) {
 
     const colors = ['#8884d8', '#82ca9d', '#ffc658', '#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
 
+    const perspectiveOptions = [
+        { value: 'weeks', label: 'Weeks' },
+        { value: 'months', label: 'Months' },
+        { value: 'years', label: 'Years' }
+    ];
+
+    const handleOptionChange = (value) => {
+        setPerspective(value);
+        if (value === 'months') {
+            setChartFilteredData(groupedByMonth[month]);
+        } else if (value === 'weeks') {
+            setChartFilteredData(groupedByWeek[week]);
+        } else if (value === 'years') {
+            setChartFilteredData(chartData);
+        }
+    }
+
+    const groupedByMonth = chartData.reduce((acc, cur) => {
+        const month = new Date(cur.date).getMonth(); // getMonth() returns 0-11 for Jan-Dec
+        const year = new Date(cur.date).getFullYear();
+        const key = `${year}-${month + 1}`; // Create a key like '2024-1' for January 2024
+        console.log('Key:', key)
+        if (!acc[key]) {
+            acc[key] = [];
+        }
+
+        acc[key].push(cur);
+        console.log('Acc:', acc)
+        return acc;
+    }, {});
+
+    const groupedByWeek = chartData.reduce((acc, cur) => {
+        const week = getWeek(new Date(cur.date)); // getWeek() returns 1-53 for weeks
+        const year = new Date(cur.date).getFullYear();
+        const key = `${year}-${week}`; // Create a key like '2024-1' for week 1 of 2024
+
+        if (!acc[key]) {
+            acc[key] = [];
+        }
+
+        acc[key].push(cur);
+        return acc;
+    }, {});
+
+    function getWeek(date) {
+
+    }
+
+    const incrementPerspective = () => {
+        if (perspective === 'months') {
+            if (month === 12) return;
+            setMonth(month + 1);
+            setChartFilteredData(groupedByMonth[month]);
+        } else if (perspective === 'weeks') {
+            if (week === 53) return;
+            setWeek(week + 1);
+            setChartFilteredData(groupedByWeek[week]);
+        }
+    }
+
+    const decreasePerspective = () => {
+        if (perspective === 'months') {
+            if (month === 1) return;
+            setMonth(month - 1);
+            setChartFilteredData(groupedByMonth[month]);
+        } else if (perspective === 'weeks') {
+            if (week === 1) return;
+            setWeek(week - 1);
+            setChartFilteredData(groupedByWeek[week]);
+        }
+    }
+
     return (
         <ImageBackground source={require('../../../assets/BackgroundUnlocked.jpg')} style={styles.container}>
             <Text style={styles.title}>Charts</Text>
+            <View style={[styles.pickerContainer, { overflow: 'visible', zIndex: 9999}]}>
+                <Text style={styles.label}>Chart intervals: </Text>
+                <Select
+                    options={perspectiveOptions}
+                    onChange={(selectedOption) => handleOptionChange(selectedOption.value)}
+                    value={perspectiveOptions.find(option => option.value === perspective) || 'Select an option'}
+                    styles={{
+                        control: (provided) => ({
+                            ...provided,
+                            backgroundColor: 'transparent',
+                            color: 'white',
+                            borderColor: 'gray',
+                            borderWidth: 1,
+                            borderRadius: 5,
+                            zIndex: 9999,
+                        }),
+                        singleValue: (provided) => ({
+                            ...provided,
+                            color: 'white',
+                            zIndex: 9999,
+                        }),
+                        menu: (provided) => ({
+                            ...provided,
+                            color: 'black',
+                            zIndex: 9999,
+                            placeholder: 'white',
+                        })
+                    }}
+                />
+            </View>
             <View style={styles.content}>
                 <View style={styles.chartContainer}>
                     <View style={{ width: '100%', height: 300 }}>
                         <Text style={styles.chartTitle}>Mileage</Text>
                         <ResponsiveContainer>
                             <LineChart
-                                data={chartData.length ? chartData : [{ date: 'No Data', Mileage: 0 }]}
+                                data={chartFilteredData.length ? chartFilteredData : [{ date: 'No Data', Mileage: 0 }]}
                                 margin={{ top: 0, right: 20, left: 10, bottom: 5 }}
                             >
                                 <XAxis dataKey="date" />
@@ -87,6 +196,12 @@ export function VehicleCharts({ navigation, route }) {
                         </ResponsiveContainer>
                     </View>
                 </View>
+                <TouchableOpacity onPress={incrementPerspective} style={styles.arrowRight}>
+                    <Image source={arrowImage} />
+                </TouchableOpacity>
+                <TouchableOpacity onPress={decreasePerspective}  style={styles.arrowLeft} >
+                    <Image source={arrowImage}/>
+                </TouchableOpacity>
             </View>
         </ImageBackground>
     );
@@ -109,6 +224,19 @@ const styles = StyleSheet.create({
         width: '100%',
         height: 300,
     },
+    label: {
+        alignSelf: 'flex-start',
+        color: 'white',
+        fontSize: 18,
+        fontWeight: 'bold',
+        marginTop: 5,
+    },
+    pickerContainer: {
+        marginBottom: 20,
+        alignSelf: 'center',
+        zIndex: 9999,
+        flexDirection: 'row',
+    },
     content: {
         marginTop: 10,
         padding: 10,
@@ -130,5 +258,20 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         marginBottom: 12,
         marginTop: -8,
+    },
+    arrowRight: {
+        position: 'absolute',
+        bottom: 10,
+        right: 10,
+        width: 20,
+        height: 12,
+        transform: [{ scaleX: -1 }],
+    },
+    arrowLeft: {
+        position: 'absolute',
+        bottom: 10,
+        left: 10,
+        width: 20,
+        height: 12,
     },
 });

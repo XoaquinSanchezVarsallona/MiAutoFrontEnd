@@ -6,6 +6,8 @@ import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
 import {DatePicker} from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
 import {NotificationContext} from "../../../components/notification/NotificationContext";
+import InputText from "../../../components/InputText";
+import AddButton from "../../../components/AddButton";
 
 function AddNewRoute({ navigation, route }) {
     const { vehicle, familyId } = route.params;
@@ -69,34 +71,34 @@ function AddNewRoute({ navigation, route }) {
 
     return (
         <ImageBackground source={require('../../../assets/BackgroundUnlocked.jpg')} style={styles.container}>
-            <View style={styles.container}>
-                <Text style={styles.title}>Add New Route</Text>
-                <TextInput
-                    style={styles.input}
+            <Text style={styles.title}>Add New Route</Text>
+            <View style={styles.inputContainer}>
+                <InputText
+                    label={"Distance"}
                     value={kilometraje}
                     onChangeText={setKilometraje}
-                    placeholder="Distance in km"
+                    placeholder="Distance in kilometres"
                 />
-                <TextInput
-                    style={styles.input}
+                <InputText
+                    label={"Duration"}
                     value={duration}
                     onChangeText={setDuration}
                     placeholder="Duration"
                 />
-                <Text style={styles.label}>Route Date</Text>
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DatePicker
-                        value={date ? dayjs(date) : null}
-                        onChange={(newValue) => {
-                            setDate(newValue ? dayjs(newValue).format('YYYY-MM-DD') : '');
-                        }}
-                    />
-                </LocalizationProvider>
+                <View style={styles.date}>
+                    <Text style={styles.label}>Route Date</Text>
+                    <LocalizationProvider dateAdapter={AdapterDayjs} >
+                        <DatePicker
+                            value={date ? dayjs(date) : null}
+                            onChange={(newValue) => {
+                                setDate(newValue ? dayjs(newValue).format('YYYY-MM-DD') : '');
+                            }}
+                        />
+                    </LocalizationProvider>
+                </View>
                 {errorMessage ? <Text style={styles.errorText}>{errorMessage}</Text> : <Text style={styles.errorText}></Text>}
-                <Pressable style={styles.addVehicleButton} onPress={() => { addRoute().then() }}>
-                    <Text style={styles.addVehicleText}>Add route</Text>
-                </Pressable>
             </View>
+            <AddButton onPress={addRoute} text={"Add route"}/>
         </ImageBackground>
     );
 }
@@ -104,46 +106,38 @@ function AddNewRoute({ navigation, route }) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'flex-start',
-        alignItems: 'center',
         padding: 16,
-        paddingTop: 30,
+        alignItems: 'center',
+        justifyContent: "space-between"
     },
-    input: {
-        color: 'white',
-        height: 40,
-        borderColor: 'gray',
-        borderWidth: 1,
-        marginBottom: 20,
-        paddingLeft: 10,
+    inputContainer: {
+        flex: 1,
+        width: '100%',
+        marginBottom: 10,
+    },
+    date: {
+        flex: 1,
+        alignSelf: 'center',
+        width: '20%',
+        marginBottom: 10,
     },
     title: {
         fontSize: 60,
         color: 'white',
         fontWeight: 'bold',
-        marginBottom: 10,
+        marginBottom: 20,
         alignContent: 'center',
     },
     errorText: {
         fontSize: 16,
         color: 'red',
     },
-    addVehicleButton: {
-        width: '20%',
-        paddingVertical: 12,
-        paddingHorizontal: 20,
-        marginVertical: 10,
-        backgroundColor: '#32cd32',
-        borderRadius: 20,
-        position: 'absolute',
-        bottom: 10,
-        alignSelf: 'center',
-    },
-    addVehicleText: {
-        fontSize: 18,
+    label: {
+        alignSelf: 'flex-start',
         color: 'white',
-        fontWeight: '500',
-        textAlign: 'center',
+        fontSize: 18,
+        fontWeight: 'bold',
+        marginBottom: 5,
     },
 });
 
