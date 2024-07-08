@@ -1,12 +1,106 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Modal, View, Text, StyleSheet, ScrollView, Pressable, TouchableOpacity, Image, TextInput} from 'react-native';
 import InputText from "../../components/InputText";
 import { Picker } from "react-native-web";
 import Icon from 'react-native-vector-icons/FontAwesome';
+import {haversineDistance} from "../map/haversineDistance";
 
-export default function StoreSelectModal({ visible, onClose, stores, onStoreSelect, tipoDeServicio, handleInputChange }) {
+export default function StoreSelectModal({ visible, onClose, firstStores, onStoreSelect, primerTipoDeServicio }) {
     const [search, setSearch] = useState('')
+    const [stores, setStores] = useState(firstStores);
+    const [tipoDeServicio, setServicios] = useState(primerTipoDeServicio);
+    const [filteredStores, setFilteredStores] = useState(stores);
+
+
     console.log('Stores passed to StoreSelectModal:', stores); // Added log to check the stores
+
+    const fetchRating = async () => {
+        try {
+            const response = await fetch(`http://localhost:9002/getStoresByRating`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            });
+
+            if (response.ok) {
+                const data = await response.json()
+                setStores(data)
+                return data
+            }
+            else console.log("There is a problem in fetchRating!")
+
+        } catch (e) {
+            console.log("There is a error in fetchRating: " + e.message)
+        }
+    }
+
+    const sortByService = async (service, stores) => {
+        if (service === "rating") {
+            fetchRating().then()
+        }
+
+        if (service === 'distance' && centro) {
+            let list = stores.sort((a, b) => {
+                const distanceA = haversineDistance(centro, {lat: a.domicilioLatitud, lng: a.domicilioLongitud});
+                const distanceB = haversineDistance(centro, {lat: b.domicilioLatitud, lng: b.domicilioLongitud});
+                return distanceA - distanceB;
+            }); //llega bien las coordenadas, sortea bien, printea bien, pero no se guarda bien.
+            console.log(list);
+            setStores(list);
+            setServicios(service);
+            setFilteredStores(list);
+            console.log(stores);
+        }
+
+        if (service !== 'any') {
+            let list = stores.filter(store => store.tipoDeServicio === service)
+            setStores(list);
+            setServicios(service);
+            setFilteredStores(list);
+            console.log(list);
+        }
+    };
+
+
+    const handleInputChange = (field, value) => {
+        fetchRating().then(r => sortByService(field, r))
+        setServicios(prevState => ({
+            ...prevState,
+            [field]: value
+        }));
+        sortByService(field).then()
+    };
+
+    const fetchStores = async () => {
+        try {
+            const response = await fetch(`http://localhost:9002/fetchAllStores`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({email: 'email'}), //email doesnt matter.
+            });
+            if (response.ok) {
+                return await response.json();
+            } else {
+                console.log(`Failed to fetch stores`);
+                return null;
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    };
+
+    useEffect(() => {
+        fetchStores()
+            .then(fetchedStores => {
+                console.log('Fetched stores:', fetchedStores);
+                setStores(fetchedStores);
+            })
+            .catch(error => console.error('Error:', error));
+    }, []);
+
 
     return (
         <Modal

@@ -143,7 +143,7 @@ const styles = StyleSheet.create({
         zIndex: 9999,
     },
     mapContainer: {
-        width: '100%',
+        width: '90%',
         height: 400,
         marginTop: 20,
         marginBottom: 20,

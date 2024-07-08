@@ -222,7 +222,7 @@ export function VehicleExperiences({ route }) {
     }
 
     const handleStoreSelect = (store) => {
-        setSelectedStore(store.idStore);
+        setSelectedStore(store.storeName);
         closeStoreSelectModal();
     };
 
@@ -366,7 +366,15 @@ export function VehicleExperiences({ route }) {
                     <View style={styles.modalContent}>
                         <Text style={styles.sectionTitle}>Add Experience</Text>
                         <Text style={styles.label}>Select a store</Text>
-                        <Button title="Select Store" onPress={openStoreSelectModal} />
+                        <View style={styles.selectStoreContainer}>
+                            <TextInput
+                                style={styles.storeTextInput}
+                                placeholder="Select a store"
+                                value={selectedStore || ''}
+                                editable={false}
+                            />
+                            <Button title="Select Store" onPress={openStoreSelectModal} />
+                        </View>
                         <InteractiveStarRating rating={rating} setRating={setRating} />
                         <Text style={styles.label}>Comment</Text>
                         <TextInput
@@ -576,5 +584,23 @@ const styles = StyleSheet.create({
         top: 10,
         right: 10,
     },
+    selectStoreContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        width: '100%',
+        marginBottom: 10,
+    },
+    storeTextInput: {
+        flex: 1,
+        height: 40,
+        borderColor: 'gray',
+        borderWidth: 1,
+        borderRadius: 5,
+        padding: 10,
+        marginRight: 10,
+        color: 'black',
+        backgroundColor: 'white',
+    }
 });
 export default VehicleExperiences;
