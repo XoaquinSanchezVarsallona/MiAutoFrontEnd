@@ -32,7 +32,7 @@ const StoreMapModal = ({ visible, onClose, navigation, stores, centro = { lat: -
                                 key={store.id}
                                 position={{ lat: store.domicilioLatitud, lng: store.domicilioLongitud }}
                                 label={{
-                                    fontSize: '35px',
+                                    fontSize: '80px',
                                 }}
                                 onClick={() => {
                                     onClose();
