@@ -46,6 +46,17 @@ export function AddNewVehicle({ navigation, route }) {
         }
     };
 
+    function showInputIsNotValid (input) {
+        setColor('red')
+        showNotification(dayjs(input).format('YYYY-MM-DD') + ' is an expired date, please check if this date is correct.')
+    }
+
+    function checkDateIsNotExpired ( input ) {
+        const date = input
+        const today = new Date()
+        return date >= today
+    }
+
     return (
         <ImageBackground source={require('../../../assets/BackgroundUnlocked.jpg')} style={styles.container}>
             <Text style={styles.title}>Add new Vehicle</Text>
@@ -90,7 +101,9 @@ export function AddNewVehicle({ navigation, route }) {
                             <DatePicker
                                 value={fechaVencimientoSeguro ? dayjs(fechaVencimientoSeguro) : null}
                                 onChange={(newValue) => {
-                                    setFechaVencimientoSeguro(newValue ? dayjs(newValue).format('YYYY-MM-DD') : '');
+                                    checkDateIsNotExpired(newValue) ?
+                                        setFechaVencimientoSeguro(newValue ? dayjs(newValue).format('YYYY-MM-DD') : '') :
+                                        showInputIsNotValid(newValue)
                                 }}
                             />
                         </LocalizationProvider>
@@ -101,7 +114,10 @@ export function AddNewVehicle({ navigation, route }) {
                             <DatePicker
                                 value={fechaVencimientoSeguro ? dayjs(fechaVencimientoVTV) : null}
                                 onChange={(newValue) => {
-                                    setFechaVencimientoVTV(newValue ? dayjs(newValue).format('YYYY-MM-DD') : '');
+                                    checkDateIsNotExpired(newValue) ?
+                                        setFechaVencimientoVTV(newValue ? dayjs(newValue).format('YYYY-MM-DD') : '') :
+                                        showInputIsNotValid(newValue)
+
                                 }}
                             />
                         </LocalizationProvider>
