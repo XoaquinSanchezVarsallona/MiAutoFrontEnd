@@ -1,9 +1,20 @@
 import React, {useEffect, useState} from 'react';
-import {ImageBackground, Pressable, Image, StyleSheet, Text, View, ScrollView, Button} from 'react-native';
+import {
+    ImageBackground,
+    Pressable,
+    Image,
+    StyleSheet,
+    Text,
+    View,
+    ScrollView,
+    Button,
+    TouchableOpacity
+} from 'react-native';
 import InputText from "../../../components/InputText";
 import {Picker} from "react-native-web";
 import StoreMapModal from "../../../components/map/StoreMapModal";
 import {haversineDistance} from "../../../components/map/haversineDistance"
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 export function StoreUnlockedScreen({ navigation, route }) {
     const [stores, setStores] = useState([]);
@@ -136,7 +147,7 @@ export function StoreUnlockedScreen({ navigation, route }) {
     return (
         <ImageBackground source={require('../../../assets/BackgroundUnlocked.jpg')} style={styles.container}>
             <Text style={styles.title}>Stores</Text>
-            <View style={styles.searchContainer}>
+            <View style={styles.controlContainer}>
                 <InputText
                     placeholder="Search for stores"
                     value={search}
@@ -146,10 +157,6 @@ export function StoreUnlockedScreen({ navigation, route }) {
                     style={styles.icon}
                     source={require('../../../assets/lupa.png')}
                 />
-            </View>
-            <View style={styles.row}>
-                <Text style={styles.noStoresText}>Sort Stores by </Text>
-
                 <Picker
                     selectedValue={tipoDeServicio}
                     onValueChange={(itemValue) => handleInputChange(itemValue)}
@@ -162,8 +169,10 @@ export function StoreUnlockedScreen({ navigation, route }) {
                     <Picker.Item label="Rating" value="rating" />
                     <Picker.Item label="Distance" value="distance" />
                 </Picker>
+                <TouchableOpacity style={styles.mapButton} onPress={() => setModalVisible(true)}>
+                    <Icon name="map" size={30} color="#fff" />
+                </TouchableOpacity>
             </View>
-            <Button title="Map" onPress={() => setModalVisible(true)} />
             <ScrollView style={styles.storesList}>
                 {stores != null && stores.length > 0 ? (
                     stores.filter(store => store.storeName.startsWith(search)).map((store, index) => (
@@ -193,6 +202,19 @@ export function StoreUnlockedScreen({ navigation, route }) {
 }
 
 const styles = StyleSheet.create({
+    controlContainer: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'flex-start',
+        width: '90%',
+    },
+    searchContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        flex: 1,
+
+    },
     container: {
         flex: 1,
         justifyContent: 'space-between',
@@ -220,7 +242,6 @@ const styles = StyleSheet.create({
         height: 40,
         borderColor: 'gray',
         borderWidth: 1,
-        margin: 20,
         padding: 10,
         color: 'white',
         width: '80%',
@@ -251,12 +272,6 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         padding: 5,
     },
-    searchContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center',
-        width: '80%',
-    },
     icon: {
         marginLeft: 10,
         marginBottom: 15,
@@ -272,5 +287,12 @@ const styles = StyleSheet.create({
         borderColor: 'gray',
         borderRadius: 5,
         borderWidth: 1,
+    },
+    mapButton: {
+        backgroundColor: '#1e90ff',
+        padding: 10,
+        borderRadius: 5,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
 });

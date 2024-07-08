@@ -135,10 +135,12 @@ export function VisualStoreProfile({ route }) {
             });
 
             if (!response.ok) {
-                console.error('Network response was not ok');
+                console.error('Network response was not ok or no review found');
+                return;
             }
 
             const data = await response.json();
+            console.log("data recieved, setting user review")
             setUserReview(data);
         } catch (error) {
             console.error('Error fetching user review:', error);
@@ -614,5 +616,11 @@ const styles = StyleSheet.create({
         flex: 1,
         width: '60%',
         paddingBottom: 20,
+    },
+    userReviewContainer: {
+        backgroundColor: '#1e90ff', // Different blue color
+        padding: 10,
+        borderRadius: 10,
+        marginVertical: 10,
     }
 })
