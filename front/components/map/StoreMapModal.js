@@ -31,7 +31,9 @@ const StoreMapModal = ({ visible, onClose, navigation, stores, centro = { lat: -
                             <Marker
                                 key={store.id}
                                 position={{ lat: store.domicilioLatitud, lng: store.domicilioLongitud }}
-                                label="📍"
+                                label={{
+                                    fontSize: '35px',
+                                }}
                                 onClick={() => {
                                     onClose();
                                     navigation.navigate('VisualStoreProfile', { store: store });
