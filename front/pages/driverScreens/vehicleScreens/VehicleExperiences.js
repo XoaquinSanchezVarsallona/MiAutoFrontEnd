@@ -331,7 +331,7 @@ export function VehicleExperiences({ route }) {
                                         <Text style={styles.experienceText}><Text style={styles.bold}>Description:</Text> {experience.description}</Text>
                                         <View style={styles.row}>
                                             <Text style={styles.experienceRowText}><Text style={styles.bold}>Date:</Text> {new Date(experience.creationDate).toLocaleDateString()}</Text>
-                                            <Text style={styles.experienceRowText}><Text style={styles.bold}>Price:</Text> $ {experience.price} ARS</Text>
+                                            <Text style={styles.experienceRowText}><Text style={styles.bold}>Price:</Text> ${experience.price} ARS</Text>
                                             <StarRating rating={experience.rating / 2} />
                                         </View>
                                         </View>

@@ -3,6 +3,7 @@ import {View, Text, StyleSheet, ImageBackground, Button, Pressable, Image} from 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {NotificationContext} from "../../../components/notification/NotificationContext";
 import AddButton from "../../../components/AddButton";
+import {useIsFocused} from "@react-navigation/native";
 
 export function AccidentInformation({navigation, route}) {
     const {patente} = route.params;
@@ -13,6 +14,7 @@ export function AccidentInformation({navigation, route}) {
     const [frontDNI, setFront] = React.useState('');
     const [backDNI, setBack] = React.useState('');
     const [cedula, setCedula] = React.useState('');
+    const isFocused = useIsFocused();
 
     useEffect(() => {
         async function loadUserProfile() {
@@ -74,7 +76,7 @@ export function AccidentInformation({navigation, route}) {
         }
         getPapers().then()
         setCanFetchProfile(false)
-    }, [canFetchProfile, userId]);
+    }, [canFetchProfile, userId, isFocused]);
 
     const handleDownloadImage = async (base64Image) => {
         try {
@@ -124,7 +126,7 @@ export function AccidentInformation({navigation, route}) {
                                        text={'Download'}/>
                         </>
                     ) : (
-                        <Text style={styles.notProvidedText}>No esta disponible la imagen de la cara del dni.</Text>
+                        <Text style={styles.notProvidedText}>Front DNI image not available</Text>
                     )}
                 </View>
                 <View style={styles.imageSection}>
@@ -136,8 +138,7 @@ export function AccidentInformation({navigation, route}) {
                                        text={'Download'}/>
                         </>
                     ) : (
-                        <Text style={styles.notProvidedText}>No esta disponible la imagen de la contracara del
-                            dni.</Text>
+                        <Text style={styles.notProvidedText}>Back DNI image not available</Text>
                     )}
                 </View>
                 <View style={styles.imageSection}>
@@ -148,7 +149,7 @@ export function AccidentInformation({navigation, route}) {
                             <AddButton color={'#1e90ff'} onPress={() => handleDownloadImage(cedula)} text={'Download'}/>
                         </>
                     ) : (
-                        <Text style={styles.notProvidedText}>No esta disponible la imagen de la cedula azul.</Text>
+                        <Text style={styles.notProvidedText}>Registration image not available</Text>
                     )}
                 </View>
             </View>

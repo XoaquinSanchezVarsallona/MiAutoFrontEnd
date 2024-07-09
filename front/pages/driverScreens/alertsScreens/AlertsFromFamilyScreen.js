@@ -3,12 +3,16 @@ import {View, Text, StyleSheet, ImageBackground, TouchableOpacity, ScrollView, P
 import {NotificationContext} from "../../../components/notification/NotificationContext";
 import CustomScrollBar from "../../../components/CustomScrollBar";
 import AddButton from "../../../components/AddButton";
+import LoadingScreen from "../../LoadingScreen";
+import {useIsFocused} from "@react-navigation/native";
 
 export function AlertsFromFamilyScreen({ navigation, route }) {
     const { family, email, username } = route.params;
     const [alerts, setAlerts] = useState([]);
     const [event, setEvent] = useState('');
     const { showNotification, setColor } = useContext(NotificationContext);
+    const [loading, setLoading] = useState(true);
+    const isFocused = useIsFocused();
 
     const fetchAlerts = async () => {
         try {
@@ -21,30 +25,38 @@ export function AlertsFromFamilyScreen({ navigation, route }) {
                 setEvent("fetch")
                 const alerts = await response.json();
                 setAlerts(alerts);
+                setLoading(false);
             } else {
-                console.error(`Failed to fetch alerts for family: ${family.surname}`); } }
+                console.error(`No alerts available for family: ${family.surname}`);
+                setLoading(false);
+                setAlerts([])
+            }
+        }
         catch (error) {
             console.error("Error fetching alerts: ", error);
         }
     };
 
     const deleteAlert = async (alertId) => {
-        const response = await fetch(`http://localhost:9002/alerts/${alertId}`, {
-            method: 'DELETE',
-        });
-        if (response.ok) {
-            setColor('#32cd32');
-            showNotification('Alert deleted successfully');
-            setEvent(alertId)
-        } else {
+        try {
+            const response = await fetch(`http://localhost:9002/alerts/${alertId}`, {
+                method: 'DELETE',
+            });
+            if (response.ok) {
+                setColor('red');
+                showNotification('Alert deleted successfully');
+                setEvent(alertId)
+            }
+        } catch (error) {
             setColor('red');
-            showNotification(`Failed to delete alert with ID: ${alertId}`);
+            showNotification('Failed to delete alert');
+            console.error('Error:', error);
         }
     };
 
     useEffect(() => {
         fetchAlerts().then();
-    }, [event]);
+    }, [event, isFocused]);
 
     const readAlert = async (idAlert) => {
         const response = await fetch(`http://localhost:9002/alerts/setAsRead/${idAlert}`, {
@@ -68,6 +80,10 @@ export function AlertsFromFamilyScreen({ navigation, route }) {
         } else {
             console.log(`Failed to unread alert with ID: ${idAlert}`);
         }
+    }
+
+    if (loading) {
+        return <LoadingScreen />
     }
 
     return (

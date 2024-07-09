@@ -39,7 +39,7 @@ export function ServiceConfigurationScreen({ navigation }) {
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.buttonContainer} onPress={() => navigation.navigate('ServiceViewProfile')}>
                     <StyledButton2
-                        onPress={() => navigation.navigate('ServiceEditProfile')}
+                        onPress={() => navigation.navigate('ServiceViewProfile')}
                         icon={require('../../../assets/user.png')}
                     />
                     <Text style={styles.subtitle}>View Profile</Text>

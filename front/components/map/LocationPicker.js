@@ -46,6 +46,7 @@ const LocationPicker = ({ onLocationSelect }) => {
                 center={defaultCenter}
                 onClick={handleMapClick}
                 onLoad={map => mapRef.current = map}
+                borderRadius={10}
             >
                 {markerPosition && (
                     <Marker
@@ -62,7 +63,16 @@ const LocationPicker = ({ onLocationSelect }) => {
                 <input
                     type="text"
                     placeholder="Busca una ubicación"
-                    style={{ width: '100%', padding: '10px', marginTop: '10px' }}
+                    style={{
+                        width: '100%',
+                        color: 'white',
+                        backgroundColor: 'transparent',
+                        borderColor: 'gray',
+                        padding: 10,
+                        borderRadius: 5,
+                        borderWidth: 1,
+                        marginTop: 10
+                    }}
                 />
             </Autocomplete>
         </LoadScript>

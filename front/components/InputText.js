@@ -1,7 +1,7 @@
 import React from 'react';
 import { Text, TextInput, View, StyleSheet } from 'react-native';
 
-const InputText = ({ label, value, onChangeText, placeholder, multiline, secureTextEntry, backcolor= 'transparent' }) => {
+const InputText = ({ label, value, onChangeText, placeholder, multiline, secureTextEntry, backcolor= 'transparent', number }) => {
     const [hovered, setHovered] = React.useState(false);
 
     const inputTextStyle = {
@@ -9,7 +9,25 @@ const InputText = ({ label, value, onChangeText, placeholder, multiline, secureT
         backgroundColor: backcolor,
         color: backcolor === 'white' ? 'black' : 'white',
     };
-
+    if (number) {
+        return (
+            <View
+                onMouseEnter={() => setHovered(true)}
+                onMouseLeave={() => setHovered(false)}
+                style={[styles.inputContainer, hovered && styles.inputContainerHovered]}
+            >
+                <Text style={styles.label}>{label}</Text>
+                <TextInput
+                    style={inputTextStyle}
+                    onChangeText={(text) => onChangeText(text.replace(/[^0-9]/g, ''))}
+                    value={value}
+                    placeholder={placeholder}
+                    placeholderTextColor="#FFFFFF80"
+                    keyboardType="numeric"
+                />
+            </View>
+        );
+    }
     if (secureTextEntry) {
         return (
             <View

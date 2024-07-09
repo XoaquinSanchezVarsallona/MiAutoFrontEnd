@@ -9,7 +9,7 @@ import {DatePicker} from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
 import AddButton from "../../../components/AddButton";
 
-export function EditCarProfile({ route }) {
+export function EditCarProfile({ route, navigation }) {
     const patente = route.params.patente
 
     const [inputs, setInputs] = useState({
@@ -103,6 +103,7 @@ export function EditCarProfile({ route }) {
         for (const field of fields) {
             await handleSave(field);
         }
+        navigation.goBack();
     };
 
     useEffect(() => {
@@ -124,12 +125,14 @@ export function EditCarProfile({ route }) {
                     onChangeText={(text) => handleInputChange("ano", text)}
                     placeholder="Year"
                     label={"Year"}
+                    number={true}
                 />
                 <InputText
                     value={inputs["kilometraje"]}
                     onChangeText={(text) => handleInputChange("kilometraje", text)}
                     placeholder="Mileage"
                     label={"Mileage"}
+                    number={true}
                 />
             </View>
             <View style={styles.row}>

@@ -9,8 +9,6 @@ function AddFamilyScreen({ navigation, route }) {
     const [password, setPassword] = useState(''); // Add this line
     const { username, email } = route.params;
     const [errorMessage, setErrorMessage] = useState('');
-    const inputStyleSurname = surname.length > 0 ? styles.inputNormal : styles.inputItalic;
-    const inputStylePassword = password.length > 0 ? styles.inputNormal : styles.inputItalic;
     const { showNotification, setColor } = useContext(NotificationContext);
 
     const addFamily = async () => {
@@ -28,14 +26,17 @@ function AddFamilyScreen({ navigation, route }) {
                 setColor('#32cd32')
                 showNotification("Family added successfully")
             } else if (response.status === 400) {
-                setErrorMessage('Family already exists')
+                setColor('red')
+                showNotification('Family already exists')
                 console.error('Family already exists')
             } else {
-                setErrorMessage('Failed to add family')
+                setColor('red')
+                showNotification('Failed to add family')
                 console.error('Failed to add family');
             }
         } catch (error) {
-            setErrorMessage(error.message || 'Add family error. Please try again.')
+            setColor('red')
+            showNotification(error.message || 'Add family error. Please try again.')
             console.error('Error:', error);
         }
     };

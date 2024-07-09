@@ -13,6 +13,7 @@ import {
 import {NotificationContext} from "../../components/notification/NotificationContext";
 import StarRating from '../../components/StarRating';
 import crossIcon from "../../assets/cross.png";
+import TinyButton from "../../components/TinyButton";
 
 export function StoreProfile({ navigation, route }) {
     const { store } = route.params;
@@ -228,6 +229,9 @@ export function StoreProfile({ navigation, route }) {
         return (totalRating / experiences.length) / 2;
     };
 
+// <TinyButton onPress={deleteStore()} color={'red'} text={'Delete Store'} />
+// <TinyButton onPress={() => { navigation.navigate("EditVisualStoreProfile", {email : store.storeEmail} ) }} color={'orange'} text={'Modify Store Details'} />
+// <TinyButton onPress={openExperienceModal()} color={'#0E46A3'} text={'View Experiences'} />
     return (
         <ScrollView contentContainerStyle={styles.scrollContainer}>
             <ImageBackground source={require('../../assets/BackgroundUnlocked.jpg')} style={styles.container}>
