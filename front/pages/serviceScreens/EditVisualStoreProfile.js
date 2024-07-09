@@ -119,96 +119,104 @@ export function EditVisualStoreProfile({ navigation , route}) {
         <ImageBackground source={require('../../assets/BackgroundUnlocked.jpg')} style={styles.container}>
             <Text style={styles.title}>Edit Profile</Text>
             <CustomScrollBar contentContainerStyle={styles.scrollContent} style={styles.scrollView}>
-                <View style={styles.row}>
-                    <InputText
-                        label={"Email"}
-                        onChangeText={(text) => handleInputChange("Email", text)}
-                        value={inputs["Email"]}
-                        placeholder={inputs["Email"]}
-                    />
-                    <InputText
-                        label={"StoreName"}
-                        onChangeText={(text) => handleInputChange("StoreName", text)}
-                        value={inputs["StoreName"]}
-                        placeholder={inputs["StoreName"]}
-                    />
-                </View>
-                <View style={[styles.row, { overflow: 'visible', zIndex: 9999}]}>
-                    <View style={[styles.pickerContainer, { overflow: 'visible' }]}>
-                        <Text style={styles.label}>Service Type</Text>
-                        <Select
-                            options={serviceOptions}
-                            value={serviceOptions.find(option => option.value === inputs["TipoDeServicio"])}
-                            onChange={(selectedOption) => handleInputChange("TipoDeServicio", selectedOption.value)}
-                            styles={{
-                                control: (provided) => ({
-                                    ...provided,
-                                    backgroundColor: 'transparent',
-                                    color: 'white',
-                                    borderColor: 'gray',
-                                    borderWidth: 1,
-                                    borderRadius: 5,
-                                    zIndex: 9999,
-                                }),
-                                singleValue: (provided) => ({
-                                    ...provided,
-                                    color: 'white',
-                                    zIndex: 9999,
-                                }),
-                                menu: (provided) => ({
-                                    ...provided,
-                                    color: 'black',
-                                    zIndex: 9999,
-                                })
-                            }}
-                        />
+                <View style={styles.mainContainer}>
+                    <View style={styles.leftColumn}>
+                        <View style={styles.row}>
+                            <InputText
+                                label={"Email"}
+                                onChangeText={(text) => handleInputChange("Email", text)}
+                                value={inputs["Email"]}
+                                placeholder={inputs["Email"]}
+                            />
+                            <InputText
+                                label={"StoreName"}
+                                onChangeText={(text) => handleInputChange("StoreName", text)}
+                                value={inputs["StoreName"]}
+                                placeholder={inputs["StoreName"]}
+                            />
+                        </View>
+                        <View style={[styles.row, { overflow: 'visible', zIndex: 9999 }]}>
+                            <View style={[styles.pickerContainer, { overflow: 'visible' }]}>
+                                <Text style={styles.label}>Service Type</Text>
+                                <Select
+                                    options={serviceOptions}
+                                    value={serviceOptions.find(option => option.value === inputs["TipoDeServicio"])}
+                                    onChange={(selectedOption) => handleInputChange("TipoDeServicio", selectedOption.value)}
+                                    styles={{
+                                        control: (provided) => ({
+                                            ...provided,
+                                            backgroundColor: 'transparent',
+                                            color: 'white',
+                                            borderColor: 'gray',
+                                            borderWidth: 1,
+                                            borderRadius: 5,
+                                            zIndex: 9999,
+                                        }),
+                                        singleValue: (provided) => ({
+                                            ...provided,
+                                            color: 'white',
+                                            zIndex: 9999,
+                                        }),
+                                        menu: (provided) => ({
+                                            ...provided,
+                                            color: 'black',
+                                            zIndex: 9999,
+                                        })
+                                    }}
+                                />
+                            </View>
+                            <InputText
+                                label={"Phone Number"}
+                                onChangeText={(text) => handleInputChange("PhoneNumber", text)}
+                                value={inputs["PhoneNumber"]}
+                                placeholder={inputs["PhoneNumber"]}
+                            />
+                        </View>
+                        <View style={styles.row}>
+                            <InputText
+                                label={"WebPage Link"}
+                                onChangeText={(text) => handleInputChange("WebPageLink", text)}
+                                value={inputs["WebPageLink"]}
+                                placeholder={inputs["WebPageLink"]}
+                            />
+                            <InputText
+                                label={"Instagram Link"}
+                                onChangeText={(text) => handleInputChange("InstagramLink", text)}
+                                value={inputs["InstagramLink"]}
+                                placeholder={inputs["InstagramLink"]}
+                            />
+                        </View>
+                        <View style={styles.row}>
+                            <InputText
+                                label={"Description"}
+                                value={inputs["Description"]}
+                                onChangeText={(text) => handleInputChange("Description", text)}
+                                placeholder={inputs["Description"]}
+                                multiline={true}
+                            />
+                            <InputText
+                                label={"GoogleMaps Link"}
+                                onChangeText={(text) => handleInputChange("GoogleMapsLink", text)}
+                                value={inputs["GoogleMapsLink"]}
+                                placeholder={inputs["GoogleMapsLink"]}
+                            />
+                        </View>
                     </View>
-                    <InputText
-                        label={"Description"}
-                        value={inputs["Description"]}
-                        onChangeText={(text) => handleInputChange("Description", text)}
-                        placeholder={inputs["Description"]}
-                        multiline={true}
-                    />
-                    <InputText
-                        label={"Phone Number"}
-                        onChangeText={(text) => handleInputChange("PhoneNumber", text)}
-                        value={inputs["PhoneNumber"]}
-                        placeholder={inputs["PhoneNumber"]}
-                    />
-                </View>
-                <View style={styles.row}>
-                    <InputText
-                        label={"WebPage Link"}
-                        onChangeText={(text) => handleInputChange("WebPageLink", text)}
-                        value={inputs["WebPageLink"]}
-                        placeholder={inputs["WebPageLink"]}
-                    />
-                    <InputText
-                        label={"Instagram Link"}
-                        onChangeText={(text) => handleInputChange("InstagramLink", text)}
-                        value={inputs["InstagramLink"]}
-                        placeholder={inputs["InstagramLink"]}
-                    />
-                    <InputText
-                        label={"GoogleMaps Link"}
-                        onChangeText={(text) => handleInputChange("GoogleMapsLink", text)}
-                        value={inputs["GoogleMapsLink"]}
-                        placeholder={inputs["GoogleMapsLink"]}
-                    />
-                </View>
-                <View style={styles.mapContainer}>
-                    <Text style={styles.mapLabel}>Select Store Location</Text>
-                    <LocationPicker
-                        onLocationSelect={(lat, lng) => {
-                            setInputs(prevState => ({
-                                ...prevState,
-                                latitude: lat,
-                                longitude: lng
-                            }));
-                        }}
-                        defaultCenter={{ lat: inputs.latitude || -34.6037, lng: inputs.longitude || -58.3816 }}
-                    />
+                    <View style={styles.rightColumn}>
+                        <View style={styles.mapContainer}>
+                            <Text style={styles.mapLabel}>Select Store Location</Text>
+                            <LocationPicker
+                                onLocationSelect={(lat, lng) => {
+                                    setInputs(prevState => ({
+                                        ...prevState,
+                                        latitude: lat,
+                                        longitude: lng
+                                    }));
+                                }}
+                                defaultCenter={{ lat: inputs.latitude || -34.6037, lng: inputs.longitude || -58.3816 }}
+                            />
+                        </View>
+                    </View>
                 </View>
             </CustomScrollBar>
             <AddButton text={"Save"} onPress={handleSave} />
@@ -223,11 +231,26 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: "space-between"
     },
+    mainContainer: {
+        flexDirection: 'row',
+        width: '90%',
+        alignItems: 'center',
+        alignContent: 'center',
+    },
+    leftColumn: {
+        flex: 1,
+        paddingRight: 10,
+        justifyContent: "space-between",
+        width: '90%',
+    },
+    rightColumn: {
+        flex: 1,
+        paddingLeft: 10,
+    },
     row: {
         flexDirection: 'row',
-        flex: 1,
-        justifyContent: 'space-around',
-        width: '80%',
+        justifyContent: 'space-evenly',
+        marginBottom: 20,
     },
     picker: {
         height: 40,
@@ -281,5 +304,12 @@ const styles = StyleSheet.create({
         color: 'white',
         marginBottom: 10,
         textAlign: 'center',
+    },
+    largeInput: {
+        flex: 1,
+        padding: 15,
+        borderRadius: 10,
+        borderWidth: 1,
+        fontSize: 18,
     },
 });

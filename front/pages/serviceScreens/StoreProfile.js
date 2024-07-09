@@ -14,6 +14,7 @@ import {NotificationContext} from "../../components/notification/NotificationCon
 import StarRating from '../../components/StarRating';
 import crossIcon from "../../assets/cross.png";
 import TinyButton from "../../components/TinyButton";
+import CustomScrollBar from "../../components/CustomScrollBar";
 
 export function StoreProfile({ navigation, route }) {
     const { store } = route.params;
@@ -233,24 +234,31 @@ export function StoreProfile({ navigation, route }) {
 // <TinyButton onPress={() => { navigation.navigate("EditVisualStoreProfile", {email : store.storeEmail} ) }} color={'orange'} text={'Modify Store Details'} />
 // <TinyButton onPress={openExperienceModal()} color={'#0E46A3'} text={'View Experiences'} />
     return (
-        <ScrollView contentContainerStyle={styles.scrollContainer}>
-            <ImageBackground source={require('../../assets/BackgroundUnlocked.jpg')} style={styles.container}>
+        <ImageBackground source={require('../../assets/BackgroundUnlocked.jpg')} style={styles.container}>
+            <CustomScrollBar style={styles.commentsSection}>
+
                 <View style={styles.content}>
                     <Text style={styles.title}>{storeData.storeName}</Text>
                     <Text style={styles.detail}>Store Email: {store.storeEmail}</Text>
-                    <Text style={styles.detail}>Store Address: {storeData.domicilio}</Text>
                     <Text style={styles.detail}>Store Service type: {storeData.tipoDeServicio}</Text>
-                    <View style={styles.buttonContainer}>
-                        <TouchableOpacity style={styles.deleteButton} onPress={deleteStore}>
-                            <Text style={styles.buttonText}>Delete Store</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.modifyButton} onPress={() => { navigation.navigate("EditVisualStoreProfile", {email : store.storeEmail} ) }}>
-                            <Text style={styles.buttonText}>Modify Store Details</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.viewExperiencesButton} onPress={openExperienceModal}>
-                            <Text style={styles.buttonText}>View Experiences</Text>
-                        </TouchableOpacity>
-                    </View>
+                </View>
+
+                <View style={styles.buttonContainer}>
+                    <TinyButton
+                        onPress={openExperienceModal}
+                        color={'#32cd32'}
+                        text={'View Experiences'}
+                    />
+                    <TinyButton
+                        onPress={() => { navigation.navigate("EditVisualStoreProfile", {email : store.storeEmail} ) }}
+                        color={'#1e90ff'}
+                        text={'Modify Store Details'}
+                    />
+                    <TinyButton
+                        onPress={deleteStore}
+                        color={'red'}
+                        text={'Delete Store'}
+                    />
                 </View>
 
                 <View style={styles.notificationSection}>
@@ -268,27 +276,28 @@ export function StoreProfile({ navigation, route }) {
                     </TouchableOpacity>
                 </View>
 
-                <ScrollView style={styles.commentsSection}>
+                <View style={styles.notificationsContainer}>
                     <Text style={styles.commentsTitle}>Notifications</Text>
-                    {notifications.reduce((unique, notification) => {
-                        if (!unique.some(item => item.description === notification.description)) {
-                            unique.push(notification);
-                        }
-                        return unique;
-                    }, []).sort((a, b) => new Date(b.creationDate) - new Date(a.creationDate)).map((notification, index) => (
-                        <View key={index} style={styles.commentContainer}>
-                            <TouchableOpacity onPress={() => handleDeleteNotification(notification.description)}>
-                                <Image
-                                    source={crossIcon}
-                                    style={styles.crossIcon}
-                                />
-                            </TouchableOpacity>
-                            <Text style={styles.comment}>{notification.description}</Text>
-                            <Text style={styles.creationDate}>{new Date(notification.creationDate).toLocaleDateString()}</Text>
-                        </View>
-                    ))}
-                </ScrollView>
-            </ImageBackground>
+                        {notifications.reduce((unique, notification) => {
+                            if (!unique.some(item => item.description === notification.description)) {
+                                unique.push(notification);
+                            }
+                            return unique;
+                        }, []).sort((a, b) => new Date(b.creationDate) - new Date(a.creationDate)).map((notification, index) => (
+                            <View key={index} style={styles.commentContainer}>
+                                <TouchableOpacity onPress={() => handleDeleteNotification(notification.description)}>
+                                    <Image
+                                        source={crossIcon}
+                                        style={styles.crossIcon}
+                                    />
+                                </TouchableOpacity>
+                                <Text style={styles.comment}>{notification.description}</Text>
+                                <Text style={styles.creationDate}>{new Date(notification.creationDate).toLocaleDateString()}</Text>
+                            </View>
+                        ))}
+                </View>
+
+            </CustomScrollBar>
 
             <Modal
                 visible={isExperienceModalVisible}
@@ -327,13 +336,13 @@ export function StoreProfile({ navigation, route }) {
                     </View>
                 </View>
             </Modal>
-        </ScrollView>
+        </ImageBackground>
     );
 }
 
 const styles = StyleSheet.create({
     scrollContainer: {
-        flexGrow: 1,
+        flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
     },
@@ -342,13 +351,15 @@ const styles = StyleSheet.create({
         margin: 10,
         backgroundColor: '#f8f8f8',
         borderRadius: 10,
-        width: '80%',
+        width: '90%',
         alignSelf: 'center',
     },
     buttonContainer: {
+        display: "flex",
         flexDirection: 'row',
-        justifyContent: 'space-between',
+        justifyContent: 'space-evenly',
         width: '100%',
+        alignItems: 'center',
     },
     deleteButton: {
         backgroundColor: 'red',
@@ -358,6 +369,13 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         borderRadius: 5,
         width: '30%',
+    },
+    notificationsContainer: {
+        width: '100%',
+        alignSelf: 'center',
+        padding: 16,
+        borderRadius: 10,
+        alignItems: 'center',
     },
     modifyButton: {
         backgroundColor: 'orange',
@@ -377,14 +395,20 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         width: '30%',
     },
+    noExperiencesText: {
+        fontSize: 20,
+        color: 'white',
+        textAlign: 'center',
+        marginTop: 20,
+    },
     buttonText: {
         color: 'white',
         fontWeight: 'bold',
     },
     container: {
         flex: 1,
-        width: '100%',
-        height: '100%',
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     title: {
         fontSize: 20,
@@ -398,7 +422,7 @@ const styles = StyleSheet.create({
         padding: 20,
         borderRadius: 10,
         marginVertical: 20,
-        width: '80%',
+        width: '90%',
         alignSelf: 'center',
     },
     sectionTitle: {
@@ -416,6 +440,7 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         padding: 10,
         marginBottom: 10,
+        color: 'white',
     },
     submitButton: {
         backgroundColor: '#007BFF',
@@ -447,10 +472,14 @@ const styles = StyleSheet.create({
         paddingVertical: 25,
         borderRadius: 5,
         marginBottom: 10,
+        width: '80%',
     },
     comment: {
         fontSize: 14,
         color: 'white',
+        width: '100%',
+        alignItems: 'center',
+
     },
     creationDate: {
         fontSize: 12,
