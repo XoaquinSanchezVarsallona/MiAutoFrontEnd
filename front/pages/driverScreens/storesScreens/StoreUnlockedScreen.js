@@ -206,7 +206,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'flex-start',
-        width: '90%',
+        width: '60%',
     },
     searchContainer: {
         flexDirection: 'row',
