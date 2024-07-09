@@ -95,7 +95,10 @@ export function UnlockedScreenService({ navigation, route }) {
             <View style={styles.scrollBarContainer}>
                 <CustomScrollBar>
                     {stores != null && stores.length > 0 ? (
-                        stores.map((store, index) => (
+                        stores
+                            .filter(store => store)
+                            .sort((a, b) => a.storeName.localeCompare(b.storeName)) // Ordenar alfabéticamente
+                            .map((store, index) => (
                             store && ( // Check if store is not null
                                 <Pressable
                                     key={index}
