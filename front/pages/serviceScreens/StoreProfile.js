@@ -358,8 +358,9 @@ const styles = StyleSheet.create({
         display: "flex",
         flexDirection: 'row',
         justifyContent: 'space-evenly',
-        width: '100%',
+        width: '90%',
         alignItems: 'center',
+        alignSelf: 'center',
     },
     deleteButton: {
         backgroundColor: 'red',
