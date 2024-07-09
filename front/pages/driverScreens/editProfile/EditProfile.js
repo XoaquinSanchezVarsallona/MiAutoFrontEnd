@@ -1,10 +1,12 @@
 import React, {useContext, useEffect, useState} from 'react';
-import { StyleSheet, View, Text, ImageBackground } from 'react-native';
+import {StyleSheet, View, Text, ImageBackground, Modal} from 'react-native';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import ImageInput from "../../../components/ImageInput";
 import InputText from "../../../components/InputText";
 import AddButton from "../../../components/AddButton";
 import {NotificationContext} from "../../../components/notification/NotificationContext";
+import LocationPicker from "../../../components/map/LocationPicker";
+import BoxButton from "../../../components/BoxButton";
 
 export function EditProfile({ navigation }) {
     const { showNotification, setColor } = useContext(NotificationContext);
@@ -18,8 +20,11 @@ export function EditProfile({ navigation }) {
         email: '',
         dniFront: null,
         dniBack: null,
+        domicilioLatitude: 0,
+        domicilioLongitude: 0,
     });
     const [canFetchProfile, setCanFetchProfile] = useState(false);
+    const [locationPickerVisible, setLocationPickerVisible] = useState(false);
 
     // This effect runs once and fetches the token and user ID
     useEffect(() => {
@@ -65,10 +70,11 @@ export function EditProfile({ navigation }) {
                     const data = await response.json();
                     setInputs(prevInputs => ({
                         ...prevInputs,
-                        domicilio: data.domicilio,
                         name: data.name,
                         surname: data.surname,
                         email: data.email,
+                        domicilioLatitude: data.domicilioLatitude,
+                        domicilioLongitude: data.domicilioLongitude,
                     }));
                 } catch (error) {
                     console.error('Error:', error);
@@ -133,7 +139,7 @@ export function EditProfile({ navigation }) {
     // Función que se encarga de enviar los datos al backend, y muestra un mensaje de éxito o error
     const handleSave = async (field) => {
         const newValue = inputs[field];
-        const {userID, username, name, surname, domicilio, password, email} = inputs;
+        const {userID, username, name, surname, password, email, domicilioLatitude, domicilioLongitude} = inputs;
 
         if (field === 'email' && !newValue.includes('@')) {
             setColor('red')
@@ -193,60 +199,80 @@ export function EditProfile({ navigation }) {
     return (
         <ImageBackground source={require('../../../assets/BackgroundUnlocked.jpg')} style={styles.container}>
             <Text style={styles.title}>Edit Profile</Text>
-            <View style={styles.row}>
-                <InputText
-                    label={"Name"}
-                    onChangeText={(text) => handleInputChange("name", text)}
-                    value={inputs["name"]}
-                    placeholder={inputs["name"]}
-                />
-                <InputText
-                    label={"Username"}
-                    onChangeText={(text) => handleInputChange("username", text)}
-                    value={inputs["username"]}
-                    placeholder={inputs["username"]}
-                />
-                <InputText
-                    label={"Surname"}
-                    onChangeText={(text) => handleInputChange("surname", text)}
-                    value={inputs["surname"]}
-                    placeholder={inputs["surname"]}
-                />
-            </View>
-            <View style={styles.row}>
-                <InputText
-                    label={"Domicilio"}
-                    onChangeText={(text) => handleInputChange("domicilio", text)}
-                    value={inputs["domicilio"]}
-                    placeholder={inputs["domicilio"]}
-                />
-                <InputText
-                    label={"Email"}
-                    onChangeText={(text) => handleInputChange("email", text)}
-                    value={inputs["email"]}
-                    placeholder={inputs["email"]}
-                />
-                <InputText
-                    label={"Password"}
-                    onChangeText={(text) => handleInputChange("password", text)}
-                    value={inputs["password"]}
-                    placeholder={inputs["password"]}
-                />
-            </View>
-            <View style={styles.row}>
-                <View>
-                    <Text style={styles.label}>Front of DNI</Text>
-                    <View style={styles.inputRow}>
-                        <ImageInput userId={inputs.userID} patente={null} field={"front of DNI"} onChange={(image) => handleInputChange("front of DNI", image) }/>
-                    </View>
+            <View style={styles.formContainer}>
+
+                <View style={styles.row}>
+                    <InputText
+                        label={"Name"}
+                        onChangeText={(text) => handleInputChange("name", text)}
+                        value={inputs["name"]}
+                        placeholder={inputs["name"]}
+                    />
+                    <InputText
+                        label={"Surname"}
+                        onChangeText={(text) => handleInputChange("surname", text)}
+                        value={inputs["surname"]}
+                        placeholder={inputs["surname"]}
+                    />
                 </View>
-                <View>
-                    <Text style={styles.label}>Back of DNI</Text>
-                    <View style={styles.inputRow}>
-                        <ImageInput userId={inputs.userID} patente={null} field={"back of DNI"} onChange={(image) => handleInputChange("back of DNI", image) }/>
-                    </View>
+                <View style={styles.row}>
+                    <InputText
+                        label={"Email"}
+                        onChangeText={(text) => handleInputChange("email", text)}
+                        value={inputs["email"]}
+                        placeholder={inputs["email"]}
+                    />
+                    <InputText
+                        label={"Username"}
+                        onChangeText={(text) => handleInputChange("username", text)}
+                        value={inputs["username"]}
+                        placeholder={inputs["username"]}
+                    />
+                </View>
+                <View style={styles.row}>
+                    <InputText
+                        label={"Password"}
+                        onChangeText={(text) => handleInputChange("password", text)}
+                        value={inputs["password"]}
+                        placeholder={inputs["password"]}
+                    />
+                    <BoxButton text={"Pick Address"} onPress={() => setLocationPickerVisible(true)} />
+                </View>
+                <View style={styles.row}>
+                    <ImageInput buttonText="Upload Front DNI" userId={inputs.userID} patente={null} field={"front of DNI"} onChange={(image) => handleInputChange("front of DNI", image) }/>
+                    <ImageInput buttonText="Upload Back DNI" userId={inputs.userID} patente={null} field={"back of DNI"} onChange={(image) => handleInputChange("back of DNI", image) }/>
                 </View>
             </View>
+
+            {locationPickerVisible && (
+                <Modal
+                    visible={locationPickerVisible}
+                    animationType="slide"
+                    onRequestClose={() => setLocationPickerVisible(false)}
+                >
+                    <View style={styles.modalContainer}>
+                        <LocationPicker
+                            onLocationSelect={(lat, lng) => {
+                                setInputs(prevState => ({
+                                    ...prevState,
+                                    domicilioLatitude: lat,
+                                    domicilioLongitude: lng
+                                }));
+                            }}
+                            defaultCenter={{ lat: inputs.domicilioLatitude || -34.6037, lng: inputs.domicilioLongitude || -58.3816 }}
+                        />
+                        <AddButton
+                            text={"Done"}
+                            onPress={() => {
+                                handleInputChange("domicilioLatitude", inputs.domicilioLatitude);
+                                handleInputChange("domicilioLongitude", inputs.domicilioLongitude);
+                                setLocationPickerVisible(false);
+                            }}
+                        />
+                    </View>
+                </Modal>
+            )}
+
             <View style={styles.row}>
                 <AddButton text={"Save"} onPress={() => handleEachSave()} />
                 <AddButton text={"Delete User"} color={"red"} onPress={() => deleteUser()} />
@@ -267,9 +293,10 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'space-around',
         width: '80%',
+        alignItems: 'center',
     },
     label: {
-        alignSelf: 'flex-start',
+        alignSelf: 'center',
         color: 'white',
         fontSize: 16,
         fontWeight: 'bold',
@@ -303,6 +330,11 @@ const styles = StyleSheet.create({
         marginRight: 10,
         paddingHorizontal: 10,
         width: 50,
+    },
+    formContainer: {
+        width: '80%',
+        justifyContent: 'center',
+        alignItems: 'center',
     },
 });
 

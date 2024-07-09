@@ -1,4 +1,4 @@
-import { ImageBackground, Image, StyleSheet, Text, View, Modal, TextInput, TouchableOpacity } from "react-native";
+import {ImageBackground, Image, StyleSheet, Text, View, Modal, TextInput, TouchableOpacity, Button} from "react-native";
 import React, { useContext, useEffect, useState } from "react";
 import { NotificationContext } from "../../../components/notification/NotificationContext";
 import CustomScrollBar from "../../../components/CustomScrollBar";
@@ -10,6 +10,7 @@ initMercadoPago('TEST-25cf5ee8-fbe8-4fa3-b59f-bcb11680dd53', {locale: "en-US"});
 import crossIcon from '../../../assets/cross.png';
 import InputText from "../../../components/InputText";
 import StarRating from "../../../components/StarRating";
+import StoreSelectModal from "../../../components/modals/StoreSelectModal";
 
 function InteractiveStarRating({ rating, setRating }) {
     const handlePress = (value) => {
@@ -49,6 +50,7 @@ export function VehicleExperiences({ route }) {
     const [comment, setComment] = useState('');
     const [preferenceId, setPreferenceId] = useState('');
     const [unitPrice, setUnitPrice] = useState(0);
+    const [storeModalVisible, setStoreModalVisible] = useState(false);
 
     const [inputs, setInputs] = useState({
         userID: '',
@@ -62,7 +64,7 @@ export function VehicleExperiences({ route }) {
             const token = await AsyncStorage.getItem('userToken');
             if (token) {
                 // Send token to your backend to validate and get user details
-                const response = await fetch('http://localhost:9002//validateToken', {
+                const response = await fetch('http://localhost:9002/validateToken', {
                     method: 'POST',
                     headers: {
                         'Authorization': `Bearer ${token}`,
@@ -211,6 +213,19 @@ export function VehicleExperiences({ route }) {
         setPaymentModalVisible(false)
     }
 
+    const openStoreSelectModal = () => {
+        setStoreModalVisible(true);
+    }
+
+    const closeStoreSelectModal = () => {
+        setStoreModalVisible(false);
+    }
+
+    const handleStoreSelect = (store) => {
+        setSelectedStore(store.storeName);
+        closeStoreSelectModal();
+    };
+
     const getStoreName = async (storeId) => {
         console.log('getStoreName called with storeId:', storeId);
         try {
@@ -351,15 +366,15 @@ export function VehicleExperiences({ route }) {
                     <View style={styles.modalContent}>
                         <Text style={styles.sectionTitle}>Add Experience</Text>
                         <Text style={styles.label}>Select a store</Text>
-                        <Picker
-                            selectedValue={selectedStore}
-                            onValueChange={(itemValue) => setSelectedStore(itemValue)}
-                            style={styles.picker}
-                        >
-                            {stores.map((store) => (
-                                <Picker.Item key={store.idStore} label={store.storeName} value={store.idStore} />
-                            ))}
-                        </Picker>
+                        <View style={styles.selectStoreContainer}>
+                            <TextInput
+                                style={styles.storeTextInput}
+                                placeholder="Select a store"
+                                value={selectedStore || ''}
+                                editable={false}
+                            />
+                            <Button title="Select Store" onPress={openStoreSelectModal} />
+                        </View>
                         <InteractiveStarRating rating={rating} setRating={setRating} />
                         <Text style={styles.label}>Comment</Text>
                         <TextInput
@@ -384,6 +399,13 @@ export function VehicleExperiences({ route }) {
                     </View>
                 </View>
             </Modal>
+            <StoreSelectModal
+                visible={storeModalVisible}
+                onClose={closeStoreSelectModal}
+                stores={stores}
+                onStoreSelect={handleStoreSelect}
+                userId = {inputs.userID}
+            />
             <Modal
                 visible={paymentModalVisible}
                 animationType="slide"
@@ -563,5 +585,23 @@ const styles = StyleSheet.create({
         top: 10,
         right: 10,
     },
+    selectStoreContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        width: '100%',
+        marginBottom: 10,
+    },
+    storeTextInput: {
+        flex: 1,
+        height: 40,
+        borderColor: 'gray',
+        borderWidth: 1,
+        borderRadius: 5,
+        padding: 10,
+        marginRight: 10,
+        color: 'black',
+        backgroundColor: 'white',
+    }
 });
 export default VehicleExperiences;

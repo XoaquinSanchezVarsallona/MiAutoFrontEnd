@@ -7,6 +7,7 @@ import {NotificationContext} from "../../components/notification/NotificationCon
 import InputText from "../../components/InputText";
 import AddButton from "../../components/AddButton";
 import LocationPicker from "../../components/map/LocationPicker";
+import CustomScrollBar from "../../components/CustomScrollBar";
 
 
 export function EditVisualStoreProfile({ navigation , route}) {
@@ -117,7 +118,7 @@ export function EditVisualStoreProfile({ navigation , route}) {
     return (
         <ImageBackground source={require('../../assets/BackgroundUnlocked.jpg')} style={styles.container}>
             <Text style={styles.title}>Edit Profile</Text>
-            <ScrollView contentContainerStyle={styles.scrollContent} style={styles.scrollView}>
+            <CustomScrollBar contentContainerStyle={styles.scrollContent} style={styles.scrollView}>
                 <View style={styles.row}>
                     <InputText
                         label={"Email"}
@@ -198,15 +199,18 @@ export function EditVisualStoreProfile({ navigation , route}) {
                 </View>
                 <View style={styles.mapContainer}>
                     <Text style={styles.mapLabel}>Select Store Location</Text>
-                    <LocationPicker onLocationSelect={(lat, lng) => {
-                        setInputs(prevState => ({
-                            ...prevState,
-                            latitude: lat,
-                            longitude: lng
-                        }));
-                    }} />
+                    <LocationPicker
+                        onLocationSelect={(lat, lng) => {
+                            setInputs(prevState => ({
+                                ...prevState,
+                                latitude: lat,
+                                longitude: lng
+                            }));
+                        }}
+                        defaultCenter={{ lat: inputs.latitude || -34.6037, lng: inputs.longitude || -58.3816 }}
+                    />
                 </View>
-            </ScrollView>
+            </CustomScrollBar>
             <AddButton text={"Save"} onPress={handleSave} />
         </ImageBackground>
     );
@@ -267,7 +271,7 @@ const styles = StyleSheet.create({
         paddingBottom: 20,
     },
     mapContainer: {
-        width: '90%',
+        width: '100%',
         height: 400,
         marginTop: 20,
         marginBottom: 20,
