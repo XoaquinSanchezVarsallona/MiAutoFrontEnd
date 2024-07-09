@@ -46,21 +46,17 @@ const StoreMapModal = ({ visible, onClose, navigation, stores, centro = { lat: -
                                 setOpen(true);
                                 onClose();
                                 navigation.navigate('VisualStoreProfile', { store: store });
-
                             }}
+                            onMouseOver={() => setSelectedStore(store)}
+                            onMouseOut={() => setSelectedStore(null)}
                         />
                     ))}
-                    {open && selectedStore && (
-                        <InfoWindow
-                            position={{ lat: selectedStore.domicilioLatitud, lng: selectedStore.domicilioLongitud }}
-                            onCloseClick={() => setOpen(false)}
-                        >
-                            <View>
-                                <Text>{selectedStore.storeName}</Text>
-                            </View>
-                        </InfoWindow>
-                    )}
                 </GoogleMap>
+                {selectedStore && (
+                    <View style={styles.storeInfo}>
+                        <Text style={styles.storeName}>{selectedStore.storeName}</Text>
+                    </View>
+                )}
             </View>
         </Modal>
     );
@@ -82,6 +78,18 @@ const styles = StyleSheet.create({
         borderRadius: 5,
     },
     closeButtonText: {
+        color: 'white',
+        fontWeight: 'bold',
+    },
+    storeInfo: {
+        position: 'absolute',
+        bottom: 20,
+        left: 20,
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        padding: 10,
+        borderRadius: 5,
+    },
+    storeName: {
         color: 'white',
         fontWeight: 'bold',
     },

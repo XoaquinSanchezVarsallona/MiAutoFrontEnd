@@ -5,6 +5,7 @@ import AddButton from "../../components/AddButton";
 import InputText from "../../components/InputText";
 import Select from "react-select";
 import LocationPicker from "../../components/map/LocationPicker";
+import CustomScrollBar from "../../components/CustomScrollBar";
 
 
 export function AddNewStore({ navigation, route }) {
@@ -52,7 +53,7 @@ export function AddNewStore({ navigation, route }) {
     return (
         <ImageBackground source={require('../../assets/BackgroundUnlocked.jpg')} style={styles.container}>
             <Text style={styles.title}>Add a new Store</Text>
-            <ScrollView contentContainerStyle={styles.scrollContent} style={styles.scrollView}>
+            <CustomScrollBar contentContainerStyle={styles.scrollContent} style={styles.scrollView}>
                 <View style={[styles.pickerContainer, { overflow: 'visible' }]}>
                     <Text style={styles.label}>Service Type</Text>
                     <Select
@@ -96,7 +97,7 @@ export function AddNewStore({ navigation, route }) {
                     <LocationPicker onLocationSelect={(lat, lng) => { setLatitud(lat); setLongitud(lng); }} />
                 </View>
                 <AddButton onPress={addStore} text={'Add Store'} />
-            </ScrollView>
+            </CustomScrollBar>
         </ImageBackground>
     );
 }
