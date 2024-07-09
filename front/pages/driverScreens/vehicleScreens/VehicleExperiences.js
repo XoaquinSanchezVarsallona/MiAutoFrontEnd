@@ -64,7 +64,7 @@ export function VehicleExperiences({ route }) {
             const token = await AsyncStorage.getItem('userToken');
             if (token) {
                 // Send token to your backend to validate and get user details
-                const response = await fetch('http://localhost:9002//validateToken', {
+                const response = await fetch('http://localhost:9002/validateToken', {
                     method: 'POST',
                     headers: {
                         'Authorization': `Bearer ${token}`,
@@ -404,6 +404,7 @@ export function VehicleExperiences({ route }) {
                 onClose={closeStoreSelectModal}
                 stores={stores}
                 onStoreSelect={handleStoreSelect}
+                userId = {inputs.userID}
             />
             <Modal
                 visible={paymentModalVisible}

@@ -4,15 +4,40 @@ import InputText from "../../components/InputText";
 import { Picker } from "react-native-web";
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {haversineDistance} from "../map/haversineDistance";
+import CustomScrollBar from "../CustomScrollBar";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export default function StoreSelectModal({ visible, onClose, firstStores, onStoreSelect, primerTipoDeServicio }) {
+export default function StoreSelectModal({ visible, onClose, firstStores, onStoreSelect, primerTipoDeServicio, userId }) {
     const [search, setSearch] = useState('')
     const [stores, setStores] = useState(firstStores);
     const [tipoDeServicio, setServicios] = useState(primerTipoDeServicio);
     const [filteredStores, setFilteredStores] = useState(stores);
+    const [inputs, setInputs] = useState({
+        userID: userId,
+        userEmail:'',
+    })
+    const [centro, setCentro] = useState(null);
 
+    const fetchUserLocation = async (userEmail) => {
+        try {
+            const response = await fetch(`http://localhost:9002/user/${userEmail}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+            if (response.ok) {
+                const data = await response.json();
+                console.log("user data:", data)
+                setCentro({ lat: data.domicilioLatitude, lng: data.domicilioLongitude });
+            } else {
+                console.log(`Failed to fetch user location`);
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    };
 
-    console.log('Stores passed to StoreSelectModal:', stores); // Added log to check the stores
 
     const fetchRating = async () => {
         try {
@@ -46,14 +71,14 @@ export default function StoreSelectModal({ visible, onClose, firstStores, onStor
                 const distanceB = haversineDistance(centro, {lat: b.domicilioLatitud, lng: b.domicilioLongitud});
                 return distanceA - distanceB;
             }); //llega bien las coordenadas, sortea bien, printea bien, pero no se guarda bien.
+            console.log("imprimo lista dado distance, antes de savear")
             console.log(list);
             setStores(list);
             setServicios(service);
             setFilteredStores(list);
+            console.log("imprimo lista dado distance, despues de savear")
             console.log(stores);
-        }
-
-        if (service !== 'any') {
+        } else if (service !== 'any') {
             let list = stores.filter(store => store.tipoDeServicio === service)
             setStores(list);
             setServicios(service);
@@ -93,6 +118,36 @@ export default function StoreSelectModal({ visible, onClose, firstStores, onStor
     };
 
     useEffect(() => {
+
+        const loadUserProfile = async () => {
+            const token = await AsyncStorage.getItem('userToken');
+            if (token) {
+                // Send token to your backend to validate and get user details
+                const response = await fetch('http://localhost:9002/validateToken', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json',
+                    },
+                });
+                const data = await response.json();
+                if (response.ok) {
+                    setInputs({
+                        ...inputs,
+                        userID: data.userId,
+                        username: data.username,
+                    });
+                } else {
+                    console.error('Token validation failed:', data.message);
+                }
+            }
+        };
+
+        loadUserProfile().then();
+    }, []);
+
+    useEffect(() => {
+        console.log("tengo el user idddd" + inputs.userID)
         fetchStores()
             .then(fetchedStores => {
                 console.log('Fetched stores:', fetchedStores);
@@ -100,6 +155,44 @@ export default function StoreSelectModal({ visible, onClose, firstStores, onStor
             })
             .catch(error => console.error('Error:', error));
     }, []);
+
+    useEffect(() => {
+        console.log("user id before looking for email: " + inputs.userID)
+        findUserEmailById().then(userEmail => {
+            if (userEmail) {
+                console.log("user email found" + userEmail)
+                fetchUserLocation(userEmail);
+            }
+        });
+    }, [inputs.userID]);
+
+    function findUserEmailById() {
+        return fetch(`http://localhost:9002/findUserById/${inputs.userID}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    console.log(`Failed to fetch user with ID: ${inputs.userID}`);
+                    return null;
+                }
+            })
+            .then(data => {
+                if (data) {
+                    console.log("se obtuvo bien el userEmail" + data.email)
+                    setInputs(prevInputs => ({
+                        ...prevInputs,
+                        userEmail: data.email,
+                    }));
+                    return data.email;
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    }
 
 
     return (
@@ -138,7 +231,7 @@ export default function StoreSelectModal({ visible, onClose, firstStores, onStor
                             <Picker.Item label="Distance" value="distance" />
                         </Picker>
                     </View>
-                    <ScrollView style={styles.storesList}>
+                    <CustomScrollBar>
                         {stores != null && stores.length > 0 ? (
                             stores.filter(store => store.storeName.startsWith(search)).map((store, index) => (
                                 <Pressable
@@ -152,7 +245,7 @@ export default function StoreSelectModal({ visible, onClose, firstStores, onStor
                         ) : (
                             <Text style={styles.noStoresText}>No stores available</Text>
                         )}
-                    </ScrollView>
+                    </CustomScrollBar>
                 </View>
             </View>
         </Modal>
