@@ -6,13 +6,8 @@ const mapContainerStyle = {
     width: '100%'
 };
 
-const defaultCenter = {
-    lat: -34.6037, // Coordenadas de ejemplo (Buenos Aires)
-    lng: -58.3816
-};
-
-const LocationPicker = ({ onLocationSelect }) => {
-    const [markerPosition, setMarkerPosition] = useState(null);
+const LocationPicker = ({ onLocationSelect, defaultCenter = {lat: -34.6037, lng: -58.3816} }) => {
+    const [markerPosition, setMarkerPosition] = useState(defaultCenter);
     const [autocomplete, setAutocomplete] = useState(null);
     const mapRef = useRef(null);
 
@@ -46,6 +41,7 @@ const LocationPicker = ({ onLocationSelect }) => {
                 center={defaultCenter}
                 onClick={handleMapClick}
                 onLoad={map => mapRef.current = map}
+                borderRadius={10}
             >
                 {markerPosition && (
                     <Marker
@@ -62,7 +58,16 @@ const LocationPicker = ({ onLocationSelect }) => {
                 <input
                     type="text"
                     placeholder="Busca una ubicación"
-                    style={{ width: '100%', padding: '10px', marginTop: '10px' }}
+                    style={{
+                        width: '100%',
+                        color: 'white',
+                        backgroundColor: 'transparent',
+                        borderColor: 'gray',
+                        padding: 10,
+                        borderRadius: 5,
+                        borderWidth: 1,
+                        marginTop: 10
+                    }}
                 />
             </Autocomplete>
         </LoadScript>

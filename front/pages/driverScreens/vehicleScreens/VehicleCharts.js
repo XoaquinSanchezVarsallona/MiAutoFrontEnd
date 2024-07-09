@@ -7,12 +7,15 @@ import arrowImage from '../../../assets/blackArrow.png';
 export function VehicleCharts({ navigation, route }) {
     const { vehicle } = route.params;
     const [chartData, setChartData] = useState([]);
-    const [chartFilteredData, setChartFilteredData] = useState([[]])
+    const [chartFilteredData, setChartFilteredData] = useState([])
+    const [monthData, setMonthData] = useState([]);
+    const [weekData, setWeekData] = useState([]);
     const [usernames, setUsernames] = useState([]);
     const [month, setMonth] = useState(0);
-    const [week, setWeek] = useState(0);
+    const [week, setWeek] = useState(1);
     const [year, setYear] = useState(0);
     const [perspective, setPerspective] = useState('')
+    const [monthName, setMonthName] = useState('');
 
     const fetchData = async () => {
         try {
@@ -69,69 +72,101 @@ export function VehicleCharts({ navigation, route }) {
         { value: 'years', label: 'Years' }
     ];
 
-    const handleOptionChange = (value) => {
+    const handleOptionChange = async (value) => {
         setPerspective(value);
         if (value === 'months') {
-            setChartFilteredData(groupedByMonth[month]);
+            await setMonthData(groupByMonth);
         } else if (value === 'weeks') {
-            setChartFilteredData(groupedByWeek[week]);
+            await setWeekData(groupByWeek);
         } else if (value === 'years') {
+            console.log('Grouped by year ' + value + ':', chartFilteredData)
             setChartFilteredData(chartData);
         }
     }
 
-    const groupedByMonth = chartData.reduce((acc, cur) => {
-        const month = new Date(cur.date).getMonth(); // getMonth() returns 0-11 for Jan-Dec
-        const year = new Date(cur.date).getFullYear();
-        const key = `${year}-${month + 1}`; // Create a key like '2024-1' for January 2024
-        console.log('Key:', key)
-        if (!acc[key]) {
-            acc[key] = [];
+    const groupByMonth = chartData.reduce((acc, curr) => {
+        const month = new Date(curr.date).getMonth();
+        if (!acc[month]) {
+            acc[month] = [];
         }
-
-        acc[key].push(cur);
-        console.log('Acc:', acc)
+        acc[month].push(curr);
         return acc;
-    }, {});
+    }, []);
 
-    const groupedByWeek = chartData.reduce((acc, cur) => {
-        const week = getWeek(new Date(cur.date)); // getWeek() returns 1-53 for weeks
-        const year = new Date(cur.date).getFullYear();
-        const key = `${year}-${week}`; // Create a key like '2024-1' for week 1 of 2024
-
-        if (!acc[key]) {
-            acc[key] = [];
+    const groupByWeek = chartData.reduce((acc, cur) => {
+        const date = new Date(cur.date);
+        const week = getWeek(date);
+        console.log('week: ' + week)
+        console.log('date:' + date)
+        if (!acc[week]) {
+            acc[week] = [];
         }
-
-        acc[key].push(cur);
+        acc[week].push(cur);
+        console.log(acc)
         return acc;
     }, {});
 
     function getWeek(date) {
-
+        const firstDayOfYear = new Date(date.getFullYear(), 0, 1);
+        const pastDaysOfYear = (date - firstDayOfYear) / 86400000;
+        return Math.ceil((pastDaysOfYear + firstDayOfYear.getDay() + 1) / 7);
     }
 
-    const incrementPerspective = () => {
+    const incrementPerspective = async () => {
         if (perspective === 'months') {
-            if (month === 12) return;
+            if (month === 11) return;
             setMonth(month + 1);
-            setChartFilteredData(groupedByMonth[month]);
+            setChartFilteredData(groupByMonth[month]);
         } else if (perspective === 'weeks') {
             if (week === 53) return;
             setWeek(week + 1);
-            setChartFilteredData(groupedByWeek[week]);
+            setChartFilteredData(groupByWeek[week]);
         }
     }
 
     const decreasePerspective = () => {
         if (perspective === 'months') {
-            if (month === 1) return;
+            if (month === 0) return;
             setMonth(month - 1);
-            setChartFilteredData(groupedByMonth[month]);
+            setChartFilteredData(groupByMonth[month]);
         } else if (perspective === 'weeks') {
-            if (week === 1) return;
+            if (week === 1  ) return;
             setWeek(week - 1);
-            setChartFilteredData(groupedByWeek[week]);
+            setChartFilteredData(groupByWeek[week]);
+        }
+    }
+
+    useEffect(() => {
+        setMonthName(getMonthName(month));
+    }, [month]);
+
+    useEffect(() => {
+        if (monthData[month]) {
+            setChartFilteredData(monthData[month]);
+        }
+    }, [monthData, month]);
+
+    useEffect(() => {
+        if (weekData[week]) {
+            setChartFilteredData(weekData[week]);
+        }
+    }, [weekData, week]);
+
+    function getMonthName(month) {
+        switch (month) {
+            case 0: return 'January';
+            case 1: return 'February';
+            case 2: return 'March';
+            case 3: return 'April';
+            case 4: return 'May';
+            case 5: return 'June';
+            case 6: return 'July';
+            case 7: return 'August';
+            case 8: return 'September';
+            case 9: return 'October';
+            case 10: return 'November';
+            case 11: return 'December';
+            default: return 'Invalid month';
         }
     }
 
@@ -171,11 +206,16 @@ export function VehicleCharts({ navigation, route }) {
             <View style={styles.content}>
                 <View style={styles.chartContainer}>
                     <View style={{ width: '100%', height: 300 }}>
-                        <Text style={styles.chartTitle}>Mileage</Text>
-                        <ResponsiveContainer>
+                        <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+                            <Text style={styles.chartTitle}>Mileage</Text>
+                            {perspective === 'months' && (
+                                <Text style={styles.interval}>{monthName}</Text>
+                            )}
+                        </View>
+                        <ResponsiveContainer style={{}}>
                             <LineChart
-                                data={chartFilteredData.length ? chartFilteredData : [{ date: 'No Data', Mileage: 0 }]}
-                                margin={{ top: 0, right: 20, left: 10, bottom: 5 }}
+                                data={chartFilteredData.length ? chartFilteredData : [{ date: 'Select an interval', Mileage: 0 }]}
+                                margin={{ top: 0, right: 10, left: 10, bottom: 5 }}
                             >
                                 <XAxis dataKey="date" />
                                 <YAxis />
@@ -196,12 +236,14 @@ export function VehicleCharts({ navigation, route }) {
                         </ResponsiveContainer>
                     </View>
                 </View>
-                <TouchableOpacity onPress={incrementPerspective} style={styles.arrowRight}>
-                    <Image source={arrowImage} />
-                </TouchableOpacity>
-                <TouchableOpacity onPress={decreasePerspective}  style={styles.arrowLeft} >
-                    <Image source={arrowImage}/>
-                </TouchableOpacity>
+                <View style={styles.arrows}>
+                    <TouchableOpacity onPress={decreasePerspective}>
+                        <Image source={arrowImage} style={styles.arrowLeft}/>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={incrementPerspective} >
+                        <Image source={arrowImage} style={styles.arrowRight}/>
+                    </TouchableOpacity>
+                </View>
             </View>
         </ImageBackground>
     );
@@ -210,8 +252,11 @@ export function VehicleCharts({ navigation, route }) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        padding: 16,
+        justifyContent: 'space-between',
         alignItems: 'center',
+        padding: 16,
+        maxWidth: '100%',
+        maxHeight: '100%',
     },
     title: {
         fontSize: 60,
@@ -220,9 +265,11 @@ const styles = StyleSheet.create({
         marginBottom: 10,
     },
     chartContainer: {
+        flex: 1,
+        padding: 10,
         marginTop: 10,
-        width: '100%',
-        height: 300,
+        maxHeight: '100%',
+        alignItems: 'center',
     },
     label: {
         alignSelf: 'flex-start',
@@ -238,15 +285,15 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
     },
     content: {
+        flex: 1,
         marginTop: 10,
         padding: 10,
         margin: 2,
+        paddingRight: 66,
         backgroundColor: '#f8f8f8',
         borderRadius: 10,
         width: '60%',
         alignSelf: 'center',
-        justifyContent: 'space-between',
-        flexDirection: 'row',
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 4 },
         shadowOpacity: 0.25,
@@ -255,23 +302,31 @@ const styles = StyleSheet.create({
     },
     chartTitle: {
         fontSize: 30,
-        textAlign: 'center',
+        alignSelf: 'center',
+        marginLeft: 60,
         marginBottom: 12,
         marginTop: -8,
     },
-    arrowRight: {
+    interval: {
+        fontSize: 20,
         position: 'absolute',
-        bottom: 10,
-        right: 10,
-        width: 20,
-        height: 12,
+        right: 5,
+    },
+    arrowRight: {
+        height: 25,
+        width: 30,
+        marginRight: -80,
         transform: [{ scaleX: -1 }],
     },
     arrowLeft: {
-        position: 'absolute',
-        bottom: 10,
-        left: 10,
-        width: 20,
-        height: 12,
+        height: 25,
+        width: 30,
+        marginLeft: 20,
     },
+    arrows: {
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'flex-end'
+    }
 });

@@ -4,6 +4,7 @@ import RouteCard from "../../../components/RouteCard";
 import {NotificationContext} from "../../../components/notification/NotificationContext";
 import CustomScrollBar from "../../../components/CustomScrollBar";
 import LoadingScreen from "../../LoadingScreen";
+import AddButton from "../../../components/AddButton";
 
 export function VehicleRoutes({ navigation, route }) {
     const { vehicle, familyId, routesPassed, distance } = route.params;
@@ -117,9 +118,7 @@ export function VehicleRoutes({ navigation, route }) {
                     )}
                 </CustomScrollBar>
             </View>
-            <Pressable style={styles.addRouteButton} onPress={() => navigation.navigate('AddNewRoute', { vehicle, familyId })}>
-                <Text style={styles.addRouteText}>Add a new route</Text>
-            </Pressable>
+            <AddButton text={"Add a new route"} onPress={() => navigation.navigate('AddNewRoute', { vehicle, familyId })} />
         </ImageBackground>
     );
 }
@@ -149,26 +148,6 @@ const styles = StyleSheet.create({
         color: 'white',
         fontWeight: 'bold',
         marginBottom: 10,
-        textAlign: 'center',
-    },
-    addRouteButton: {
-        width: '20%',
-        paddingVertical: 12,
-        paddingHorizontal: 20,
-        marginVertical: 10,
-        backgroundColor: '#32cd32',
-        borderRadius: 20,
-        alignSelf: 'center',
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.25,
-        shadowRadius: 5,
-        elevation: 5,
-    },
-    addRouteText: {
-        fontSize: 18,
-        color: 'white',
-        fontWeight: '500',
         textAlign: 'center',
     },
     contentContainerStyle: {

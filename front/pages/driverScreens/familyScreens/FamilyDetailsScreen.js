@@ -2,6 +2,8 @@ import React, {useContext, useEffect, useState} from 'react';
 import {View, Text, TextInput, Button, StyleSheet, ImageBackground, Pressable} from 'react-native';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {NotificationContext} from "../../../components/notification/NotificationContext";
+import AddButton from "../../../components/AddButton";
+import InputText from "../../../components/InputText";
 
 function FamilyDetailsScreen({ route, navigation }) {
     const { family: initialFamily, email } = route.params;
@@ -26,10 +28,7 @@ function FamilyDetailsScreen({ route, navigation }) {
                 showNotification('Surname updated successfully')
                 console.log('Surname updated successfully');
                 setFamily(prev => ({ ...prev, surname: surname }));
-                navigation.reset({
-                    index: 0,
-                    routes: [{ name: 'UnlockedScreenDriver', params: { email: email }}],
-                });
+                navigation.goBack();
             } else {
                 console.error('Failed to update surname');
             }
@@ -66,21 +65,16 @@ function FamilyDetailsScreen({ route, navigation }) {
                 <Text style={styles.title}>Edit Family: {family.surname}</Text>
             </View>
 
-            <TextInput
+            <InputText
                 value={surname}
+                label={"Family Surname"}
                 onChangeText={setSurname}
-                placeholder="Enter Family Surname"
-                placeholderTextColor="#A9A9A9" // placeholder text color
-                style={styles.input}
+                placeholder={"Enter Family Surname"}
             />
 
             <View style={styles.buttonsContainer}>
-                <Pressable style={styles.addFamilyButton} onPress={updateSurname}>
-                    <Text style={styles.addFamilyText}>Update Surname</Text>
-                </Pressable>
-                <Pressable style={styles.deleteFamilyButton} onPress={deleteFamily}>
-                    <Text style={styles.addFamilyText}>Delete Family</Text>
-                </Pressable>
+                <AddButton onPress={updateSurname} text={"Update Surname"}/>
+                <AddButton color={'red'} onPress={deleteFamily} text={"Delete Family"}/>
             </View>
         </ImageBackground>
     );
@@ -109,55 +103,6 @@ const styles = StyleSheet.create({
         justifyContent: 'space-around',
         width: '100%',
         padding: 10,
-    },
-    input: {
-        height: 50, // Increase the height for a better touch area
-        backgroundColor: '#1e90ff', // a white background for the input field
-        borderRadius: 25, // circular edges
-        borderWidth: 1,
-        borderColor: '#1e90ff', // light grey border
-        paddingLeft: 20, // space before text starts
-        paddingRight: 20, // space after text ends
-        fontSize: 18, // slightly larger text
-        color: '#D3D3D3', // text color
-        marginTop: 20, // space from the top element
-        marginBottom: 20, // space from the bottom element
-        shadowOffset: { width: 0, height: 2 }, // shadow positioning
-        shadowOpacity: 0.1, // shadow visibility
-        shadowRadius: 8, // shadow blurriness
-        elevation: 2, // shadow depth for Android
-    },
-    addFamilyButton: {
-        width: '40%',
-        paddingVertical: 12, // Increase padding for a larger touch area
-        paddingHorizontal: 20,
-        marginVertical: 8,
-        backgroundColor: '#32cd32', // A vibrant green color
-        borderRadius: 20,
-        elevation: 4,
-        shadowColor: '#000', // Shadow for iOS
-        shadowOffset: { width: 0, height: 2 }, // Shadow for iOS
-        shadowOpacity: 0.25, // Shadow for iOS
-        shadowRadius: 3.84, // Shadow for iOS
-    },
-    deleteFamilyButton: {
-        width: '40%',
-        paddingVertical: 12, // Increase padding for a larger touch area
-        paddingHorizontal: 20,
-        marginVertical: 8,
-        backgroundColor: 'red',
-        borderRadius: 20,
-        elevation: 4,
-        shadowColor: '#000', // Shadow for iOS
-        shadowOffset: { width: 0, height: 2 }, // Shadow for iOS
-        shadowOpacity: 0.25, // Shadow for iOS
-        shadowRadius: 3.84, // Shadow for iOS
-    },
-    addFamilyText: {
-        fontSize: 18,
-        color: 'white',
-        fontWeight: '500',
-        textAlign: 'center',
     },
 });
 

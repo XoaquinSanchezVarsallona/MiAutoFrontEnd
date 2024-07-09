@@ -28,29 +28,16 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         padding: 16,
     },
-    header: {
-        fontSize: 40,
-        color: 'white',
-        marginBottom: 60,
-        fontWeight: 'bold',
-    },
     title: {
         fontSize: 90,
         position: 'absolute',
         top: 50,
         color: 'white',
-        marginBottom: 60,
-    },
-    gradient: {
-        flex: 1,
-    },
-    button: {
-        marginVertical: 10,
     },
     buttonContainer: {
-        flexDirection: 'row', // Align children in a row
-        justifyContent: 'space-evenly', // Evenly distribute children across container's main axis
-        alignItems: 'center', // Align children along the cross axis (in this case, vertically center)
-        width: '100%', // Take up full width to allow even spacing
+        flexDirection: 'row',
+        justifyContent: 'space-evenly',
+        width: '100%',
+        marginTop: 100,
     },
 });

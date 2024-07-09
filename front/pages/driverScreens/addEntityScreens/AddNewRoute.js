@@ -74,16 +74,18 @@ function AddNewRoute({ navigation, route }) {
             <Text style={styles.title}>Add New Route</Text>
             <View style={styles.inputContainer}>
                 <InputText
-                    label={"Distance"}
+                    label={"Distance [Km]"}
+                    number={true}
                     value={kilometraje}
                     onChangeText={setKilometraje}
                     placeholder="Distance in kilometres"
                 />
                 <InputText
-                    label={"Duration"}
+                    label={"Duration [Hrs]"}
+                    number={true}
                     value={duration}
                     onChangeText={setDuration}
-                    placeholder="Duration"
+                    placeholder="Duration in hours"
                 />
                 <View style={styles.date}>
                     <Text style={styles.label}>Route Date</Text>

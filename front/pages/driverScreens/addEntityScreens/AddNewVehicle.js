@@ -72,12 +72,14 @@ export function AddNewVehicle({ navigation, route }) {
                         onChangeText={setAno}
                         placeholder="Year"
                         label={"Year"}
+                        number={true}
                     />
                     <InputText
                         value={kilometraje}
                         onChangeText={setKilometraje}
                         placeholder="Mileage"
                         label={"Mileage"}
+                        number={true}
                     />
                 </View>
                 <View style={styles.row}>

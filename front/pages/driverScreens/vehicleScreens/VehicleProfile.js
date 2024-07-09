@@ -5,6 +5,7 @@ import {NotificationContext} from "../../../components/notification/Notification
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import AddButton from "../../../components/AddButton";
 import LoadingScreen from "../../LoadingScreen";
+import TinyButton from "../../../components/TinyButton";
 
 export function VehicleProfile({ navigation, route }) {
     const { vehicle, familySurname, familyId } = route.params;
@@ -129,8 +130,8 @@ export function VehicleProfile({ navigation, route }) {
                         </View>
                         <View style={styles.column}>
                             <View style={styles.detailContainer}>
-                                <Text style={styles.detail}><Text style={styles.bold}>Insurance Expiry:</Text> {vehicle.fechaVencimientoSeguro}</Text>
-                                <Text style={styles.detail}><Text style={styles.bold}>VTV Expiry:</Text> {vehicle.fechaVencimientoVTV}</Text>
+                                <Text style={styles.detail}><Text style={styles.bold}>Insurance Expiry:</Text> {vehicleFetched.fechaVencimientoSeguro}</Text>
+                                <Text style={styles.detail}><Text style={styles.bold}>VTV Expiry:</Text> {vehicleFetched.fechaVencimientoVTV}</Text>
                                 <View style={styles.stateStyle}>
                                     <Text style={styles.detail}><Text style={styles.bold}>State:</Text></Text>
                                     <View style={[styles.stateIndicator, {backgroundColor: colors[vehicleFetched.estadoActual], borderRadius: 4, padding: 3,}]}/>
@@ -147,13 +148,9 @@ export function VehicleProfile({ navigation, route }) {
                 <View>
                     <Text style={styles.title}>Information in case of accident</Text>
                     <Text style={styles.detail}>Expiry: {vehicleFetched.fechaVencimientoSeguro}</Text>
-                    <View style={{ flexDirection: 'row' }}>
-                        <TouchableOpacity style={styles.notifyButton} >
-                            <Text style={styles.buttonText} onPress={() => navigation.navigate('AccidentInformation', {patente : vehicleFetched.patente})}>Notify Accident</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.modifyInfoButton} onPress={() => {navigation.navigate('EditPapers', {patente: vehicle.patente})}}>
-                            <Text style={styles.buttonText}>Modify Info</Text>
-                        </TouchableOpacity>
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                        <TinyButton width={'45%'} onPress={() => navigation.navigate('AccidentInformation', {patente : vehicleFetched.patente})} color={'red'} text={"Notify Accident"}/>
+                        <TinyButton width={'45%'} onPress={() => {navigation.navigate('EditPapers', {patente: vehicle.patente})}} color={'orange'} text={'Modify Info'} />
                     </View>
                 </View>
                 <View>
@@ -161,19 +158,13 @@ export function VehicleProfile({ navigation, route }) {
                 </View>
             </View>
             <View style={styles.content}>
-                <View>
+                <View style={{  width: '80%' }}>
                     <Text style={styles.title}>Usage of car</Text>
                     <Text style={styles.detail}>Add / Modify / Delete / View routes from {carName}</Text>
-                    <View style={{ flexDirection: 'row' }}>
-                        <TouchableOpacity style={styles.routesButton} onPress={() => navigation.navigate('VehicleRoutes', { vehicle, familySurname, familyId, distance : 0 })}>
-                            <Text style={styles.buttonText}>View routes</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.routesButton} onPress={() => navigation.navigate('VehicleCharts', { vehicle, familySurname, familyId})}>
-                            <Text style={styles.buttonText}>View charts</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.routesButton} onPress={() => navigation.navigate('VehicleExperiences', { vehicle, familySurname, familyId})}>
-                            <Text style={styles.buttonText}>Experiences</Text>
-                        </TouchableOpacity>
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '72%' }}>
+                        <TinyButton onPress={() => navigation.navigate('VehicleRoutes', { vehicle, familySurname, familyId, distance : 0 })} color={'#0E46A3'} text={'View routes'} />
+                        <TinyButton onPress={() => navigation.navigate('VehicleCharts', { vehicle, familySurname, familyId})} color={'#478CCF'} text={'View charts'} />
+                        <TinyButton onPress={() => navigation.navigate('VehicleExperiences', { vehicle, familySurname, familyId})} color={'#36C2CE'} text={"Experiences"} />
                     </View>
                 </View>
                 <View>
@@ -182,7 +173,7 @@ export function VehicleProfile({ navigation, route }) {
             </View>
             <View style={styles.buttonContainer}>
                 <AddButton onPress={deleteVehicle} color={'red'} text={'Delete Vehicle'} />
-                <AddButton onPress={() => {navigation.navigate('EditCarProfile', {patente : vehicle.patente} )}} color={'orange'} text={'Modify Vehicle Details'} />
+                <AddButton onPress={() => {navigation.navigate('EditCarProfile', {patente : vehicle.patente, navigation} )}} color={'orange'} text={'Modify Vehicle Details'} />
             </View>
         </ImageBackground>
     );
@@ -205,6 +196,11 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.25,
         shadowRadius: 5,
         elevation: 5,
+    },
+    interior: {
+        flex: 1,
+        width: '80%',
+        justifyContent: "space-between",
     },
     icon: {
         height: 100,
@@ -238,51 +234,6 @@ const styles = StyleSheet.create({
     },
     detailContainer: {
         marginTop: 7,
-    },
-    notifyButton: {
-        width: '50%',
-        paddingVertical: 6,
-        paddingHorizontal: 10,
-        marginVertical: 5,
-        marginRight: 10,
-        top: 5,
-        backgroundColor: 'red',
-        borderRadius: 10,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.25,
-        shadowRadius: 5,
-        elevation: 5,
-    },
-    modifyInfoButton: {
-        width: '50%',
-        paddingVertical: 6,
-        paddingHorizontal: 10,
-        marginVertical: 5,
-        marginRight: 10,
-        top: 5,
-        backgroundColor: 'orange',
-        borderRadius: 10,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.25,
-        shadowRadius: 5,
-        elevation: 5,
-    },
-    routesButton: {
-        width: '30%',
-        paddingVertical: 6,
-        paddingHorizontal: 10,
-        marginVertical: 5,
-        marginRight: 10,
-        top: 5,
-        backgroundColor: '#1e90ff',
-        borderRadius: 10,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.25,
-        shadowRadius: 5,
-        elevation: 5,
     },
     crashicon: {
         height: 100,

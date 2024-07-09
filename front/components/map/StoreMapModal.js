@@ -1,15 +1,26 @@
 // src/components/StoreMapModal.js
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Modal, StyleSheet, View, Text, Pressable } from 'react-native';
-import {GoogleMap, InfoWindow, LoadScript, Marker} from '@react-google-maps/api';
+import { GoogleMap, InfoWindow, Marker, useLoadScript } from '@react-google-maps/api';
 
 const mapContainerStyle = {
     height: '500px',
     width: '100%'
 };
 
+const libraries = ['places']; // Specify libraries needed by your application
+
 const StoreMapModal = ({ visible, onClose, navigation, stores, centro = { lat: -34.6037, lng: -58.3816 } }) => {
     const [selectedStore, setSelectedStore] = useState(null);
+    const [open, setOpen] = useState(false);
+
+    const { isLoaded, loadError } = useLoadScript({
+        googleMapsApiKey: "AIzaSyAcFW_irUNVIJSuCV3_2ddMjtB1WpfoEeQ",
+        libraries,
+    });
+
+    if (loadError) return <Text>Error loading maps</Text>;
+    if (!isLoaded) return <Text>Loading Maps</Text>;
 
     return (
         <Modal
@@ -21,39 +32,31 @@ const StoreMapModal = ({ visible, onClose, navigation, stores, centro = { lat: -
                 <Pressable style={styles.closeButton} onPress={onClose}>
                     <Text style={styles.closeButtonText}>Close</Text>
                 </Pressable>
-                <LoadScript googleMapsApiKey="AIzaSyAcFW_irUNVIJSuCV3_2ddMjtB1WpfoEeQ">
-                    <GoogleMap
-                        mapContainerStyle={mapContainerStyle}
-                        zoom={12}
-                        center={centro}
-                    >
-                        {stores.map(store => (
-                            <Marker
-                                key={store.id}
-                                position={{ lat: store.domicilioLatitud, lng: store.domicilioLongitud }}
-                                label={{
-                                    fontSize: '35px',
-                                }}
-                                onClick={() => {
-                                    onClose();
-                                    navigation.navigate('VisualStoreProfile', { store: store });
-                                }}
-                                onMouseOver={() => setSelectedStore(store)}
-                                onMouseOut={() => setSelectedStore(null)}
-                            />
-                        ))}
-                        {selectedStore && (
-                            <InfoWindow
-                                position={{ lat: selectedStore.domicilioLatitud, lng: selectedStore.domicilioLongitud }}
-                                onCloseClick={() => setSelectedStore(null)}
-                            >
-                                <View>
-                                    <Text>{selectedStore.storeName}</Text>
-                                </View>
-                            </InfoWindow>
-                        )}
-                    </GoogleMap>
-                </LoadScript>
+                <GoogleMap
+                    mapContainerStyle={mapContainerStyle}
+                    zoom={12}
+                    center={centro}
+                >
+                    {stores.map(store => (
+                        <Marker
+                            key={store.id}
+                            position={{ lat: store.domicilioLatitud, lng: store.domicilioLongitud }}
+                            onClick={() => {
+                                setSelectedStore(store);
+                                setOpen(true);
+                                onClose();
+                                navigation.navigate('VisualStoreProfile', { store: store });
+                            }}
+                            onMouseOver={() => setSelectedStore(store)}
+                            onMouseOut={() => setSelectedStore(null)}
+                        />
+                    ))}
+                </GoogleMap>
+                {selectedStore && (
+                    <View style={styles.storeInfo}>
+                        <Text style={styles.storeName}>{selectedStore.storeName}</Text>
+                    </View>
+                )}
             </View>
         </Modal>
     );
@@ -75,6 +78,18 @@ const styles = StyleSheet.create({
         borderRadius: 5,
     },
     closeButtonText: {
+        color: 'white',
+        fontWeight: 'bold',
+    },
+    storeInfo: {
+        position: 'absolute',
+        bottom: 20,
+        left: 20,
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        padding: 10,
+        borderRadius: 5,
+    },
+    storeName: {
         color: 'white',
         fontWeight: 'bold',
     },

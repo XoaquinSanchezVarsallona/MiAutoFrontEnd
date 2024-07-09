@@ -3,6 +3,7 @@ import {StyleSheet, View, Text, ImageBackground, Pressable, ScrollView} from 're
 import CustomScrollBar from "../../../components/CustomScrollBar";
 import AddButton from "../../../components/AddButton";
 import LoadingScreen from "../../LoadingScreen";
+import VehicleCard from "../../../components/VehicleCard";
 
 export function VehiclesScreen({ navigation, route }) {
     let { familySurname, familyId, isUpdated } = route.params;
@@ -79,18 +80,14 @@ export function VehiclesScreen({ navigation, route }) {
                     {vehiclesData != null && vehiclesData.length > 0 ? (
                         vehiclesData.map((vehicle, index) => (
                             vehicle && ( // Check if family is not null
-                                <Pressable
+                                <VehicleCard
                                     key={index}
-                                    style={styles.vehicleButton}
-                                    onPress={() => {navigation.navigate('VehicleProfile', { vehicle: vehicle, familySurname: familySurname, familyId: familyId });}}
-                                >
-                                    <View style={styles.rowContainer}>
-                                        <Text style={styles.vehicleText}>{vehicle.marca} {vehicle.modelo} - {vehicle.patente}</Text>
-                                        <View style={styles.stateStyle}>
-                                            <View style={[styles.stateIndicator, {backgroundColor: colors[vehicle.estadoActual], borderRadius: 4}]}/>
-                                        </View>
-                                    </View>
-                                </Pressable>
+                                    index={index}
+                                    vehicle={vehicle}
+                                    familySurname={familySurname}
+                                    navigation={navigation}
+                                    familyId={familyId}
+                                />
                             )
                         ))
                     ) : (

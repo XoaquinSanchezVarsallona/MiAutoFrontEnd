@@ -2,6 +2,7 @@ import React, {useEffect, useState} from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {ImageBackground, ScrollView, StyleSheet, Text, View} from "react-native";
 import RouteCard from "../../../components/RouteCard";
+import CustomScrollBar from "../../../components/CustomScrollBar";
 
 export function ViewRoutes({ }) {
     const [inputs, setInputs] = useState({
@@ -70,18 +71,18 @@ export function ViewRoutes({ }) {
 
     return (
         <ImageBackground source={require('../../../assets/BackgroundUnlocked.jpg')} style={styles.container}>
-            <View>
-                <Text style={styles.title}>Routes of {inputs.username}</Text>
+            <Text style={styles.title}>Routes of {inputs.username}</Text>
+            <View style={styles.scrollContainer}>
+                <CustomScrollBar>
+                    {routes.length === 0 ? (
+                        <Text style={styles.noRoutesText}>No routes yet</Text>
+                    ) : (
+                        routes.map((route, index) => (
+                            <RouteCard key={index} route={route} />
+                        ))
+                    )}
+                </CustomScrollBar>
             </View>
-            <ScrollView style={styles.routesList} contentContainerStyle={styles.contentContainerStyle}>
-                {routes.length === 0 ? (
-                    <Text style={styles.noRoutesText}>No routes yet</Text>
-                ) : (
-                    routes.map((route, index) => (
-                        <RouteCard key={index} route={route} />
-                    ))
-                )}
-            </ScrollView>
         </ImageBackground>
     );
 }
@@ -89,10 +90,9 @@ export function ViewRoutes({ }) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'flex-start',
+        justifyContent: 'space-between',
         alignItems: 'center',
         padding: 16,
-        paddingTop: 30,
     },
     noRoutesText: {
         fontSize: 20,
@@ -107,14 +107,8 @@ const styles = StyleSheet.create({
         marginBottom: 10,
         alignContent: 'center',
     },
-    contentContainerStyle: {
-        alignItems: 'center',
-        paddingBottom: 20,
-    },
-    routesList: {
-        flex: 1,
-        width: '100%',
-        paddingHorizontal: 10,
-        marginBottom: 65,
-    },
+    scrollContainer: {
+        width: '30%',
+        height: '80%',
+    }
 });

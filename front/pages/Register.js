@@ -109,70 +109,78 @@ export function Register( {navigation, route}) {
     return (
         <ImageBackground source={require('../assets/BackgroundLocked.jpg')} style={styles.container}>
             <ReturnButton navigation={navigation} />
-            <Text style={styles.title}>Register as {userType}</Text>
-            <ScrollView contentContainerStyle={styles.scrollContent} style={styles.scrollview}>
-                {userType === 'driver' && (
-                    <>
-                        <InputText
-                            placeholder="Username"
-                            value={username}
-                            onChangeText={setUsername}
-                            label={"Username"}
-                        />
-                        <InputText
-                            placeholder={"Name"}
-                            value={name}
-                            onChangeText={setName}
-                            label={"Name"}
-                        />
-                        <InputText
-                            placeholder="Surname"
-                            value={surname}
-                            onChangeText={setSurname}
-                            label={"Surname"}
-                        />
-                        <InputText
-                            placeholder="Email"
-                            value={email}
-                            onChangeText={setEmail}
-                            label={"Email"}
-                        />
-                        <InputText
-                            placeholder="Password"
-                            value={password}
-                            onChangeText={setPassword}
-                            label={"Password"}
-                        />
+            <Text style={styles.title}>Register as <Text style={{fontWeight: 'bold'}}>{userType}</Text></Text>
+            {userType === 'driver' && (
+                <>
+                    <View style={styles.inputsContainer}>
+                        <View style={styles.textInputs}>
+                            <Text style={styles.subTitle}>User Details</Text>
+                            <View style={{flexDirection: 'row', justifyContent: 'space-evenly'}}>
+                                <InputText
+                                    placeholder={"Name"}
+                                    value={name}
+                                    onChangeText={setName}
+                                    label={"Name"}
+                                />
+                                <InputText
+                                    placeholder="Surname"
+                                    value={surname}
+                                    onChangeText={setSurname}
+                                    label={"Surname"}
+                                />
+                                <InputText
+                                    placeholder="Username"
+                                    value={username}
+                                    onChangeText={setUsername}
+                                    label={"Username"}
+                                />
+                            </View>
+                            <View style={{flexDirection: 'row', justifyContent: 'space-evenly'}}>
+                                <InputText
+                                    placeholder="Email"
+                                    value={email}
+                                    onChangeText={setEmail}
+                                    label={"Email"}
+                                />
+                                <InputText
+                                    placeholder="Password"
+                                    value={password}
+                                    onChangeText={setPassword}
+                                    label={"Password"}
+                                />
+                            </View>
+                        </View>
                         <View style={styles.mapContainer}>
-                            <Text style={styles.mapLabel}>Select Your Location</Text>
+                            <Text style={styles.subTitle}>Select Your Location</Text>
                             <LocationPicker onLocationSelect={handleLocationSelect} />
                         </View>
-                    </>
-                )}
+                    </View>
+                </>
+            )}
 
-                {userType === 'service' && (
-                    <>
-                        <InputText
-                            placeholder="Service Name"
-                            value={serviceName}
-                            onChangeText={setServiceName}
-                            label={"Service Name"}
-                        />
-                        <InputText
-                            placeholder="Email"
-                            value={email}
-                            onChangeText={setEmail}
-                            label={"Email"}
-                        />
-                        <InputText
-                            placeholder="Password"
-                            value={password}
-                            onChangeText={setPassword}
-                            label={"Password"}
-                        />
-                    </>
-                )}
-            </ScrollView>
+            {userType === 'service' && (
+                <>
+                    <InputText
+                        placeholder="Service Name"
+                        value={serviceName}
+                        onChangeText={setServiceName}
+                        label={"Service Name"}
+                    />
+                    <InputText
+                        placeholder="Email"
+                        value={email}
+                        onChangeText={setEmail}
+                        label={"Email"}
+                    />
+                    <InputText
+                        placeholder="Password"
+                        value={password}
+                        onChangeText={setPassword}
+                        label={"Password"}
+                        secureTextEntry={true}
+                    />
+                </>
+            )}
             <CustomButton onPress={handleRegister} text="Register" />
         </ImageBackground>
     );
@@ -188,30 +196,31 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 70,
         color: 'white',
-        paddingTop: 30,
+        paddingTop: 5,
+        paddingBottom: 10,
     },
-    inputs: {
-        width: '100%'
+    textInputs: {
+        flex: 1,
+        width: '70%',
+        height: '80%',
     },
-    scrollContent: {
-        alignItems: 'center',
+    inputsContainer: {
+        flex: 1,
         width: '100%',
-        paddingBottom: 20,
+        flexDirection: 'row',
     },
     mapContainer: {
-        width: '90%',
-        height: 400,
-        marginTop: 20,
-        marginBottom: 20,
+        flex: 1,
+        width: '20%',
+        height: '100%',
         alignItems: 'center',
     },
-    mapLabel: {
-        fontSize: 18,
+    subTitle: {
+        fontSize: 25,
+        padding: 10,
         color: 'white',
+        fontWeight: 'bold',
         marginBottom: 10,
         textAlign: 'center',
-    },
-    scrollview: {
-        width: '90%',
     },
 });

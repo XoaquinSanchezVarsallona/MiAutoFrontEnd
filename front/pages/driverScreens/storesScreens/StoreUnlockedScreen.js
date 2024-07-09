@@ -15,6 +15,7 @@ import {Picker} from "react-native-web";
 import StoreMapModal from "../../../components/map/StoreMapModal";
 import {haversineDistance} from "../../../components/map/haversineDistance"
 import Icon from 'react-native-vector-icons/FontAwesome';
+import CustomScrollBar from "../../../components/CustomScrollBar";
 
 export function StoreUnlockedScreen({ navigation, route }) {
     const [stores, setStores] = useState([]);
@@ -56,18 +57,19 @@ export function StoreUnlockedScreen({ navigation, route }) {
                 const distanceB = haversineDistance(centro, {lat: b.domicilioLatitud, lng: b.domicilioLongitud});
                 return distanceA - distanceB;
             }); //llega bien las coordenadas, sortea bien, printea bien, pero no se guarda bien.
+            console.log("imprimo lista dado distance, antes de savear")
             console.log(list);
             setStores(list);
             setServicios(service);
             setFilteredStores(list);
+            console.log("imprimo lista dado distance, despues de savear")
             console.log(stores);
-        }
-
-        if (service !== 'any') {
+        } else if (service !== 'any') {
             let list = stores.filter(store => store.tipoDeServicio === service)
             setStores(list);
             setServicios(service);
             setFilteredStores(list);
+            console.log("imprimo lista dado any")
             console.log(list);
         }
     }
@@ -173,7 +175,7 @@ export function StoreUnlockedScreen({ navigation, route }) {
                     <Icon name="map" size={30} color="#fff" />
                 </TouchableOpacity>
             </View>
-            <ScrollView style={styles.storesList}>
+            <CustomScrollBar>
                 {stores != null && stores.length > 0 ? (
                     stores.filter(store => store.storeName.startsWith(search)).map((store, index) => (
                         <Pressable
@@ -189,7 +191,7 @@ export function StoreUnlockedScreen({ navigation, route }) {
                 ) : (
                     <Text style={styles.noStoresText}>No stores available</Text>
                 )}
-            </ScrollView>
+            </CustomScrollBar>
             <StoreMapModal
                 visible={modalVisible}
                 onClose={() => setModalVisible(false)}
@@ -296,3 +298,4 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
 });
+export default StoreUnlockedScreen;

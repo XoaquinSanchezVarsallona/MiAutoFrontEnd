@@ -68,7 +68,7 @@ const ImageInput = (requiered) => {
     return (
         <View style={styles.container}>
             <TouchableOpacity onPress={pickImage} style={styles.button}>
-                <Text style={styles.buttonText}>Upload image</Text>
+                <Text style={styles.buttonText}>{requiered.buttonText || 'Upload image'}</Text>
             </TouchableOpacity>
             <StyledButton2
                 icon={require('../assets/pencil.png')}

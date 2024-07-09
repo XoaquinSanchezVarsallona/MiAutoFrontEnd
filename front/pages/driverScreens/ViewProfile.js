@@ -94,10 +94,6 @@ export function ViewProfile({ }) {
                         <Text style={styles.boldSubtitle}>Username: </Text>
                         <Text style={styles.subtitle}>{userData.username}</Text>
                     </View>
-                    <View style={styles.headerContainer}>
-                        <Text style={styles.boldSubtitle}>Domicilio: </Text>
-                        <Text style={styles.subtitle}>{userData.domicilio}</Text>
-                    </View>
                 </View>
                 <Image source={require('../../assets/viewuser.png')} style={styles.icon} />
             </View>
