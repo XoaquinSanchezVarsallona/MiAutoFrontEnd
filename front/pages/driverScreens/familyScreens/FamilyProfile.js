@@ -37,7 +37,8 @@ export function FamilyProfile({ navigation, route }) {
             fetchFamilias(uniqueFamilies)
                 .then(fetchedFamilies => {
                     console.log('Fetched families:', fetchedFamilies);
-                    setFamilies(fetchedFamilies);
+                    const sortedFamilies = fetchedFamilies.sort()
+                    setFamilies(sortedFamilies);
                     setLoading(false);
                 })
                 .catch(error => console.error('Error:', error));
