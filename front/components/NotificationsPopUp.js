@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Modal, ScrollView } from 'react-native';
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import TinyButton from "./TinyButton";
 
 const NotificationsPopUp = ({ isVisible, onClose, email }) => {
     const [notifications, setNotifications] = useState([]);
@@ -76,7 +77,7 @@ const NotificationsPopUp = ({ isVisible, onClose, email }) => {
 
     useEffect(() => {
         if (isVisible) {
-            fetchNotifications();
+            fetchNotifications().then();
         }
     }, [isVisible, email]);
 
@@ -90,17 +91,11 @@ const NotificationsPopUp = ({ isVisible, onClose, email }) => {
                             <View key={index} style={styles.notificationItem}>
                                 <Text style={styles.notificationText}>{notification.description}</Text>
                                 <Text style={styles.notificationTime}>{notification.creationDate}</Text>
-                                <TouchableOpacity
-                                    style={styles.doneButton}
-                                    onPress={() => handleDeleteNotification(notification.notificationId)}>
-                                    <Text style={styles.closeButtonText}>Read</Text>
-                                </TouchableOpacity>
+                                <TinyButton bottom={3} text={'Read'} width={'10%'} onPress={() => handleDeleteNotification(notification.notificationId)} />
                             </View>
                         ))}
                     </ScrollView>
-                    <TouchableOpacity onPress={onClose} style={styles.closeButton}>
-                        <Text style={styles.closeButtonText}>Close</Text>
-                    </TouchableOpacity>
+                    <TinyButton bottom={3} text={'Close'} width={'10%'} color={'red'} onPress={onClose} />
                 </View>
             </View>
         </Modal>
@@ -141,13 +136,6 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
     },
-    doneButton: {
-        backgroundColor: '#ff6347',
-        padding: 5,
-        borderRadius: 5,
-        paddingHorizontal: 10, // Reduced width
-        marginLeft: 10,
-    },
     notificationText: {
         color: 'white',
         fontSize: 16,
@@ -162,10 +150,6 @@ const styles = StyleSheet.create({
         backgroundColor: '#1C86EE',
         padding: 10,
         borderRadius: 5,
-    },
-    closeButtonText: {
-        color: 'white',
-        fontSize: 16,
     },
 });
 

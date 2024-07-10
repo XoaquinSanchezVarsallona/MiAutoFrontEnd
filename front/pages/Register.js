@@ -147,6 +147,7 @@ export function Register( {navigation, route}) {
                                     value={password}
                                     onChangeText={setPassword}
                                     label={"Password"}
+                                    secureTextEntry={true}
                                 />
                             </View>
                         </View>

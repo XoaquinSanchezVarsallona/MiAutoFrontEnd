@@ -214,7 +214,7 @@ export function VehicleCharts({ navigation, route }) {
                         </View>
                         <ResponsiveContainer style={{}}>
                             <LineChart
-                                data={chartFilteredData.length ? chartFilteredData : [{ date: 'Select an interval', Mileage: 0 }]}
+                                data={chartFilteredData && chartFilteredData.length ? chartFilteredData : [{ date: 'Select an interval', Mileage: 0 }]}
                                 margin={{ top: 0, right: 10, left: 10, bottom: 5 }}
                             >
                                 <XAxis dataKey="date" />

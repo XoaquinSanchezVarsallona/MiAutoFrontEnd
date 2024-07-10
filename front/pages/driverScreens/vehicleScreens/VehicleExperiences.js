@@ -391,6 +391,7 @@ export function VehicleExperiences({ route }) {
                             onChangeText={(value) => {setUnitPrice(value)}}
                             placeholder={"Enter the price"}
                             backcolor={'white'}
+                            number={true}
                         />
                         <View style={styles.row}>
                             <AddButton onPress={handlePayment} text={"Continue"}/>

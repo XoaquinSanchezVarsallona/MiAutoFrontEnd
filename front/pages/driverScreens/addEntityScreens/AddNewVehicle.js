@@ -103,9 +103,12 @@ export function AddNewVehicle({ navigation, route }) {
                             <DatePicker
                                 value={fechaVencimientoSeguro ? dayjs(fechaVencimientoSeguro) : null}
                                 onChange={(newValue) => {
-                                    checkDateIsNotExpired(newValue) ?
-                                        setFechaVencimientoSeguro(newValue ? dayjs(newValue).format('YYYY-MM-DD') : '') :
-                                        showInputIsNotValid(newValue)
+                                    if (checkDateIsNotExpired(newValue)) {
+                                        setFechaVencimientoSeguro(newValue ? dayjs(newValue).format('YYYY-MM-DD') : '');
+                                    } else {
+                                        showInputIsNotValid(newValue);
+                                        setFechaVencimientoSeguro(dayjs().format('YYYY-MM-DD')); // set current date as default
+                                    }
                                 }}
                             />
                         </LocalizationProvider>
@@ -116,10 +119,12 @@ export function AddNewVehicle({ navigation, route }) {
                             <DatePicker
                                 value={fechaVencimientoSeguro ? dayjs(fechaVencimientoVTV) : null}
                                 onChange={(newValue) => {
-                                    checkDateIsNotExpired(newValue) ?
-                                        setFechaVencimientoVTV(newValue ? dayjs(newValue).format('YYYY-MM-DD') : '') :
-                                        showInputIsNotValid(newValue)
-
+                                    if (checkDateIsNotExpired(newValue)) {
+                                        setFechaVencimientoVTV(newValue ? dayjs(newValue).format('YYYY-MM-DD') : '');
+                                    } else {
+                                        showInputIsNotValid(newValue);
+                                        setFechaVencimientoVTV(dayjs().format('YYYY-MM-DD')); // set current date as default
+                                    }
                                 }}
                             />
                         </LocalizationProvider>

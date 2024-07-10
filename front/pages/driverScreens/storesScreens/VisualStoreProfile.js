@@ -4,6 +4,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import Icon from 'react-native-vector-icons/FontAwesome';
 import CustomScrollBar from "../../../components/CustomScrollBar";
 import AddButton from "../../../components/AddButton";
+import TinyButton from "../../../components/TinyButton";
 
 function StarRating({ rating }) {
     const stars = [1, 2, 3, 4, 5].map((value) => {
@@ -174,12 +175,11 @@ export function VisualStoreProfile({ route }) {
             });
 
             if (!response.ok) {
-                throw new Error('Network response was not ok');
+                console.error('Network response was not ok');
             }
 
-            await fetchReviews(); //refetcheo
+            await fetchReviews();
             await fetchUserReview();
-            const data = await response.json();
             setRating('');
             setComment('');
         } catch (error) {
@@ -284,21 +284,17 @@ export function VisualStoreProfile({ route }) {
                             </View>
                             <Text style={styles.comment}>{userReview.comment}</Text>
                             <View style={styles.userReviewActions}>
-                                <TouchableOpacity style={styles.actionButton} onPress={openModal}>
-                                    <Text style={styles.actionButtonText}>Edit</Text>
-                                    <ReviewModal
-                                        isVisible={isModalVisible}
-                                        onClose={closeModal}
-                                        fetchReviews={fetchReviews}
-                                        fetchUserReview={fetchUserReview}
-                                        route={route}
-                                        inputs={inputs}
-                                        currentReview={userReview}
-                                    />
-                                </TouchableOpacity>
-                                <TouchableOpacity style={styles.actionButton} onPress={handleDeleteReview}>
-                                    <Text style={styles.actionButtonText}>Delete</Text>
-                                </TouchableOpacity>
+                                <TinyButton width={'8%'} onPress={openModal} text={'Edit'} color={'orange'} />
+                                <ReviewModal
+                                    isVisible={isModalVisible}
+                                    onClose={closeModal}
+                                    fetchReviews={fetchReviews}
+                                    fetchUserReview={fetchUserReview}
+                                    route={route}
+                                    inputs={inputs}
+                                    currentReview={userReview}
+                                />
+                                <TinyButton width={'8%'} onPress={handleDeleteReview} text={'Delete'} color={'red'}/>
                             </View>
                         </View>
                     ) : (
@@ -313,9 +309,7 @@ export function VisualStoreProfile({ route }) {
                                 multiline={true}
                                 numberOfLines={4}
                             />
-                            <TouchableOpacity style={styles.submitButton} onPress={handleSubmitRatingAndComment}>
-                                <Text style={styles.submitButtonText}>Submit</Text>
-                            </TouchableOpacity>
+                            <TinyButton width={'20%'} onPress={handleSubmitRatingAndComment} text={'Submit'}></TinyButton>
                         </View>
                     )}
 
@@ -369,7 +363,7 @@ const ReviewModal = ({ isVisible, onClose, fetchReviews, fetchUserReview, route,
             });
 
             if (!response.ok) {
-                throw new Error('Network response was not ok');
+                console.error('Network response was not ok');
             }
 
             await fetchReviews(); // Fetch reviews again to update the list
@@ -532,8 +526,8 @@ const styles = StyleSheet.create({
     },
     userReviewActions: {
         flexDirection: 'row',
-        justifyContent: 'space-between',
-        marginTop: 10,
+        justifyContent: 'space-evenly',
+        padding: 10,
     },
     actionButton: {
         backgroundColor: '#1e90ff',
@@ -580,21 +574,9 @@ const styles = StyleSheet.create({
         marginBottom: 10,
         color: '#FFFFFF',
     },
-    submitButton: {
-        flex: 1,
-        backgroundColor: '#32cd32',
-        padding: 10,
-        borderRadius: 5,
-        marginBottom: 10,
-        alignItems: 'center',
-    },
-    submitButtonText: {
-        color: 'white',
-        fontWeight: 'bold',
-    },
     cancelButton: {
         flex: 1,
-        backgroundColor: '#ff6347',
+        backgroundColor: 'red',
         padding: 10,
         borderRadius: 5,
         marginHorizontal: 5,
