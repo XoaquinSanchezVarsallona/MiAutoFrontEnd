@@ -94,7 +94,10 @@ export function AddNewStore({ navigation, route }) {
                 />
                 <View style={styles.mapContainer}>
                     <Text style={styles.mapLabel}>Select Store Location</Text>
-                    <LocationPicker onLocationSelect={(lat, lng) => { setLatitud(lat); setLongitud(lng); }} />
+                    <LocationPicker
+                        onLocationSelect={(lat, lng) => { setLatitud(lat); setLongitud(lng); }}
+                        defaultCenter={{ lat: latitud || -34.6037, lng: longitud || -58.3816 }}
+                    />
                 </View>
                 <AddButton onPress={addStore} text={'Add Store'} />
             </CustomScrollBar>

@@ -182,6 +182,7 @@ export function EditProfile({ navigation }) {
             } else {
                 setColor('#32cd32')
                 showNotification(`Updated profile successfully!`);
+                navigation.goBack();
             }
 
             if (response.status === 409) {
